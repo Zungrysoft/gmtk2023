@@ -35,6 +35,7 @@ export default class Board extends Thing {
   stateStack = []
   time = 0
   cameraPosition = [0, 0]
+  nextId = 1000
 
   constructor () {
     super()
@@ -52,12 +53,16 @@ export default class Board extends Thing {
     this.state.level = game.globals.level
     this.state.clock = 0
     this.state.actionQueue = []
+    this.state.waterlogged = {}
 
     // Set up camera
     let cameras = this.getThingsByName('camera')
     if (cameras.length) {
       this.cameraPosition = cameras[0].position
     }
+
+    // Set nextId
+    this.nextId = this.state.things.at(-1).id + 1
 
     // Initial setup of animations
     this.resetAnimations()
@@ -158,6 +163,7 @@ export default class Board extends Thing {
               'move',
               'action',
               'switch',
+              'waterlog',
             ]
           }
 
@@ -180,6 +186,9 @@ export default class Board extends Thing {
         }
         else if (adv === 'switch') {
           this.advanceSwitch(this.advancementData.control)
+        }
+        else if (adv === 'waterlog') {
+          this.advanceWaterlog(this.advancementData.control)
         }
 
         blocked = this.isAnimationBlocking()
@@ -232,16 +241,7 @@ export default class Board extends Thing {
     return false
   }
 
-  getElementAt(pos) {
-    for (let i = 0; i < this.state.elements.length; i ++) {
-      if (vec3.equals(this.state.elements[i].position, pos)) {
-        return i
-      }
-    }
-    return -1
-  }
-
-  tileHeight(coords) {
+  getTileHeight(coords) {
     // Determine which chunk this coordinate should be in
     const chunkCoord = [Math.floor(coords[0]/64), Math.floor(coords[1]/64)]
 
@@ -262,6 +262,35 @@ export default class Board extends Thing {
     return height
   }
 
+  setTileHeight(coords, newHeight) {
+    // Determine which chunk this coordinate should be in
+    const chunkCoord = [Math.floor(coords[0]/64), Math.floor(coords[1]/64)]
+
+    // Get that chunk's data
+    let chunkData = this.state.grid[chunkCoord]
+
+    // If this chunk isn't defined, create it first
+    if (!chunkData) {
+      chunkData = new Array(64*64).fill(0)
+      this.state.grid[chunkCoord] = chunkData
+
+    }
+
+    // Get the tile index
+    const tileIndex = (coords[0] % 64) + (coords[1] % 64) * 64
+
+    // Calculate height
+    chunkData[tileIndex] = newHeight
+  }
+
+  getThingHeight(thing) {
+    let height = this.getTileHeight(thing.position)
+    if (height === 0 && !thing.waterlogged) {
+      return 1
+    }
+    return height
+  }
+
   positionOnScreen(pos) {
     let screenX = game.config.width/2 + tileWidth * (pos[0] - this.cameraPosition[0])
     let screenY = game.config.height/2 + tileDepth * (pos[1] - this.cameraPosition[1])
@@ -271,6 +300,12 @@ export default class Board extends Thing {
 
   getThingsFromRow(y) {
     let ret = []
+    for (const posKey in this.state.waterlogged) {
+      const thing = this.state.waterlogged[posKey]
+      if (thing.position[1] === y) {
+        ret.push(thing)
+      }
+    }
     for (const thing of this.state.things) {
       if (thing.position[1] === y) {
         ret.push(thing)
@@ -331,36 +366,36 @@ export default class Board extends Thing {
     const newPosition = vec2.add(player.position, vec2.directionToVector(control))
 
     // Player can't swim
-    if (this.tileHeight(newPosition) <= 0) {
+    if (this.getTileHeight(newPosition) <= 0 && !(newPosition in this.state.waterlogged)) {
       return
     }
 
     // Player can't scale cliffs
-    if (this.tileHeight(newPosition) > this.tileHeight(player.position)) {
+    if (this.getTileHeight(newPosition) > this.getThingHeight(player)) {
       return
     }
 
-    // Check if there is an entity blocking us
-    const blockingEntity = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
-    if (blockingEntity) {
-      const canBeMovedByGolem = blockingEntity.name === 'player' || (blockingEntity.name === 'deco' && blockingEntity.data.type === 'rock')
+    // Check if there is an thing blocking us
+    const blockingThing = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
+    if (blockingThing) {
+      const canBeMovedByGolem = blockingThing.name === 'player' || (blockingThing.name === 'deco' && blockingThing.data.type === 'rock')
       if (player.data.type === 'golem' && canBeMovedByGolem) {
         // Check if the space behind this is free
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
         // Check terrain height
-        if (this.tileHeight(newPosition2) > this.tileHeight(player.position)) {
+        if (this.getTileHeight(newPosition2) > this.getTileHeight(player.position)) {
           return
         }
 
-        // Check for another entity
-        const blockingEntity2 = this.state.things.filter(x => vec2.equals(newPosition2, x.position) && ['deco', 'player'].includes(x.name))[0]
-        if (blockingEntity2) {
+        // Check for another thing
+        const blockingThing2 = this.state.things.filter(x => vec2.equals(newPosition2, x.position) && ['deco', 'player'].includes(x.name))[0]
+        if (blockingThing2) {
           return
         }
 
-        // Move the other entity
-        blockingEntity.position = newPosition2
+        // Move the other thing
+        blockingThing.position = newPosition2
       }
       else {
         return
@@ -430,6 +465,26 @@ export default class Board extends Thing {
     }
   }
 
+  advanceWaterlog(control) {
+    // Iterate over entities and see if they should be waterlogged
+    for (let i = this.state.things.length-1; i >= 0; i --) {
+      let thing = this.state.things[i]
+
+      // If this position is water...
+      if (this.getTileHeight(thing.position) === 0) {
+        // If there is not already a waterlogged thing at this position...
+        if (!(thing.position in this.state.waterlogged)) {
+          // Add this thing to the waterlogged list
+          thing.waterlogged = true
+          this.state.waterlogged[thing.position] = thing
+
+          // And remove it from the main thing list
+          this.state.things.splice(i, 1)
+        }
+      }
+    }
+  }
+
   executeBolt(direction) {
     const delta = vec2.directionToVector(direction)
 
@@ -438,12 +493,12 @@ export default class Board extends Thing {
 
     // Raytrace the bolt forward
     let pos = [...player.position]
-    const beamHeight = this.tileHeight(pos)
+    const beamHeight = this.getThingHeight(player)
     for (let i = 0; i < 20; i ++) {
       pos = vec2.add(pos, delta)
 
       // See if the terrain blocks this shot
-      if (this.tileHeight(pos) > beamHeight) {
+      if (this.getTileHeight(pos) > beamHeight) {
         break
       }
 
@@ -479,12 +534,12 @@ export default class Board extends Thing {
     let player = this.getActivePlayer()
 
     // Check all adjacent tiles
-    const beamHeight = this.tileHeight(player.position)
+    const beamHeight = this.getThingHeight(player)
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
 
       // Don't deal damage if the ground of a different height
-      if (this.tileHeight(pos) !== beamHeight) {
+      if (this.getTileHeight(pos) !== beamHeight) {
         continue
       }
 
@@ -629,7 +684,7 @@ export default class Board extends Thing {
       // Terrain
       for (let x = minX; x <= maxX; x ++) {
         // Determine terrain height at this coordinate
-        const tileHeight = this.tileHeight([x, y])
+        const tileHeight = this.getTileHeight([x, y])
 
         // Determine where this tile will be rendered on screen
         let screenX, screenY
@@ -643,7 +698,7 @@ export default class Board extends Thing {
         else {
           // Create rock wall pattern
           for (let i = 0; i < tileHeight; i ++) {
-            if (i >= this.tileHeight([x, y+1])) {
+            if (i >= this.getTileHeight([x, y+1])) {
               ctx.drawImage(assets.images.wallRock, screenX, screenY, tileWidth, tileDepth)
             }
             screenY -= wallDepth
@@ -659,7 +714,7 @@ export default class Board extends Thing {
       // Overlays
       for (let x = minX; x <= maxX; x ++) {
         // Determine terrain height at this coordinate
-        const tileHeight = this.tileHeight([x, y])
+        const tileHeight = this.getTileHeight([x, y])
 
         // Determine where these overlays will be rendered on screen
         let screenX, screenY
@@ -668,14 +723,14 @@ export default class Board extends Thing {
         // Render
         if (tileHeight > 0) {
           // Get heights of adjacent tiles
-          const leftHeight = this.tileHeight([x-1, y])
-          const rightHeight = this.tileHeight([x+1, y])
-          const topHeight = this.tileHeight([x, y-1])
-          const bottomHeight = this.tileHeight([x, y+1])
+          const leftHeight = this.getTileHeight([x-1, y])
+          const rightHeight = this.getTileHeight([x+1, y])
+          const topHeight = this.getTileHeight([x, y-1])
+          const bottomHeight = this.getTileHeight([x, y+1])
 
           // Rock wall
           for (let i = 0; i < tileHeight; i ++) {
-            if (i >= this.tileHeight([x, y+1])) {
+            if (i >= this.getTileHeight([x, y+1])) {
               // Left
               if (i >= leftHeight) {
                 ctx.drawImage(assets.images.conGrassCliffRight, screenX - tileWidth, screenY, tileWidth, tileDepth)
@@ -712,10 +767,10 @@ export default class Board extends Thing {
       const thisRowThings = this.getThingsFromRow(y)
       for (const thing of thisRowThings) {
         // Determine where to render it.
-        const tileHeight = this.tileHeight(thing.position)
+        const getThingHeight = this.getThingHeight(thing)
         let screenX, screenY
         ;[screenX, screenY] = this.positionOnScreen(thing.position)
-        screenY -= (wallDepth * tileHeight)
+        screenY -= (wallDepth * getThingHeight)
 
         // Items
         if (thing.name === 'item') {
@@ -726,7 +781,6 @@ export default class Board extends Thing {
           // Render
           ctx.drawImage(assets.images[baseImage], screenX, screenY, tileWidth, tileDepth)
           ctx.drawImage(assets.images[iconImage], screenX, screenY, tileWidth, tileDepth)
-
         }
 
         // Player
