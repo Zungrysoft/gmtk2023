@@ -1,5 +1,6 @@
 *.mtl
 *.png~
+*.kra~
 *.kra
 *.asd
 /src/todos.org

@@ -164,6 +164,7 @@ export default class Board extends Thing {
               'move',
               'action',
               'switch',
+              'ice',
               'waterlog',
             ]
           }
@@ -191,8 +192,11 @@ export default class Board extends Thing {
         else if (adv === 'switch') {
           this.advanceSwitch(this.advancementData.control)
         }
+        else if (adv === 'ice') {
+          this.advanceIce()
+        }
         else if (adv === 'waterlog') {
-          this.advanceWaterlog(this.advancementData.control)
+          this.advanceWaterlog()
         }
 
         blocked = this.isAnimationBlocking()
@@ -471,7 +475,43 @@ export default class Board extends Thing {
     }
   }
 
-  advanceWaterlog(control) {
+  advanceIce() {
+    // Delete all existing ice things
+    for (const key in this.state.waterlogged) {
+      let thing = this.state.waterlogged[key]
+      if (thing.type === 'ice') {
+        delete this.state.waterlogged[key]
+      }
+    }
+
+    // Iterate over ice guys
+    const icePlayers = this.getThingsByName('player').filter((t) => t.type === 'ice')
+    for (const player of icePlayers) {
+      // Build ice around this player
+      const [px, py] = player.position
+      const iceRadius = 2
+      for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
+        for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
+          const icePos = [x, y]
+
+          // If this is a valid spot for ice...
+          if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
+            // Build the ice
+            console.log("ICE")
+            this.state.waterlogged[icePos] = {
+              name: 'deco',
+              type: 'ice',
+              waterlogged: true,
+              id: this.nextId ++,
+              position: icePos,
+            }
+          }
+        }
+      }
+    }
+  }
+
+  advanceWaterlog() {
     // Iterate over entities and see if they should be waterlogged
     for (let i = this.state.things.length-1; i >= 0; i --) {
       let thing = this.state.things[i]
@@ -570,7 +610,6 @@ export default class Board extends Thing {
 
       }
     }
-
   }
 
   draw () {

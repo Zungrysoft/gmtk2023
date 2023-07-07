@@ -38,6 +38,7 @@ await game.loadAssets({
     // Deco Objects
     deco_rock: 'images/deco_rocks.png',
     deco_wood: 'images/deco_wood.png',
+    deco_ice: 'images/deco_ice.png',
 
     // Items
     iconItemBase: 'images/icon_item_base.png',
