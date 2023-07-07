@@ -54,6 +54,7 @@ export default class Board extends Thing {
     this.state.clock = 0
     this.state.actionQueue = []
     this.state.waterlogged = {}
+    this.state.turns = 0
 
     // Set up camera
     let cameras = this.getThingsByName('camera')
@@ -168,8 +169,11 @@ export default class Board extends Thing {
           }
 
           // Push current state to undo stack (but only if it's different from the previous state)
-          const curState = JSON.stringify(this.state)
+          let curState = JSON.stringify(this.state)
           if (this.stateStack[this.stateStack.length-1] !== curState) {
+            this.state.turns += 1
+            curState = JSON.stringify(this.state)
+
             this.stateStack.push(curState)
           }
         }
@@ -345,7 +349,7 @@ export default class Board extends Thing {
     for (const player of players) {
       if (player.id !== activePlayer.id) {
         const dist = vec2.distance(activePlayer.position, player.position)
-        if (dist < closest_dist) {
+        if (dist < closest_dist || (dist === closest_dist && player.lastActive > closest?.lastActive)) {
           closest_dist = dist
           closest = player
         }
@@ -378,8 +382,8 @@ export default class Board extends Thing {
     // Check if there is an thing blocking us
     const blockingThing = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
     if (blockingThing) {
-      const canBeMovedByGolem = blockingThing.name === 'player' || (blockingThing.name === 'deco' && blockingThing.data.type === 'rock')
-      if (player.data.type === 'golem' && canBeMovedByGolem) {
+      const canBeMovedByGolem = blockingThing.name === 'player' || (blockingThing.name === 'deco' && blockingThing.type === 'rock')
+      if (player.type === 'golem' && canBeMovedByGolem) {
         // Check if the space behind this is free
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
@@ -419,10 +423,10 @@ export default class Board extends Thing {
         let executedItem = this.state.actionQueue.shift()
 
         // Execute the item
-        if (executedItem.data.type === 'bolt') {
-          this.executeBolt(executedItem.data.direction)
+        if (executedItem.type === 'bolt') {
+          this.executeBolt(executedItem.direction)
         }
-        else if (executedItem.data.type === 'fire') {
+        else if (executedItem.type === 'fire') {
           this.executeFire()
         }
       }
@@ -446,7 +450,7 @@ export default class Board extends Thing {
 
     let player = this.getActivePlayer()
 
-    if (player.data.type === 'fire') {
+    if (player.type === 'fire') {
       this.executeFire()
     }
   }
@@ -462,6 +466,8 @@ export default class Board extends Thing {
     if (otherPlayer) {
       player.active = false
       otherPlayer.active = true
+
+      player.lastActive = this.state.turns - 1
     }
   }
 
@@ -475,8 +481,11 @@ export default class Board extends Thing {
         // If there is not already a waterlogged thing at this position...
         if (!(thing.position in this.state.waterlogged)) {
           // Add this thing to the waterlogged list
-          thing.waterlogged = true
-          this.state.waterlogged[thing.position] = thing
+          // But kill players
+          if (thing.name !== 'player') {
+            thing.waterlogged = true
+            this.state.waterlogged[thing.position] = thing
+          }
 
           // And remove it from the main thing list
           this.state.things.splice(i, 1)
@@ -553,7 +562,7 @@ export default class Board extends Thing {
             j --
           }
           // Wood
-          if (thing.name === 'deco' && thing.data.type === 'wood') {
+          if (thing.name === 'deco' && thing.type === 'wood') {
             this.state.things.splice(j, 1)
             j --
           }
@@ -679,6 +688,9 @@ export default class Board extends Thing {
     const minY = this.cameraPosition[1] - Math.floor(tilesY/2) - 1
     const maxY = this.cameraPosition[1] + Math.floor(tilesY/2) + 4
 
+    // Determine nearest player
+    const nearestPlayerId = this.getNearestPlayer()?.id
+
     // Render terrain
     for (let y = minY; y <= maxY; y ++) {
       // Terrain
@@ -771,12 +783,15 @@ export default class Board extends Thing {
         let screenX, screenY
         ;[screenX, screenY] = this.positionOnScreen(thing.position)
         screenY -= (wallDepth * getThingHeight)
+        if (thing.waterlogged) {
+          screenY -= 2
+        }
 
         // Items
         if (thing.name === 'item') {
           // Determine which textures should be used
-          const baseImage = baseMapping[thing.data.direction] || 'iconItemBase'
-          const iconImage = iconMapping[thing.data.type] || 'iconItemIconEmpty'
+          const baseImage = baseMapping[thing.direction] || 'iconItemBase'
+          const iconImage = iconMapping[thing.type] || 'iconItemIconEmpty'
 
           // Render
           ctx.drawImage(assets.images[baseImage], screenX, screenY, tileWidth, tileDepth)
@@ -785,14 +800,25 @@ export default class Board extends Thing {
 
         // Player
         if (thing.name === 'player') {
+          // Selected Marker
+          if (thing.active) {
+            ctx.drawImage(assets.images.iconSelected, screenX, screenY-1, tileWidth, tileDepth)
+          }
+
+          // Nearest Marker
+          if (thing.id === nearestPlayerId) {
+            ctx.drawImage(assets.images.iconNearest, screenX, screenY-1, tileWidth, tileDepth)
+          }
+
+          // Player sprite
           const frame = [0, 0]
-          const image = "player_" + (thing.data.type || 'fire')
+          const image = "player_" + (thing.type || 'fire')
           ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
         }
 
         // Deco Objects
         if (thing.name === 'deco') {
-          const image = "deco_" + thing.data.type
+          const image = "deco_" + thing.type
           if (image) {
             ctx.drawImage(assets.images[image], screenX, screenY-1, tileWidth, tileDepth)
           }

@@ -50,9 +50,8 @@ await game.loadAssets({
     iconItemIconEmpty: 'images/icon_item_icon_empty.png',
 
     // UI
-    iconConveyorBase: 'images/icon_conveyor_base.png',
-    iconConveyorBelt: 'images/icon_conveyor_belt.png',
-    iconConveyorChute: 'images/icon_conveyor_chute.png',
+    iconSelected: 'images/icon_occupied_player.png',
+    iconNearest: 'images/icon_occupied_small.png',
   },
 
   json: {
