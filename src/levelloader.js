@@ -34,9 +34,11 @@ export function getLevel(lvl) {
     }
   }
 
-  // Put all things at integer coordinates
+  // Reformat things to move position to integer and add id
+  let curId = 0
   ret.things = ret.things.map((x) => {return {
     ...x,
+    id: curId ++,
     position:[Math.floor(x.position[0]), Math.floor(x.position[1])],
   }})
 

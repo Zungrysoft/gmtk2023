@@ -53,13 +53,6 @@ export default class Board extends Thing {
     this.state.clock = 0
     this.state.actionQueue = []
 
-    // Add player to state
-    this.state.things.push({
-      name: 'player',
-      position: this.getThingsByName('start')[0]?.position || [0,0],
-      data: {},
-    })
-
     // Set up camera
     let cameras = this.getThingsByName('camera')
     if (cameras.length) {
@@ -119,6 +112,9 @@ export default class Board extends Thing {
     if (game.keysPressed.Space || game.buttonsPressed[0]) {
       setControl = 'action'
     }
+    if (game.keysPressed.ShiftLeft || game.buttonsPressed[1]) {
+      setControl = 'switch'
+    }
 
     // Undo function
     if (game.keysPressed.KeyU || game.keysPressed.KeyZ || game.buttonsPressed[5]) {
@@ -161,6 +157,7 @@ export default class Board extends Thing {
             queue: [
               'move',
               'action',
+              'switch',
             ]
           }
 
@@ -180,6 +177,9 @@ export default class Board extends Thing {
         }
         else if (adv === 'action') {
           this.advanceAction(this.advancementData.control)
+        }
+        else if (adv === 'switch') {
+          this.advanceSwitch(this.advancementData.control)
         }
 
         blocked = this.isAnimationBlocking()
@@ -299,6 +299,26 @@ export default class Board extends Thing {
     return players[0]
   }
 
+  getNearestPlayer() {
+    // Get players
+    let activePlayer = this.getActivePlayer()
+    let players = this.getThingsByName('player')
+
+    // Find nearest player
+    let closest_dist = Infinity
+    let closest = undefined
+    for (const player of players) {
+      if (player.id !== activePlayer.id) {
+        const dist = vec2.distance(activePlayer.position, player.position)
+        if (dist < closest_dist) {
+          closest_dist = dist
+          closest = player
+        }
+      }
+    }
+    return closest
+  }
+
   advanceMove(control) {
     // Check control
     if (!['left', 'right', 'up', 'down'].includes(control)) {
@@ -324,7 +344,7 @@ export default class Board extends Thing {
     const blockingEntity = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
     if (blockingEntity) {
       const canBeMovedByGolem = blockingEntity.name === 'player' || (blockingEntity.name === 'deco' && blockingEntity.data.type === 'rock')
-      if (player.type === 'golem' && canBeMovedByGolem) {
+      if (player.data.type === 'golem' && canBeMovedByGolem) {
         // Check if the space behind this is free
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
@@ -391,9 +411,22 @@ export default class Board extends Thing {
 
     let player = this.getActivePlayer()
 
-    // if (player.type === 'fire')
-    {
+    if (player.data.type === 'fire') {
       this.executeFire()
+    }
+  }
+
+  advanceSwitch(control) {
+    if (control !== 'switch') {
+      return
+    }
+
+    let player = this.getActivePlayer()
+    let otherPlayer = this.getNearestPlayer()
+
+    if (otherPlayer) {
+      player.active = false
+      otherPlayer.active = true
     }
   }
 
@@ -699,7 +732,8 @@ export default class Board extends Thing {
         // Player
         if (thing.name === 'player') {
           const frame = [0, 0]
-          ctx.drawImage(assets.images.player, frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
+          const image = "player_" + (thing.data.type || 'fire')
+          ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
         }
 
         // Deco Objects

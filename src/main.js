@@ -12,7 +12,11 @@ await game.loadAssets({
     square: 'images/square.png',
 
     // Player
-    player: 'images/player.png',
+    player_fire: 'images/player_fire.png',
+    player_golem: 'images/player_golem.png',
+    player_rock: 'images/player_rock.png',
+    player_wind: 'images/player_wind.png',
+    player_ice: 'images/player_ice.png',
 
     // Monsters
     monsterOctopus: 'images/monster_octopus.png',
