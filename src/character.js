@@ -7,14 +7,19 @@ import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 import Fire from './fire.js'
+import Wind from './wind.js'
 
 export default class Character extends Thing {
   sprite = 'player_fire'
   time = 0
   wasActive = false
+  wasSelected = false
+  isSelected = false
+  newlySelected = false
   lastPosition = [0, 0]
   drawPosition = [0, 0]
   walkBob = 0
+  depth = 10
   animations = {
     idle: { frames: [0] },
     idleAnim: { frames: [0, 1], speed: 0.035 }
@@ -68,39 +73,67 @@ export default class Character extends Thing {
       }
     }
 
-    // Constantly create fire if I'm the fire guy
-    if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
-      if (!this.timer('fire')) {
-        this.after(50, () => this.createFire(false), 'fire')
+    // NPC animations
+    if (this.tileThingReference !== board.getActivePlayer()) {
+      if (this.tileThingReference.type === 'fire') {
+        if (!this.timer('fire')) {
+          this.after(50, () => this.createFire(false), 'fire')
+        }
       }
-    }
-
-    if (this.tileThingReference.type === 'wind') {
-      this.animation = 'idleAnim'
+      if (this.tileThingReference.type === 'wind') {
+        this.animation = 'idleAnim'
+        if (!this.timer('wind')) {
+          this.after(50, () => this.createWind(), 'wind')
+        }
+      }
     }
 
     if (this.tileThingReference.dead) { this.dead = true }
 
     this.wasActive = this.tileThingReference.active
     this.lastPosition = [...this.position]
+    const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
+    if (selected && !this.wasSelected && this.tileThingReference.type !== 'person') {
+      this.after(10, null, 'newlySelected')
+    }
+    this.isSelected = selected
+    this.wasSelected = selected
   }
 
   draw () {
     super.draw(...this.drawPosition)
     const { ctx } = game
 
+    const tileThing = this.tileThingReference
+
     // Draw cursor over myself when i'm the next to be selected
     const board = game.getThing('board')
     if (board) {
-      if (this.tileThingReference.id === board.getSwitchPlayer()?.id) {
+      if (this.isSelected) {
         ctx.save()
         ctx.translate(this.position[0], this.position[1])
-        ctx.rotate(this.time / 120)
-        const scale = u.map(Math.sin(this.time / 60), -1, 1, 1, 1.25)
+        ctx.rotate(this.time / (tileThing.type === 'person' ? 120 : 30))
+        const scale = this.timers.newlySelected !== undefined ? u.map(this.timer('newlySelected'), 0, 1, 4, 1) : 1
+        ctx.scale(scale, scale)
+        if (tileThing.type === 'person') {
+          ctx.globalAlpha = 0.5
+        }
         ctx.translate(-64, -64)
         ctx.drawImage(game.assets.images.iconNearest, 0, 0)
         ctx.restore()
       }
+    }
+
+    // Draw the player's aim arrow
+    if (this.checkIsActive() && tileThing.type === 'person') {
+      const position = vec2.add(this.position, vec2.scale(vec2.directionToVector(tileThing.direction), 64))
+      ctx.save()
+      ctx.globalAlpha = 0.5
+      ctx.translate(...position)
+      ctx.rotate(u.angleTowards(0, 0, ...vec2.directionToVector(tileThing.direction)))
+      ctx.translate(-32, -32)
+      ctx.drawImage(game.assets.images.aimArrow, 0, 0)
+      ctx.restore()
     }
   }
 
@@ -114,12 +147,24 @@ export default class Character extends Thing {
     this.after(15, null, 'announce')
   }
 
+  checkIsActive () {
+    return this.tileThingReference.active
+  }
+
   createFire (fade = true) {
     for (let a = 0; a < 8; a += 1) {
       const angle = a * Math.PI / 4
       const x = this.tileThingReference.position[0] + Math.round(Math.cos(angle))
       const y = this.tileThingReference.position[1] + Math.round(Math.sin(angle))
       game.addThing(new Fire([x, y], fade))
+    }
+  }
+
+  createWind () {
+    for (let i = 0; i < 4; i += 1) {
+      const dir = vec2.directionToVector(this.tileThingReference.direction)
+      const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
+      game.addThing(new Wind(pos, dir))
     }
   }
 }
