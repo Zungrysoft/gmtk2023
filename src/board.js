@@ -861,16 +861,25 @@ export default class Board extends Thing {
   }
 
   executePlayerDeath(player) {
-    player.dead = true
-
     // Exit if this is not a player
     if (player.name !== 'player') {
       return
     }
 
+    player.dead = true
+
     // Vine guys must update their vines
     if (player.type === 'vine') {
       this.executeRetractVines(player)
+    }
+
+    // Reset active player
+    if (player.active && player.type !== 'person') {
+      player.active = false
+      const person = this.state.things.filter((x) => x.type === 'person')[0]
+      if (person) {
+        person.active = true
+      }
     }
   }
 
