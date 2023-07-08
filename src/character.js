@@ -112,7 +112,7 @@ export default class Character extends Thing {
     if (this.tileThingReference !== board?.getActivePlayer()) {
       if (this.tileThingReference.type === 'vine') {
         ctx.save()
-        ctx.translate(...this.drawPosition)
+        ctx.translate(...this.drawPosition.map(x => Math.round(x)))
         ctx.translate(-32, -30)
         ctx.drawImage(game.assets.images.deco_vine, 0, 0)
         ctx.restore()
