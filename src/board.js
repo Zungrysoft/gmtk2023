@@ -468,13 +468,20 @@ export default class Board extends Thing {
   }
 
   tileIsInWindTunnel(position) {
-    for (const delta of [[1,0], [1,0], [-1,0], [0,-1]]) {
+    for (const direction of ['up', 'down', 'right', 'left']) {
+      let delta = vec2.directionToVector(direction)
       let curPos = position
       for (let i = 0; i < 15; i ++) {
         curPos = vec2.add(curPos, delta)
 
         // Found a wind guy
-        let foundWind = this.state.things.filter(x => vec2.equals(curPos, x.position) && x.name === 'player' && x.type === 'wind' && !(x.active))[0]
+        let foundWind = this.state.things.filter(x =>
+          vec2.equals(curPos, x.position) &&
+          x.name === 'player' &&
+          x.type === 'wind' &&
+          x.direction === vec2.oppositeDirection(direction) &&
+          !(x.active)
+        )[0]
         if (foundWind) {
           return true
         }
