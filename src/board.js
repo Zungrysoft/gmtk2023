@@ -10,6 +10,7 @@ import { assets } from './core/game.js'
 import { getLevel } from './levelloader.js'
 import Character from './character.js'
 import Fire from './fire.js'
+import Wave from './wave.js'
 
 const tileWidth = 64
 const tileDepth = 64
@@ -149,6 +150,19 @@ export default class Board extends Thing {
 
         // Clear advancement queue
         this.advancementData.queue = []
+      }
+    }
+
+    if (this.time % 30 === 0) {
+      if (this.getActivePlayer()) {
+        const x = u.random(game.config.width / -2, game.config.width / 2)
+        const y = u.random(game.config.height / -2, game.config.height / 2)
+        const position = [...this.getActivePlayer().position]
+        position[0] += Math.round(x / 64)
+        position[1] += Math.round(y / 64)
+        if (this.getTileHeight(position) === 0) {
+          game.addThing(new Wave(position))
+        }
       }
     }
 
