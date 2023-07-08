@@ -521,6 +521,7 @@ export default class Board extends Thing {
         // Move the other thing
         blockingThing.position = newPosition2
         this.executeUpdatePlayer(blockingThing)
+        soundmanager.playSound('move_stone', 0.1, [0.95, 1.05])
       }
       else {
         return
