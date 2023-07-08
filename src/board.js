@@ -8,6 +8,7 @@ import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 import { assets } from './core/game.js'
 import { getLevel } from './levelloader.js'
+import Character from './character.js'
 
 const tileWidth = 64
 const tileDepth = 64
@@ -35,6 +36,7 @@ export default class Board extends Thing {
   stateStack = []
   time = 0
   nextId = 1000
+  depth = -1
 
   constructor () {
     super()
@@ -55,15 +57,15 @@ export default class Board extends Thing {
     this.state.waterlogged = {}
     this.state.turns = 0
 
-    // Set up camera
-    // let cameras = this.getThingsByName('camera')
-    // if (cameras.length) {
-    //   this.cameraPosition = cameras[0].position
-    // }
-    //game.getCamera2D().position = this.getActivePlayer()?.position || [0, 0]
-
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
+
+    // Create visual representations for each thing
+    this.state.things.forEach(thing => {
+      if (thing.name === 'player') {
+        game.addThing(new Character(thing))
+      }
+    })
 
     // Initial setup of animations
     this.resetAnimations()
@@ -209,16 +211,7 @@ export default class Board extends Thing {
 
         blocked = this.isAnimationBlocking()
       }
-
-      // Update camera to follow player
-      const newPosition = this.getActivePlayer()?.position
-      if (newPosition) {
-        game.getCamera2D().position = [newPosition[0] * tileWidth, newPosition[1] * tileDepth]
-      }
     }
-
-    // Advance animations
-    this.advanceAnimations()
 
     //game.config.width = Math.round(window.innerWidth / 2) - 8
     //game.config.height = Math.round(window.innerHeight / 2) - 8
@@ -230,31 +223,8 @@ export default class Board extends Thing {
 
   }
 
-  defaultAnimation() {
-    return {
-      position: [0, 0, 0],
-      endPosition: [0, 0, 0],
-      speed: 0,
-      moveType: 'none',
-      spinSpeed: 0,
-      spinAngle: 0,
-      scale: 1.0,
-      scrollTime: 0,
-      scrollPosition: 0,
-      laserThickness: 0,
-      laserLength: 0,
-      rotation: 0,
-      endRotation: 0,
-      shrinkHeight: 0,
-    }
-  }
-
   resetAnimations() {
     // this.animState = this.state.elements.map(e => this.defaultAnimation())
-  }
-
-  advanceAnimations() {
-
   }
 
   isAnimationBlocking() {
@@ -640,6 +610,7 @@ export default class Board extends Thing {
         if (vec2.equals(thing.position, pos)) {
           // Player
           if (thing.name === 'player') {
+            this.state.things[j].dead = true
             this.state.things.splice(j, 1)
             j --
           }
@@ -860,8 +831,6 @@ export default class Board extends Thing {
           }
 
           // Grass tile
-          //const grassImage = (x%2 !== y%2) ? assets.images.tileGrass : assets.images.tileGrassBlades
-          //ctx.drawImage(grassImage, screenX, screenY, tileWidth, tileDepth)
           ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
           if (tileHeight > 1) {
             ctx.fillStyle = 'gray'
@@ -956,14 +925,13 @@ export default class Board extends Thing {
 
           // Nearest Marker
           if (thing.id === nearestPlayerId) {
-            ctx.drawImage(assets.images.iconNearest, screenX, screenY-1, tileWidth, tileDepth)
           }
 
           // Player sprite
           const frame = [0, 0]
           const image = "player_" + (thing.type || 'fire')
           //ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
-          ctx.drawImage(assets.images[image], screenX, screenY - 2)
+          //ctx.drawImage(assets.images[image], screenX, screenY - 2)
         }
 
         // Deco Objects
