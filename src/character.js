@@ -15,6 +15,10 @@ export default class Character extends Thing {
   lastPosition = [0, 0]
   drawPosition = [0, 0]
   walkBob = 0
+  animations = {
+    idle: { frames: [0] },
+    idleAnim: { frames: [0, 1], speed: 0.035 }
+  }
 
   constructor (tileThingReference) {
     super()
@@ -28,6 +32,7 @@ export default class Character extends Thing {
   update () {
     this.time += 1
     this.updateTimers()
+    this.animate()
 
     // Do a little animation when I become selected
     if (this.tileThingReference.active && !this.wasActive) {
@@ -66,8 +71,12 @@ export default class Character extends Thing {
     // Constantly create fire if I'm the fire guy
     if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
       if (!this.timer('fire')) {
-        this.after(50, () => this.createFire(), 'fire')
+        this.after(50, () => this.createFire(false), 'fire')
       }
+    }
+
+    if (this.tileThingReference.type === 'wind') {
+      this.animation = 'idleAnim'
     }
 
     if (this.tileThingReference.dead) { this.dead = true }
@@ -105,12 +114,12 @@ export default class Character extends Thing {
     this.after(15, null, 'announce')
   }
 
-  createFire () {
+  createFire (fade = true) {
     for (let a = 0; a < 8; a += 1) {
       const angle = a * Math.PI / 4
       const x = this.tileThingReference.position[0] + Math.round(Math.cos(angle))
       const y = this.tileThingReference.position[1] + Math.round(Math.sin(angle))
-      game.addThing(new Fire([x, y]))
+      game.addThing(new Fire([x, y], fade))
     }
   }
 }
