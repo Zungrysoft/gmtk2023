@@ -9,8 +9,8 @@ import Thing from './core/thing.js'
 import { assets } from './core/game.js'
 import { getLevel } from './levelloader.js'
 
-const tileWidth = 16
-const tileDepth = 16
+const tileWidth = 64
+const tileDepth = 64
 const wallDepth = 12
 const waterHeight = 6
 
@@ -34,7 +34,6 @@ export default class Board extends Thing {
   }
   stateStack = []
   time = 0
-  cameraPosition = [0, 0]
   nextId = 1000
 
   constructor () {
@@ -61,7 +60,7 @@ export default class Board extends Thing {
     // if (cameras.length) {
     //   this.cameraPosition = cameras[0].position
     // }
-    this.cameraPosition = this.getActivePlayer()?.position || [0, 0]
+    //game.getCamera2D().position = this.getActivePlayer()?.position || [0, 0]
 
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
@@ -210,10 +209,19 @@ export default class Board extends Thing {
 
         blocked = this.isAnimationBlocking()
       }
+
+      // Update camera to follow player
+      const newPosition = this.getActivePlayer()?.position
+      if (newPosition) {
+        game.getCamera2D().position = [newPosition[0] * tileWidth, newPosition[1] * tileDepth]
+      }
     }
 
     // Advance animations
     this.advanceAnimations()
+
+    //game.config.width = Math.round(window.innerWidth / 2) - 8
+    //game.config.height = Math.round(window.innerHeight / 2) - 8
 
     // TODO: Check for win
     // if (this.state.cratesDelivered >= this.state.cratesRequired && this.state.level > 0) {
@@ -309,9 +317,8 @@ export default class Board extends Thing {
   }
 
   positionOnScreen(pos) {
-    let screenX = Math.round(game.config.width/2 + tileWidth * (pos[0] - this.cameraPosition[0]))
-    let screenY = Math.round(game.config.height/2 + tileDepth * (pos[1] - this.cameraPosition[1]))
-
+    let screenX = tileWidth * pos[0]
+    let screenY = tileDepth * pos[1]
     return [screenX, screenY]
   }
 
@@ -826,10 +833,6 @@ export default class Board extends Thing {
 
     // Move camera
     // this.cameraPosition = vec2.lerp(this.cameraPosition, this.getActivePlayer().position, 0.3)
-    const newPosition = this.getActivePlayer()?.position
-    if (newPosition) {
-      this.cameraPosition = newPosition
-    }
 
     // {
     //   const auxControls = [
@@ -938,10 +941,10 @@ export default class Board extends Thing {
     // Set up camera
     const tilesX = (game.config.width / tileWidth)
     const tilesY = (game.config.height / tileDepth)
-    const minX = Math.round(this.cameraPosition[0] - Math.floor(tilesX/2) - 1)
-    const maxX = Math.round(this.cameraPosition[0] + Math.floor(tilesX/2) + 1)
-    const minY = Math.round(this.cameraPosition[1] - Math.floor(tilesY/2) - 1)
-    const maxY = Math.round(this.cameraPosition[1] + Math.floor(tilesY/2) + 4)
+    const minX = Math.round(game.getCamera2D().position[0] / tileWidth - Math.floor(tilesX/2) - 1)
+    const maxX = Math.round(game.getCamera2D().position[0] / tileWidth + Math.floor(tilesX/2) + 1)
+    const minY = Math.round(game.getCamera2D().position[1] / tileWidth - Math.floor(tilesY/2) - 1)
+    const maxY = Math.round(game.getCamera2D().position[1] / tileWidth + Math.floor(tilesY/2) + 4)
 
     // Determine nearest player
     const nearestPlayerId = this.getNextPlayer()?.id
@@ -959,23 +962,31 @@ export default class Board extends Thing {
 
         // If height is zero, render it as water
         if (tileHeight <= 0) {
-          ctx.drawImage(assets.images.tileWater, screenX, screenY - waterHeight, tileWidth, tileDepth)
+          //ctx.drawImage(assets.images.tileWater, screenX, screenY - waterHeight, tileWidth, tileDepth)
+          ctx.fillStyle = '#3569CC'
+          ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
         }
         // Otherwise, render it as terrain
         else {
           // Create rock wall pattern
           for (let i = 0; i < tileHeight; i ++) {
             if (i >= this.getTileHeight([x, y+1])) {
-              ctx.drawImage(assets.images.wallRock, screenX, screenY, tileWidth, tileDepth)
+              //ctx.drawImage(assets.images.wallRock, screenX, screenY, tileWidth, tileDepth)
+              ctx.fillStyle = '#21235B'
+              ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
             }
             screenY -= wallDepth
           }
 
           // Grass tile
-          const grassImage = (x%2 !== y%2) ? assets.images.tileGrass : assets.images.tileGrassBlades
-          ctx.drawImage(grassImage, screenX, screenY, tileWidth, tileDepth)
+          //const grassImage = (x%2 !== y%2) ? assets.images.tileGrass : assets.images.tileGrassBlades
+          //ctx.drawImage(grassImage, screenX, screenY, tileWidth, tileDepth)
+          ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
+          if (tileHeight > 1) {
+            ctx.fillStyle = 'gray'
+          }
+          ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
         }
-
       }
 
       // Overlays
@@ -1000,11 +1011,11 @@ export default class Board extends Thing {
             if (i >= this.getTileHeight([x, y+1])) {
               // Left
               if (i >= leftHeight) {
-                ctx.drawImage(assets.images.conGrassCliffRight, screenX - tileWidth, screenY, tileWidth, tileDepth)
+                //ctx.drawImage(assets.images.conGrassCliffRight, screenX - tileWidth, screenY, tileWidth, tileDepth)
               }
               // Right
               if (i >= rightHeight) {
-                ctx.drawImage(assets.images.conGrassCliffLeft, screenX + tileWidth, screenY, tileWidth, tileDepth)
+                //ctx.drawImage(assets.images.conGrassCliffLeft, screenX + tileWidth, screenY, tileWidth, tileDepth)
               }
             }
             screenY -= wallDepth
@@ -1012,6 +1023,7 @@ export default class Board extends Thing {
 
           // Grass hanging overlays
           // Left
+          /*
           if (leftHeight < tileHeight) {
             ctx.drawImage(assets.images.conGrassRight, screenX - tileWidth, screenY, tileWidth, tileDepth)
           }
@@ -1027,6 +1039,7 @@ export default class Board extends Thing {
           if (bottomHeight < tileHeight) {
             ctx.drawImage(assets.images.conGrassTop, screenX, screenY + tileDepth, tileWidth, tileDepth)
           }
+          */
         }
       }
 
@@ -1057,7 +1070,7 @@ export default class Board extends Thing {
         if (thing.name === 'player') {
           // Selected Marker
           if (thing.active) {
-            ctx.drawImage(assets.images.iconSelected, screenX, screenY-1, tileWidth, tileDepth)
+            //ctx.drawImage(assets.images.iconSelected, screenX, screenY-1, tileWidth, tileDepth)
           }
 
           // Nearest Marker
@@ -1068,14 +1081,15 @@ export default class Board extends Thing {
           // Player sprite
           const frame = [0, 0]
           const image = "player_" + (thing.type || 'fire')
-          ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
+          //ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
+          ctx.drawImage(assets.images[image], screenX, screenY - 2)
         }
 
         // Deco Objects
         if (thing.name === 'deco') {
           const image = "deco_" + thing.type
           if (image) {
-            ctx.drawImage(assets.images[image], screenX, screenY-1, tileWidth, tileDepth)
+            ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
           }
         }
       }
