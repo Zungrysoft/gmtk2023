@@ -1,6 +1,7 @@
 import * as game from './core/game.js'
 import * as gfx from './core/webgl.js'
 import Board from './board.js'
+import Character from './character.js'
 
 //game.config.width = 1600 * 3/4
 //game.config.height = 1200 * 3/4
@@ -34,14 +35,15 @@ await game.loadAssets({
     conGrassCliffRight: 'images/con_grass_cliff_right.png',
 
     // Deco Objects
-    deco_rock: 'images/deco_rocks.png',
+    deco_rock: 'images/rock.png',
     deco_wood: 'images/plant1.png',
-    deco_ice: 'images/deco_ice.png',
+    deco_ice: 'images/ice.png',
     deco_vine: 'images/deco_ice.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
-    iconNearest: 'images/icon_occupied_small.png',
+    iconNearest: 'images/selection_arrows.png',
+    selectorArrow: 'images/selector_arrow.png'
   },
 
   json: {
@@ -84,4 +86,5 @@ game.globals.level = 1
 
 game.setScene(() => {
   game.addThing(new Board())
+  //game.addThing(new Character())
 })
