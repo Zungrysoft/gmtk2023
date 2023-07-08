@@ -64,13 +64,6 @@ export default class Board extends Thing {
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
 
-    // Create visual representations for each thing
-    this.state.things.forEach(thing => {
-      if (thing.name === 'player') {
-        game.addThing(new Character(thing))
-      }
-    })
-
     // Initial setup of animations
     this.resetAnimations()
   }
@@ -228,7 +221,18 @@ export default class Board extends Thing {
   }
 
   resetAnimations() {
-    // this.animState = this.state.elements.map(e => this.defaultAnimation())
+    for (const thing of game.getThings()) {
+      if (thing instanceof Character) {
+        thing.dead = true
+      }
+    }
+
+    // Create visual representations for each thing
+    this.state.things.forEach(thing => {
+      if (thing.name === 'player') {
+        game.addThing(new Character(thing))
+      }
+    })
   }
 
   isAnimationBlocking() {
