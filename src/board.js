@@ -270,6 +270,10 @@ export default class Board extends Thing {
   }
 
   resetAnimations() {
+    if (game.getThing('deathscreen')) {
+      game.getThing('deathscreen').dead = true
+    }
+
     for (const thing of game.getThings()) {
       if (thing instanceof Character) {
         thing.dead = true
@@ -1059,7 +1063,7 @@ export default class Board extends Thing {
   }
 
   postDraw () {
-    if (game.getThing('deathscreen')) { return }
+    if (game.getThing('winscreen')) { return }
     const { ctx } = game
     ctx.save()
     ctx.translate(32, game.config.height - 32)
