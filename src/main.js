@@ -47,6 +47,7 @@ await game.loadAssets({
 
   json: {
     intro: 'json/levels/intro.json',
+    blocking: 'json/levels/blocking.json',
     swim: 'json/levels/swim.json',
     shutter: 'json/levels/shutter.json',
     maze: 'json/levels/maze.json',

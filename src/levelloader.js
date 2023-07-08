@@ -4,6 +4,7 @@ export function getLevel(lvl) {
   // Retrieve level data
   const levelList = [
     "intro",
+    "blocking",
     "vine",
     "swamp",
     "swim",
@@ -45,13 +46,7 @@ export function getLevel(lvl) {
   // To make things easier in the editor, convert unknown entities to deco
   for (let i = 0; i < ret.things.length; i ++) {
     const thing = ret.things[i]
-
-    // Treat goal flag differently here
-    if (thing.name === 'goal') {
-      continue
-    }
-
-    if (!['player', 'deco'].includes(thing.name)) {
+    if (!['player', 'deco', 'goal'].includes(thing.name)) {
       thing.data.type = thing.name
       thing.name = 'deco'
     }
