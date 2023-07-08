@@ -457,7 +457,7 @@ export default class Board extends Thing {
     }
 
     let player = this.getActivePlayer()
-    if (!activePlayer) {
+    if (!player) {
       return undefined
     }
 
