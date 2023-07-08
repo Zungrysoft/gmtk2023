@@ -402,7 +402,10 @@ export default class Board extends Thing {
 
     // Player can't swim
     if (this.getTileHeight(newPosition) <= 0 && !(newPosition in this.state.waterlogged)) {
-      return
+      if (!(player.name === 'player' && player.type === 'water')) {
+        return
+
+      }
     }
 
     // Player can't scale cliffs
@@ -550,6 +553,11 @@ export default class Board extends Thing {
 
       // Do not waterlog vines
       if (thing.name === 'deco' && thing.type === 'vine') {
+        continue
+      }
+
+      // Do not waterlog water guy
+      if (thing.name === 'player' && thing.type === 'water') {
         continue
       }
 

@@ -7,16 +7,6 @@ import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 
-const typeToSprite = {
-  fire: 'player_fire',
-  golem: 'player_golem',
-  rock: 'player_golem',
-  ice: 'player_ice',
-  wind: 'player_wind',
-  plant: 'player_vine',
-  vine: 'player_vine',
-}
-
 export default class Character extends Thing {
   sprite = 'player_fire'
   time = 0
@@ -25,7 +15,7 @@ export default class Character extends Thing {
   constructor (tileThingReference) {
     super()
     this.tileThingReference = tileThingReference
-    this.sprite = typeToSprite[tileThingReference.type]
+    this.sprite = "player_" + tileThingReference.type
     this.position = this.getDestination()
   }
 

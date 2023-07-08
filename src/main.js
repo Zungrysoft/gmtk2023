@@ -19,6 +19,7 @@ await game.loadAssets({
     player_wind: 'images/windguy.png',
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
+    player_water: 'images/waterguy.png',
 
     // Terrain
     tileGrass: 'images/tile_grass.png',
@@ -49,6 +50,7 @@ await game.loadAssets({
 
   json: {
     intro: 'json/levels/intro.json',
+    fireAndGolem: 'json/level/fire_and_golem.json'
   },
 
   sounds: {
@@ -74,7 +76,7 @@ assets.textures = Object.fromEntries(
 
 // console.log(assets)
 
-game.globals.levelCount = 1
+game.globals.levelCount = 2
 game.globals.levelCompletions = []
 game.globals.usingGamepad = false
 
