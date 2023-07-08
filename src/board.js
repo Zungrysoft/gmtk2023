@@ -27,7 +27,7 @@ const baseMapping = {
 
 export default class Board extends Thing {
   state = {}
-  animState = []
+  animState = {}
   advancementData = {
     control: '',
     queue: [],
@@ -363,6 +363,25 @@ export default class Board extends Thing {
     return closest
   }
 
+  getNextPlayer() {
+    // Get players
+    let activePlayer = this.getActivePlayer()
+    let players = this.getThingsByName('player')
+
+    // If there is only one (or zero) players, there is no next player
+    if (players.length <= 0) {
+      return undefined
+    }
+
+    // Iterate over players
+    for (let i = 0; i < players.length; i ++) {
+      if (players[i].id === activePlayer.id) {
+        return players[i+1] || players[0]
+      }
+    }
+    return players[0]
+  }
+
   advanceMove(control) {
     // Check control
     if (!['left', 'right', 'up', 'down'].includes(control)) {
@@ -466,7 +485,7 @@ export default class Board extends Thing {
     }
 
     let player = this.getActivePlayer()
-    let otherPlayer = this.getNearestPlayer()
+    let otherPlayer = this.getNextPlayer()
 
     if (otherPlayer) {
       player.active = false
@@ -733,7 +752,7 @@ export default class Board extends Thing {
     const maxY = Math.round(this.cameraPosition[1] + Math.floor(tilesY/2) + 4)
 
     // Determine nearest player
-    const nearestPlayerId = this.getNearestPlayer()?.id
+    const nearestPlayerId = this.getNextPlayer()?.id
 
     // Render terrain
     for (let y = minY; y <= maxY; y ++) {
