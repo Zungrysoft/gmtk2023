@@ -170,9 +170,12 @@ export default class Board extends Thing {
             control: setControl,
             queue: [
               'move',
+              'waterlog',
               'action',
               'switch',
+              'waterlog',
               'wind',
+              'waterlog',
               'burn',
               'ice',
               'waterlog',
@@ -513,6 +516,9 @@ export default class Board extends Thing {
     if (player.type === 'wind') {
       this.executeWind(player)
     }
+    // if (player.type === 'person') {
+    //   this.advanceSwitch('switch')
+    // }
   }
 
   advanceSwitch(control) {
