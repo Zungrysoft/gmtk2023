@@ -164,6 +164,7 @@ export default class Board extends Thing {
               'move',
               'action',
               'switch',
+              'wind',
               'burn',
               'ice',
               'waterlog',
@@ -192,6 +193,9 @@ export default class Board extends Thing {
         }
         else if (adv === 'switch') {
           this.advanceSwitch(this.advancementData.control)
+        }
+        else if (adv === 'wind') {
+          this.advanceWind()
         }
         else if (adv === 'burn') {
           this.advanceBurn()
@@ -471,6 +475,9 @@ export default class Board extends Thing {
     if (player.type === 'fire') {
       this.executeFire(player)
     }
+    if (player.type === 'wind') {
+      this.executeWind(player)
+    }
   }
 
   advanceSwitch(control) {
@@ -525,7 +532,6 @@ export default class Board extends Thing {
           // If this is a valid spot for ice...
           if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
             // Build the ice
-            console.log("ICE")
             this.state.waterlogged[icePos] = {
               name: 'deco',
               type: 'ice',
@@ -535,6 +541,16 @@ export default class Board extends Thing {
             }
           }
         }
+      }
+    }
+  }
+
+  advanceWind() {
+    // Iterate over wind guys
+    const windPlayers = this.getThingsByName('player').filter((t) => t.type === 'wind')
+    for (const player of windPlayers) {
+      if (!player.active) {
+        this.executeWind(player)
       }
     }
   }
@@ -613,7 +629,8 @@ export default class Board extends Thing {
       const pos = vec2.add(player.position, delta)
 
       // Don't deal damage if the ground of a different height
-      if (this.getTileHeight(pos) !== beamHeight) {
+      const tileHeight = this.getTileHeight(pos) || 1
+      if (tileHeight !== beamHeight) {
         continue
       }
 
@@ -633,6 +650,61 @@ export default class Board extends Thing {
           }
         }
 
+      }
+    }
+  }
+
+  executeWind(player) {
+    let curPos = player.position
+    let delta = vec2.directionToVector(player.direction)
+    const blowDistance = 4
+    let foundThing = undefined
+    let i = 0
+    while (i < blowDistance) {
+      // Advance
+      curPos = vec2.add(curPos, delta)
+      i ++
+
+      // Wind is blocked by walls
+      const tileHeight = this.getTileHeight(curPos)
+      if (tileHeight > 1) {
+        return
+      }
+
+      // Wind is blocked by deco objects
+      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+      if (blockingThing) {
+        return
+      }
+
+      // Found a player to push
+      foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
+      if (foundThing) {
+        break
+      }
+    }
+
+    // If we found a player to push, push them
+    if (foundThing) {
+      while (i <= blowDistance) {
+        // Advance
+        curPos = vec2.add(curPos, delta)
+        i ++
+
+        // Push is blocked by walls
+        const tileHeight = this.getTileHeight(curPos)
+        if (tileHeight > 1) {
+          return
+        }
+
+        // Push is blocked by players and deco objects
+        const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco', 'player'].includes(x.name))[0]
+        if (blockingThing) {
+          return
+        }
+
+        // Wasn't blocked. Push player.
+        foundThing.position = curPos
       }
     }
   }

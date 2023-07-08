@@ -19,9 +19,6 @@ await game.loadAssets({
     player_ice: 'images/iceguy.png',
     player_plant: 'images/plantguy.png',
 
-    // Monsters
-    monsterOctopus: 'images/monster_octopus.png',
-
     // Terrain
     tileGrass: 'images/tile_grass.png',
     tileGrassBlades: 'images/tile_grass_blades.png',
@@ -40,16 +37,6 @@ await game.loadAssets({
     deco_rock: 'images/deco_rocks.png',
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/deco_ice.png',
-
-    // Items
-    iconItemBase: 'images/icon_item_base.png',
-    iconItemBaseUp: 'images/icon_item_base_up.png',
-    iconItemBaseDown: 'images/icon_item_base_down.png',
-    iconItemBaseLeft: 'images/icon_item_base_left.png',
-    iconItemBaseRight: 'images/icon_item_base_right.png',
-    iconItemIconBolt: 'images/icon_item_icon_bolt.png',
-    iconItemIconFire: 'images/icon_item_icon_fire.png',
-    iconItemIconEmpty: 'images/icon_item_icon_empty.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
