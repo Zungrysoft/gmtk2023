@@ -11,12 +11,17 @@ export default class Character extends Thing {
   sprite = 'player_fire'
   time = 0
   wasActive = false
+  lastPosition = [0, 0]
+  drawPosition = [0, 0]
+  walkBob = 0
 
   constructor (tileThingReference) {
     super()
     this.tileThingReference = tileThingReference
     this.sprite = "player_" + tileThingReference.type
     this.position = this.getDestination()
+    this.drawPosition = [...this.position]
+    this.lastPosition = [...this.position]
   }
 
   update () {
@@ -41,6 +46,12 @@ export default class Character extends Thing {
       this.scale[0] = Math.abs(this.scale[0])
     }
 
+    // Walk animation and bobbing
+    this.walkBob += u.distance(this.position, this.lastPosition)
+    this.drawPosition[0] = this.position[0]
+    this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
+    this.rotation = Math.sin(this.walkBob / 30) * 0.12
+
     // Camera should follow me when I'm the active player
     const board = game.getThing('board')
     if (board) {
@@ -52,10 +63,11 @@ export default class Character extends Thing {
     if (this.tileThingReference.dead) { this.dead = true }
 
     this.wasActive = this.tileThingReference.active
+    this.lastPosition = [...this.position]
   }
 
   draw () {
-    super.draw()
+    super.draw(...this.drawPosition)
     const { ctx } = game
 
     // Draw cursor over myself when i'm the next to be selected
