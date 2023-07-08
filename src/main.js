@@ -49,6 +49,7 @@ await game.loadAssets({
     iconSelected: 'images/icon_occupied_player.png',
     iconNearest: 'images/selection_arrows.png',
     selectorArrow: 'images/selector_arrow.png',
+    aimArrow: 'images/aim_arrow.png',
     undefined: 'images/mystery.png',
   },
 

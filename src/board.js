@@ -540,6 +540,7 @@ export default class Board extends Thing {
       player.lastActive = this.state.turns - 1
 
       // Clear out all current fire animation things
+      /*
       for (const thing of game.getThings()) {
         if (thing instanceof Fire) {
           thing.dead = true
@@ -548,6 +549,7 @@ export default class Board extends Thing {
           thing.cancelTimer('fire')
         }
       }
+      */
 
       // Vine guy ability
       if (player.type === 'vine') {
@@ -727,6 +729,14 @@ export default class Board extends Thing {
     const blowDistance = 4
     let foundThing = undefined
     let i = 0
+
+    // Play the wind animation on the wind guy's character
+    for (const thing of game.getThings()) {
+      if (thing.tileThingReference === player) {
+        thing.createWind()
+      }
+    }
+
     while (i < blowDistance) {
       // Advance
       curPos = vec2.add(curPos, delta)
@@ -1036,7 +1046,7 @@ export default class Board extends Thing {
           // Grass tile
           ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
           if (tileHeight > 1) {
-            ctx.fillStyle = 'gray'
+            ctx.fillStyle = '#52558E'
           }
           ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
         }
