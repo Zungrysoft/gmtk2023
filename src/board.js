@@ -59,9 +59,17 @@ export default class Board extends Thing {
     this.state.turns = 0
 
     // Update all players
+    let didActive = false
     for (const thing of this.state.things) {
-      this.executeUpdatePlayer(thing)
+      if (thing.name === 'player') {
+        this.executeUpdatePlayer(thing)
+        if (thing.type === 'person' && !didActive) {
+          didActive = true
+          thing.active = true
+        }
+      }
     }
+
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
 
@@ -1110,14 +1118,14 @@ export default class Board extends Thing {
 
           // Player sprite
           const frame = [0, 0]
-          const image = "player_" + (thing.type || 'fire')
+          const image = thing.type ? ("player_" + thing.type) : 'undefined'
           //ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
           //ctx.drawImage(assets.images[image], screenX, screenY - 2)
         }
 
         // Deco Objects
         if (thing.name === 'deco') {
-          const image = "deco_" + thing.type
+          const image = thing.type ? ("deco_" + thing.type) : 'undefined'
           if (image) {
             ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
           }

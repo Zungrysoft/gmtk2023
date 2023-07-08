@@ -47,12 +47,13 @@ await game.loadAssets({
     // UI
     iconSelected: 'images/icon_occupied_player.png',
     iconNearest: 'images/selection_arrows.png',
-    selectorArrow: 'images/selector_arrow.png'
+    selectorArrow: 'images/selector_arrow.png',
+    undefined: 'images/mystery.png',
   },
 
   json: {
     intro: 'json/levels/intro.json',
-    fireAndGolem: 'json/level/fire_and_golem.json'
+    swimAround: 'json/levels/swim_around.json'
   },
 
   sounds: {
