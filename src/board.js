@@ -650,7 +650,7 @@ export default class Board extends Thing {
   executeWind(player) {
     let curPos = player.position
     let delta = vec2.directionToVector(player.direction)
-    const blowDistance = 3
+    const blowDistance = 4
     let foundThing = undefined
     let i = 0
     while (i < blowDistance) {
