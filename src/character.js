@@ -26,6 +26,7 @@ export default class Character extends Thing {
     swim: { frames: [2, 3], speed: 0.075 },
     none: { frames: [0] }
   }
+  lastDestination = [0, 0]
 
   constructor (tileThingReference) {
     super()
@@ -34,6 +35,7 @@ export default class Character extends Thing {
     this.position = this.getDestination()
     this.drawPosition = [...this.position]
     this.lastPosition = [...this.position]
+    this.lastDestination = [...this.position]
     this.npcAnimations(true)
   }
 
@@ -48,6 +50,12 @@ export default class Character extends Thing {
       this.cancelTimer('fire')
       this.cancelTimer('wind')
       this.after(12, null, 'focusCamera')
+
+      if (this.tileThingReference.type === 'person') {
+        soundmanager.playSound('stop_possession', 0.1)
+      } else {
+        soundmanager.playSound('start_possession', 0.1)
+      }
     }
     if (this.timer('announce')) {
       const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.5, 1)
@@ -63,14 +71,20 @@ export default class Character extends Thing {
       this.scale[0] = Math.abs(this.scale[0])
     }
 
+    if (destination[0] !== this.lastDestination[0] || destination[1] !== this.lastDestination[1]) {
+      soundmanager.playSound('step', 0.02, [0.55, 1.45])
+    }
+    this.lastDestination = [...destination]
+
     // Walk animation and bobbing
     this.walkBob += u.distance(this.position, this.lastPosition)
     this.drawPosition[0] = this.position[0]
     this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
     this.rotation = Math.sin(this.walkBob / 30) * 0.12
 
-    if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined) {
+    if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined && !this.dead) {
       this.after(60, () => this.dead = true, 'death')
+      soundmanager.playSound('death', 0.1)
     }
 
     // Camera should follow me when I'm the active player
@@ -94,6 +108,7 @@ export default class Character extends Thing {
     const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
     if (selected && !this.wasSelected && this.tileThingReference.type !== 'person') {
       this.after(10, null, 'newlySelected')
+      soundmanager.playSound('select', 0.1)
     }
     this.isSelected = selected
     this.wasSelected = selected
@@ -114,7 +129,15 @@ export default class Character extends Thing {
       }
     }
 
+    ctx.save()
+    const prevScale = this.scale
+    if (this.timers.death !== undefined) {
+      ctx.globalAlpha = u.map(this.timer('death'), 0.5, 1, 1, 0)
+      this.scale = u.squareMap(this.timer('death'), 0.5, 1, 1, 0, true)
+    }
     super.draw(...this.drawPosition)
+    this.scale = prevScale
+    ctx.restore()
   }
 
   postDraw () {

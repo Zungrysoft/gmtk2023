@@ -673,6 +673,8 @@ export default class Board extends Thing {
             this.state.waterlogged[thing.position] = thing
           }
 
+          soundmanager.playSound('sploosh', 0.2)
+
           // And remove it from the main thing list
           this.executePlayerDeath(thing)
           this.state.things.splice(i, 1)
@@ -809,6 +811,7 @@ export default class Board extends Thing {
       // Found a player to push
       foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
       if (foundThing) {
+        soundmanager.playSound('wind', 0.1)
         break
       }
     }
@@ -931,6 +934,7 @@ export default class Board extends Thing {
       const person = this.state.things.filter((x) => x.type === 'person')[0]
       if (person) {
         this.after(80, () => person.active = true, 'deathWait')
+        return true
       }
     }
   }
@@ -1142,7 +1146,7 @@ class Walls extends Thing {
           }
 
           if (tileHeight > 1) {
-            ctx.fillStyle = '#52558E'
+            ctx.fillStyle = '#323789'
             ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
           }
         }

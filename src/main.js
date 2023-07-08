@@ -65,14 +65,14 @@ await game.loadAssets({
   },
 
   sounds: {
-    // collect: 'sounds/collect.wav',
-    // laser: 'sounds/laser2.wav',
-    // laserHit: 'sounds/laser.wav',
-    // shift: 'sounds/shift2.wav',
-    // thump: 'sounds/thump.wav',
-    // wind: 'sounds/wind.wav',
-    // fail: 'sounds/fail.wav',
-    // whoosh: 'sounds/whoosh.wav',
+    step: 'sounds/step.wav',
+    death: 'sounds/death.wav',
+    select: 'sounds/select.wav',
+    start_possession: 'sounds/start_possession.wav',
+    stop_possession: 'sounds/stop_possession.wav',
+    move_stone: 'sounds/move_stone.wav',
+    sploosh: 'sounds/sploosh.wav',
+    wind: 'sounds/wind.wav',
   },
 })
 
