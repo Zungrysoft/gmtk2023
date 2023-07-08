@@ -43,6 +43,7 @@ export default class Board extends Thing {
   constructor () {
     super()
     game.setThingName(this, 'board')
+    game.addThing(new Walls())
 
     // Build board state from level file
     if (game.globals.level === 0) {
@@ -919,115 +920,15 @@ export default class Board extends Thing {
     return false
   }
 
+  preDraw () {
+    // Draw blue for ocean
+    const { ctx } = game
+    ctx.fillStyle = '#3569CC'
+    ctx.fillRect(0, 0, game.config.width, game.config.height)
+  }
+
   draw () {
     const { ctx } = game
-
-    // Move camera
-    // this.cameraPosition = vec2.lerp(this.cameraPosition, this.getActivePlayer().position, 0.3)
-
-    // {
-    //   const auxControls = [
-    //     "WASD / Arrow Keys: Move",
-    //     "Space / U: Undo",
-    //     "Backspace: Restart",
-    //   ].reverse()
-    //   const auxControlsGamepad = [
-    //     "D-Pad: Move",
-    //     "RB: Undo",
-    //     "LB: Restart",
-    //   ].reverse()
-    //   ctx.save()
-    //   ctx.translate(game.config.width - 7, game.config.height)
-    //   ctx.font = 'italic 6px Times New Roman'
-    //   ctx.textAlign = 'right'
-    //   for (const control of (game.globals.usingGamepad ? auxControlsGamepad : auxControls)) {
-    //     ctx.translate(0, -7)
-    //     const str = control
-    //     ctx.fillStyle = 'black'
-    //     ctx.fillText(str, 0, 0)
-    //     ctx.fillStyle = 'white'
-    //     ctx.fillText(str, 4, -4)
-    //   }
-    //   ctx.restore()
-    // }
-
-    // // Draw the score HUD
-    // {
-    //   ctx.save()
-    //   ctx.translate(32, 72)
-    //   ctx.font = 'italic 6px Times New Roman'
-    //   const str = this.state.cratesDelivered + "/" + this.state.cratesRequired + " crates correctly sorted"
-    //   ctx.fillStyle = 'black'
-    //   ctx.fillText(str, 0, 0)
-    //   ctx.fillStyle = 'white'
-    //   ctx.fillText(str, 4, -4)
-    //   ctx.restore()
-    // }
-
-    // // Draw the victory text
-    // const victory = this.state.cratesDelivered >= this.state.cratesRequired
-    // if (victory) {
-    //   // You win message
-    //   {
-    //     ctx.save()
-    //     ctx.translate(game.config.width/2, game.config.height/2 - 100)
-    //     ctx.font = 'italic 130px Times New Roman'
-    //     ctx.textAlign = 'center'
-    //     const str = this.state.level === 0 ? "Level Complete!" : "Level " + this.state.level + " Complete!"
-    //     ctx.fillStyle = 'black'
-    //     ctx.fillText(str, 0, 0)
-    //     ctx.fillStyle = 'white'
-    //     ctx.fillText(str, 4, -4)
-    //     ctx.restore()
-    //   }
-
-    //   // Level change guide
-    //   if (this.state.level !== 0) {
-    //     ctx.save()
-    //     ctx.translate(game.config.width/2, game.config.height/2 + 100)
-    //     ctx.font = 'italic bold 50px Times New Roman'
-    //     ctx.textAlign = 'center'
-    //     const str = game.globals.usingGamepad ? "Use LT and RT to change levels" : "Use - and + to change levels"
-    //     ctx.fillStyle = 'black'
-    //     ctx.fillText(str, 0, 0)
-    //     ctx.fillStyle = 'white'
-    //     ctx.fillText(str, 4, -4)
-    //     ctx.restore()
-    //   }
-    // }
-    // if (!victory || this.state.level === 0) {
-    //   // Draw the level Name
-    //   {
-    //     ctx.save()
-    //     ctx.translate(game.config.width/2, 14)
-    //     ctx.font = 'italic 11px Times New Roman'
-    //     ctx.textAlign = 'center'
-    //     const str = this.state.level === 0 ? this.state.levelTitle : "Level " + this.state.level
-    //     ctx.fillStyle = 'black'
-    //     ctx.fillText(str, 0, 0)
-    //     ctx.fillStyle = 'white'
-    //     ctx.fillText(str, 4, -4)
-    //     ctx.restore()
-    //   }
-
-    //   // Draw completion text
-    //   if (game.globals.levelCompletions[this.state.level-1] === true) {
-    //     ctx.save()
-    //     ctx.translate(game.config.width/2, 24)
-    //     ctx.font = 'italic 6px Times New Roman'
-    //     ctx.textAlign = 'center'
-    //     const str = "Complete!"
-    //     ctx.fillStyle = 'black'
-    //     ctx.fillText(str, 0, 0)
-    //     ctx.fillStyle = 'white'
-    //     ctx.fillText(str, 4, -4)
-    //     ctx.restore()
-    //   }
-    // }
-
-    // ==========
-    // Draw board
-    // ==========
 
     // Set up camera
     const tilesX = (game.config.width / tileWidth)
@@ -1048,14 +949,8 @@ export default class Board extends Thing {
         let screenX, screenY
         ;[screenX, screenY] = this.positionOnScreen([x, y])
 
-        // If height is zero, render it as water
-        if (tileHeight <= 0) {
-          //ctx.drawImage(assets.images.tileWater, screenX, screenY - waterHeight, tileWidth, tileDepth)
-          ctx.fillStyle = '#3569CC'
-          ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
-        }
         // Otherwise, render it as terrain
-        else {
+        if (tileHeight === 1) {
           // Create rock wall pattern
           for (let i = 0; i < tileHeight; i ++) {
             if (i >= this.getTileHeight([x, y+1])) {
@@ -1067,11 +962,10 @@ export default class Board extends Thing {
           }
 
           // Grass tile
-          ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
-          if (tileHeight > 1) {
-            ctx.fillStyle = '#52558E'
+          if (tileHeight <= 1) {
+            ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
+            ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
           }
-          ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
         }
       }
 
@@ -1171,6 +1065,53 @@ export default class Board extends Thing {
           const image = thing.type ? ("deco_" + thing.type) : 'undefined'
           if (image) {
             ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
+          }
+        }
+      }
+    }
+  }
+}
+
+class Walls extends Thing {
+  depth = 1000
+
+  draw () {
+    const { ctx } = game
+    const board = game.getThing('board')
+    if (!board) return
+
+    // Set up camera
+    const tilesX = (game.config.width / tileWidth)
+    const tilesY = (game.config.height / tileDepth)
+    const minX = Math.round(game.getCamera2D().position[0] / tileWidth - Math.floor(tilesX/2) - 1)
+    const maxX = Math.round(game.getCamera2D().position[0] / tileWidth + Math.floor(tilesX/2) + 1)
+    const minY = Math.round(game.getCamera2D().position[1] / tileWidth - Math.floor(tilesY/2) - 1)
+    const maxY = Math.round(game.getCamera2D().position[1] / tileWidth + Math.floor(tilesY/2) + 4)
+
+    // Render terrain
+    for (let y = minY; y <= maxY; y ++) {
+      // Terrain
+      for (let x = minX; x <= maxX; x ++) {
+        // Determine terrain height at this coordinate
+        const tileHeight = board.getTileHeight([x, y])
+
+        // Determine where this tile will be rendered on screen
+        let screenX, screenY
+        ;[screenX, screenY] = board.positionOnScreen([x, y])
+
+        // Create rock wall pattern
+        if (tileHeight > 1) {
+          for (let i = 0; i < tileHeight; i ++) {
+            if (i >= board.getTileHeight([x, y+1])) {
+              ctx.fillStyle = '#21235B'
+              ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
+            }
+            screenY -= wallDepth
+          }
+
+          if (tileHeight > 1) {
+            ctx.fillStyle = '#52558E'
+            ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
           }
         }
       }
