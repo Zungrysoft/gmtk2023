@@ -83,7 +83,7 @@ export default class Character extends Thing {
     this.rotation = Math.sin(this.walkBob / 30) * 0.12
 
     if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined && !this.dead) {
-      this.after(60, () => this.dead = true, 'death')
+      this.after(120, () => this.dead = true, 'death')
       soundmanager.playSound('death', 0.1)
     }
 
