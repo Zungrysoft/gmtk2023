@@ -4,7 +4,7 @@ export function getLevel(lvl) {
   // Retrieve level data
   const levelList = [
     "intro",
-    "fireAndGolem"
+    "swimAround"
   ]
   let json = JSON.parse(assets.json[levelList[lvl-1]])
 
@@ -32,6 +32,15 @@ export function getLevel(lvl) {
       else {
         ret.grid[coords] = layer.grid[coords]
       }
+    }
+  }
+
+  // To make things easier in the editor, convert unknown entities to deco
+  for (let i = 0; i < ret.things.length; i ++) {
+    let thing = ret.things[i]
+    if (!['player', 'deco'].includes(thing.name)) {
+      thing.data.type = thing.name
+      thing.name = 'deco'
     }
   }
 
