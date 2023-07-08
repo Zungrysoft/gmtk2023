@@ -61,7 +61,7 @@ export default class Board extends Thing {
     // if (cameras.length) {
     //   this.cameraPosition = cameras[0].position
     // }
-    this.cameraPosition = this.getActivePlayer().position
+    this.cameraPosition = this.getActivePlayer()?.position || [0, 0]
 
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
@@ -165,6 +165,7 @@ export default class Board extends Thing {
               'move',
               'action',
               'switch',
+              'burn',
               'ice',
               'waterlog',
             ]
@@ -192,6 +193,9 @@ export default class Board extends Thing {
         }
         else if (adv === 'switch') {
           this.advanceSwitch(this.advancementData.control)
+        }
+        else if (adv === 'burn') {
+          this.advanceBurn()
         }
         else if (adv === 'ice') {
           this.advanceIce()
@@ -340,12 +344,17 @@ export default class Board extends Thing {
         return player
       }
     }
-    return players[0]
+    return undefined
   }
 
   getNearestPlayer() {
-    // Get players
+    // Get active player
     let activePlayer = this.getActivePlayer()
+    if (!activePlayer) {
+      return undefined
+    }
+
+    // Get all other players
     let players = this.getThingsByName('player')
 
     // Find nearest player
@@ -364,8 +373,13 @@ export default class Board extends Thing {
   }
 
   getNextPlayer() {
-    // Get players
+    // Get active player
     let activePlayer = this.getActivePlayer()
+    if (!activePlayer) {
+      return undefined
+    }
+
+    // Get all other players
     let players = this.getThingsByName('player')
 
     // If there is only one (or zero) players, there is no next player
@@ -390,6 +404,9 @@ export default class Board extends Thing {
 
     // Get player
     let player = this.getActivePlayer()
+    if (!player) {
+      return
+    }
 
     const newPosition = vec2.add(player.position, vec2.directionToVector(control))
 
@@ -432,39 +449,6 @@ export default class Board extends Thing {
 
     // Move into this new position
     player.position = newPosition
-
-    // Increment queue clock
-    this.state.clock ++
-
-    // Reset the clock if the queue is empty
-    if (this.state.actionQueue.length === 0) {
-      this.state.clock = 0
-    }
-    else {
-      // Execute next item in queue
-      if (this.state.clock >= 3) {
-        this.state.clock = 0
-        let executedItem = this.state.actionQueue.shift()
-
-        // Execute the item
-        if (executedItem.type === 'bolt') {
-          this.executeBolt(executedItem.direction)
-        }
-        else if (executedItem.type === 'fire') {
-          this.executeFire()
-        }
-      }
-    }
-
-    // Collect any items the player may have landed on
-    for (let i = 0; i < this.state.things.length; i ++) {
-      const item = this.state.things[i]
-      if (vec2.equals(player.position, item.position) && item.name === 'item') {
-        this.state.actionQueue.push(item)
-        this.state.things.splice(i, 1)
-        i --
-      }
-    }
   }
 
   advanceAction(control) {
@@ -473,9 +457,12 @@ export default class Board extends Thing {
     }
 
     let player = this.getActivePlayer()
+    if (!activePlayer) {
+      return undefined
+    }
 
     if (player.type === 'fire') {
-      this.executeFire()
+      this.executeFire(player)
     }
   }
 
@@ -485,6 +472,10 @@ export default class Board extends Thing {
     }
 
     let player = this.getActivePlayer()
+    if (!player) {
+      return undefined
+    }
+
     let otherPlayer = this.getNextPlayer()
 
     if (otherPlayer) {
@@ -492,6 +483,16 @@ export default class Board extends Thing {
       otherPlayer.active = true
 
       player.lastActive = this.state.turns - 1
+    }
+  }
+
+  advanceBurn() {
+    // Iterate over fire guys
+    const firePlayers = this.getThingsByName('player').filter((t) => t.type === 'fire')
+    for (const player of firePlayers) {
+      if (!player.active) {
+        this.executeFire(player)
+      }
     }
   }
 
@@ -596,11 +597,8 @@ export default class Board extends Thing {
 
   }
 
-  executeFire() {
+  executeFire(player) {
     const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
-
-    // Get player
-    let player = this.getActivePlayer()
 
     // Check all adjacent tiles
     const beamHeight = this.getThingHeight(player)
@@ -637,7 +635,10 @@ export default class Board extends Thing {
 
     // Move camera
     // this.cameraPosition = vec2.lerp(this.cameraPosition, this.getActivePlayer().position, 0.3)
-    this.cameraPosition = this.getActivePlayer().position
+    const newPosition = this.getActivePlayer()?.position
+    if (newPosition) {
+      this.cameraPosition = newPosition
+    }
 
     // {
     //   const auxControls = [
