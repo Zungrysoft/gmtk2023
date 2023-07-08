@@ -8,6 +8,7 @@ import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 import Fire from './fire.js'
 import Wind from './wind.js'
+import WinScreen from './winscreen.js'
 
 export default class Character extends Thing {
   sprite = 'player_fire'
@@ -37,6 +38,9 @@ export default class Character extends Thing {
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
     this.npcAnimations(true)
+    if (this.tileThingReference.type === 'person') {
+      game.getCamera2D().position = [...this.position]
+    }
   }
 
   update () {
@@ -99,6 +103,15 @@ export default class Character extends Thing {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
         } else {
           this.rotation = 0
+        }
+      }
+
+      if (this.tileThingReference.type === 'person') {
+        const goal = board.state.things.filter(x => vec2.equals(this.tileThingReference.position, x.position) && x.name === 'goal')[0]
+        if (goal && !game.getThing('winscreen')) {
+          this.tileThingReference.movementDisabled = true
+          soundmanager.playSound('win', 0.45, [1, 1.1])
+          game.addThing(new WinScreen())
         }
       }
     }

@@ -44,7 +44,13 @@ export function getLevel(lvl) {
 
   // To make things easier in the editor, convert unknown entities to deco
   for (let i = 0; i < ret.things.length; i ++) {
-    let thing = ret.things[i]
+    const thing = ret.things[i]
+
+    // Treat goal flag differently here
+    if (thing.name === 'goal') {
+      continue
+    }
+
     if (!['player', 'deco'].includes(thing.name)) {
       thing.data.type = thing.name
       thing.name = 'deco'
@@ -57,7 +63,7 @@ export function getLevel(lvl) {
     ...x.data,
     name: x.name,
     id: curId ++,
-    position:[Math.floor(x.position[0]), Math.floor(x.position[1])],
+    position: [Math.floor(x.position[0]), Math.floor(x.position[1])],
   }})
 
   return ret

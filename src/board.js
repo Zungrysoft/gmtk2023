@@ -270,6 +270,10 @@ export default class Board extends Thing {
   }
 
   resetAnimations() {
+    if (game.getThing('deathscreen')) {
+      game.getThing('deathscreen').dead = true
+    }
+
     for (const thing of game.getThings()) {
       if (thing instanceof Character) {
         thing.dead = true
@@ -516,6 +520,11 @@ export default class Board extends Thing {
     // Get player
     let player = this.getActivePlayer()
     if (!player) {
+      return
+    }
+
+    // Don't move during the level win animation
+    if (player.movementDisabled) {
       return
     }
 
@@ -1064,7 +1073,7 @@ export default class Board extends Thing {
   }
 
   postDraw () {
-    if (game.getThing('deathscreen')) { return }
+    if (game.getThing('winscreen')) { return }
     const { ctx } = game
     ctx.save()
     ctx.translate(32, game.config.height - 32)
@@ -1144,6 +1153,10 @@ export default class Board extends Thing {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }
           }
+        }
+
+        if (thing.name === 'goal') {
+          ctx.drawImage(assets.images.goal, screenX, screenY - 2, tileWidth, tileDepth)
         }
       }
     }
