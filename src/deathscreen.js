@@ -40,6 +40,9 @@ export default class DeathScreen extends Thing {
     if (this.time < 30) return
     ctx.save()
     ctx.translate(game.config.width / 2, game.config.height / 2)
+    ctx.translate(-200, -100 + Math.sin(this.time / 40) * 10)
+    ctx.drawImage(game.assets.images.you_died, 0, 0)
+    /*
     ctx.font = 'italic bold 80px Arial'
     ctx.textAlign = 'center'
     ctx.translate(-6, 6)
@@ -48,6 +51,7 @@ export default class DeathScreen extends Thing {
     ctx.translate(6, -6)
     ctx.fillStyle = '#FF711C'
     ctx.fillText('You Died!', 0, 0)
+    */
     ctx.restore()
 
     ctx.save()

@@ -55,6 +55,8 @@ await game.loadAssets({
     aimArrow: 'images/aim_arrow.png',
     skull: 'images/skull.png',
     goal: 'images/win_flag.png',
+    you_win: 'images/you_win.png',
+    you_died: 'images/you_died.png',
     undefined: 'images/mystery.png',
   },
 

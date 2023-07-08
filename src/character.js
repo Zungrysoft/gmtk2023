@@ -38,6 +38,9 @@ export default class Character extends Thing {
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
     this.npcAnimations(true)
+    if (this.tileThingReference.type === 'person') {
+      game.getCamera2D().position = [...this.position]
+    }
   }
 
   update () {
@@ -105,8 +108,9 @@ export default class Character extends Thing {
 
       if (this.tileThingReference.type === 'person') {
         const goal = board.state.things.filter(x => vec2.equals(this.tileThingReference.position, x.position) && x.name === 'goal')[0]
-        if (goal && vec2.distance(this.position, destination) < 2 && !game.getThing('winscreen')) {
-          soundmanager.playSound('win', 0.45)
+        if (goal && !game.getThing('winscreen')) {
+          this.tileThingReference.movementDisabled = true
+          soundmanager.playSound('win', 0.45, [1, 1.1])
           game.addThing(new WinScreen())
         }
       }

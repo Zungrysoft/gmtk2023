@@ -37,14 +37,19 @@ export default class WinScreen extends Thing {
     if (this.time < 30) return
     ctx.save()
     ctx.translate(game.config.width / 2, game.config.height / 2)
-    ctx.font = 'italic bold 80px Arial'
+    ctx.translate(-150, -100 + Math.sin(this.time / 40) * 10)
+    ctx.drawImage(game.assets.images.you_win, 0, 0)
+    /*
+    ctx.font = 'italic bold 100px Arial'
     ctx.textAlign = 'center'
+    ctx.rotate(-0.05)
     ctx.translate(-6, 6)
     ctx.fillStyle = '#21235B'
     ctx.fillText('You Win!', 0, 0)
     ctx.translate(6, -6)
     ctx.fillStyle = '#02A800'
     ctx.fillText('You Win!', 0, 0)
+    */
     ctx.restore()
 
     ctx.save()

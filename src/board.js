@@ -519,6 +519,11 @@ export default class Board extends Thing {
       return
     }
 
+    // Don't move during the level win animation
+    if (player.movementDisabled) {
+      return
+    }
+
     const newPosition = vec2.add(player.position, vec2.directionToVector(control))
 
     // Rotate person guy
