@@ -57,10 +57,11 @@ export default class Board extends Thing {
     this.state.turns = 0
 
     // Set up camera
-    let cameras = this.getThingsByName('camera')
-    if (cameras.length) {
-      this.cameraPosition = cameras[0].position
-    }
+    // let cameras = this.getThingsByName('camera')
+    // if (cameras.length) {
+    //   this.cameraPosition = cameras[0].position
+    // }
+    this.cameraPosition = this.getActivePlayer().position
 
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
@@ -300,8 +301,8 @@ export default class Board extends Thing {
   }
 
   positionOnScreen(pos) {
-    let screenX = game.config.width/2 + tileWidth * (pos[0] - this.cameraPosition[0])
-    let screenY = game.config.height/2 + tileDepth * (pos[1] - this.cameraPosition[1])
+    let screenX = Math.round(game.config.width/2 + tileWidth * (pos[0] - this.cameraPosition[0]))
+    let screenY = Math.round(game.config.height/2 + tileDepth * (pos[1] - this.cameraPosition[1]))
 
     return [screenX, screenY]
   }
@@ -392,7 +393,7 @@ export default class Board extends Thing {
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
         // Check terrain height
-        if (this.getTileHeight(newPosition2) > this.getTileHeight(player.position)) {
+        if (this.getTileHeight(newPosition2) > this.getThingHeight(player)) {
           return
         }
 
@@ -489,7 +490,7 @@ export default class Board extends Thing {
     for (const player of icePlayers) {
       // Build ice around this player
       const [px, py] = player.position
-      const iceRadius = 2
+      const iceRadius = 1
       for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
         for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
           const icePos = [x, y]
@@ -615,6 +616,10 @@ export default class Board extends Thing {
   draw () {
     const { ctx } = game
 
+    // Move camera
+    // this.cameraPosition = vec2.lerp(this.cameraPosition, this.getActivePlayer().position, 0.3)
+    this.cameraPosition = this.getActivePlayer().position
+
     // {
     //   const auxControls = [
     //     "WASD / Arrow Keys: Move",
@@ -722,10 +727,10 @@ export default class Board extends Thing {
     // Set up camera
     const tilesX = (game.config.width / tileWidth)
     const tilesY = (game.config.height / tileDepth)
-    const minX = this.cameraPosition[0] - Math.floor(tilesX/2)
-    const maxX = this.cameraPosition[0] + Math.floor(tilesX/2)
-    const minY = this.cameraPosition[1] - Math.floor(tilesY/2) - 1
-    const maxY = this.cameraPosition[1] + Math.floor(tilesY/2) + 4
+    const minX = Math.round(this.cameraPosition[0] - Math.floor(tilesX/2) - 1)
+    const maxX = Math.round(this.cameraPosition[0] + Math.floor(tilesX/2) + 1)
+    const minY = Math.round(this.cameraPosition[1] - Math.floor(tilesY/2) - 1)
+    const maxY = Math.round(this.cameraPosition[1] + Math.floor(tilesY/2) + 4)
 
     // Determine nearest player
     const nearestPlayerId = this.getNearestPlayer()?.id

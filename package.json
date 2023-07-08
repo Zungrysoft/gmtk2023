@@ -1,5 +1,5 @@
 {
-  "name": "Super Solitaire",
+  "name": "GMTK2023",
   "main": "index.html",
   "chromium-args": "--enable-logging=stderr",
   "window": {
