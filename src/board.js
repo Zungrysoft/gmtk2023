@@ -9,6 +9,7 @@ import Thing from './core/thing.js'
 import { assets } from './core/game.js'
 import { getLevel } from './levelloader.js'
 import Character from './character.js'
+import Fire from './fire.js'
 
 const tileWidth = 64
 const tileDepth = 64
@@ -621,6 +622,8 @@ export default class Board extends Thing {
     const beamHeight = this.getThingHeight(player)
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
+
+      game.addThing(new Fire(pos))
 
       // Don't deal damage if the ground of a different height
       const tileHeight = this.getTileHeight(pos) || 1

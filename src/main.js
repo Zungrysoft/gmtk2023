@@ -39,6 +39,7 @@ await game.loadAssets({
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
     deco_vine: 'images/deco_ice.png',
+    deco_fire: 'images/fire1.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
