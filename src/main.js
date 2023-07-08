@@ -38,10 +38,12 @@ await game.loadAssets({
 
     // Deco Objects
     deco_rock: 'images/rock.png',
+    deco_waterlogged_rock: 'images/waterlogged_rock.png',
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
     deco_vine: 'images/vine_v.png',
     deco_box: 'images/box.png',
+    deco_waterlogged_box: 'images/waterlogged_box.png',
     deco_fire: 'images/fire1.png',
     deco_wind: 'images/wind.png',
     deco_wave: 'images/wave.png',
@@ -51,6 +53,7 @@ await game.loadAssets({
     iconNearest: 'images/selection_arrows.png',
     selectorArrow: 'images/selector_arrow.png',
     aimArrow: 'images/aim_arrow.png',
+    skull: 'images/skull.png',
     undefined: 'images/mystery.png',
   },
 

@@ -905,7 +905,7 @@ export default class Board extends Thing {
       player.active = false
       const person = this.state.things.filter((x) => x.type === 'person')[0]
       if (person) {
-        person.active = true
+        this.after(80, () => person.active = true, 'deathWait')
       }
     }
   }
@@ -937,6 +937,19 @@ export default class Board extends Thing {
     const { ctx } = game
     ctx.fillStyle = '#3569CC'
     ctx.fillRect(0, 0, game.config.width, game.config.height)
+  }
+
+  postDraw () {
+    const { ctx } = game
+    ctx.save()
+    ctx.translate(32, game.config.height - 32)
+    ctx.font = 'italic bold 40px Arial'
+    ctx.fillStyle = '#21235B'
+    ctx.fillText(`Level ${game.globals.level}`, 0, 0)
+    ctx.translate(4, -4)
+    ctx.fillStyle = 'white'
+    ctx.fillText(`Level ${game.globals.level}`, 0, 0)
+    ctx.restore()
   }
 
   draw () {
@@ -1047,36 +1060,18 @@ export default class Board extends Thing {
           screenY -= 2
         }
 
-        // Items
-        if (thing.name === 'item') {
-          // Determine which textures should be used
-          const baseImage = baseMapping[thing.direction] || 'iconItemBase'
-          const iconImage = iconMapping[thing.type] || 'iconItemIconEmpty'
-
-          // Render
-          ctx.drawImage(assets.images[baseImage], screenX, screenY, tileWidth, tileDepth)
-          ctx.drawImage(assets.images[iconImage], screenX, screenY, tileWidth, tileDepth)
-        }
-
-        // Player
-        if (thing.name === 'player') {
-          // Selected Marker
-          if (thing.active) {
-            //ctx.drawImage(assets.images.iconSelected, screenX, screenY-1, tileWidth, tileDepth)
-          }
-
-          // Player sprite
-          const frame = [0, 0]
-          const image = thing.type ? ("player_" + thing.type) : 'undefined'
-          //ctx.drawImage(assets.images[image], frame[0]*16, frame[1]*16, (frame[0]+1)*16, (frame[1]+1)*16, screenX, screenY-2, tileWidth, tileDepth)
-          //ctx.drawImage(assets.images[image], screenX, screenY - 2)
-        }
-
         // Deco Objects
         if (thing.name === 'deco') {
-          const image = thing.type ? ("deco_" + thing.type) : 'undefined'
-          if (image) {
-            ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
+          if (thing.waterlogged) {
+            const image = thing.type ? ("deco_waterlogged_" + thing.type) : 'undefined'
+            if (image) {
+              ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
+            }
+          } else {
+            const image = thing.type ? ("deco_" + thing.type) : 'undefined'
+            if (image) {
+              ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
+            }
           }
         }
       }

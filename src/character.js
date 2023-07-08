@@ -12,7 +12,7 @@ import Wind from './wind.js'
 export default class Character extends Thing {
   sprite = 'player_fire'
   time = 0
-  wasActive = false
+  wasActive = true
   wasSelected = false
   isSelected = false
   newlySelected = false
@@ -22,7 +22,9 @@ export default class Character extends Thing {
   depth = 10
   animations = {
     idle: { frames: [0, 1], speed: 0.035 },
-    think: { frames: [2, 3], speed: 0.1 }
+    think: { frames: [2, 3], speed: 0.1 },
+    swim: { frames: [2, 3], speed: 0.075 },
+    none: { frames: [0] }
   }
 
   constructor (tileThingReference) {
@@ -45,6 +47,7 @@ export default class Character extends Thing {
       this.announce()
       this.cancelTimer('fire')
       this.cancelTimer('wind')
+      this.after(12, null, 'focusCamera')
     }
     if (this.timer('announce')) {
       const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.5, 1)
@@ -66,19 +69,25 @@ export default class Character extends Thing {
     this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
     this.rotation = Math.sin(this.walkBob / 30) * 0.12
 
+    if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined) {
+      this.after(60, () => this.dead = true, 'death')
+    }
+
     // Camera should follow me when I'm the active player
     const board = game.getThing('board')
     if (board) {
-      if (this.tileThingReference === board.getActivePlayer()) {
-        game.getCamera2D().position = this.position
+      if (this.timers.focusCamera) {
+          game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
       } else {
-        this.rotation = 0
+        if (this.tileThingReference === board.getActivePlayer() || this.tileThingReference.dead) {
+          game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
+        } else {
+          this.rotation = 0
+        }
       }
     }
 
     this.npcAnimations()
-
-    if (this.tileThingReference.dead) { this.dead = true }
 
     this.wasActive = this.tileThingReference.active
     this.lastPosition = [...this.position]
@@ -98,7 +107,7 @@ export default class Character extends Thing {
     if (this.tileThingReference !== board?.getActivePlayer()) {
       if (this.tileThingReference.type === 'vine') {
         ctx.save()
-        ctx.translate(...this.drawPosition.map(x => Math.round(x)))
+        ctx.translate(...this.drawPosition.map(x => Math.floor(x)))
         ctx.translate(-32, -30)
         ctx.drawImage(game.assets.images.deco_vine, 0, 0)
         ctx.restore()
@@ -181,7 +190,7 @@ export default class Character extends Thing {
   npcAnimations (init = false) {
     this.animation = 'idle'
     const board = game.getThing('board')
-    if (board && this.tileThingReference !== board.getActivePlayer()) {
+    if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead) {
       if (this.tileThingReference.type === 'fire') {
         if (!this.timer('fire')) {
           if (init) { this.createFire() }
@@ -197,6 +206,13 @@ export default class Character extends Thing {
       if (this.tileThingReference.type === 'person') {
         this.animation = 'think'
       }
+    }
+    if (this.tileThingReference.type === 'water' && board.getTileHeight(this.tileThingReference.position) === 0) {
+      this.animation = 'swim'
+    }
+    if (this.timers.death !== undefined) {
+      this.sprite = 'skull'
+      this.animation = 'none'
     }
   }
 }
