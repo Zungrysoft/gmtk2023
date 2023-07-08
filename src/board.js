@@ -518,7 +518,6 @@ export default class Board extends Thing {
           // If this is a valid spot for ice...
           if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
             // Build the ice
-            console.log("ICE")
             this.state.waterlogged[icePos] = {
               name: 'deco',
               type: 'ice',
@@ -606,7 +605,8 @@ export default class Board extends Thing {
       const pos = vec2.add(player.position, delta)
 
       // Don't deal damage if the ground of a different height
-      if (this.getTileHeight(pos) !== beamHeight) {
+      const tileHeight = this.getTileHeight(pos) || 1
+      if (tileHeight !== beamHeight) {
         continue
       }
 
