@@ -198,19 +198,20 @@ export default class Board extends Thing {
               'waterlog',
               'wind',
               'waterlog',
-              'burn',
+              'fire',
               'wind',
-              'burn',
+              'fire',
               'wind',
-              'burn',
+              'fire',
               'wind',
-              'burn',
+              'fire',
               'wind',
-              'burn',
+              'fire',
               'wind',
-              'burn',
+              'fire',
               'wind',
               'ice',
+              'vine',
               'waterlog',
             ]
           }
@@ -241,14 +242,17 @@ export default class Board extends Thing {
         else if (adv === 'wind') {
           this.advanceWind()
         }
-        else if (adv === 'burn') {
-          this.advanceBurn()
+        else if (adv === 'fire') {
+          this.advanceFire()
         }
         else if (adv === 'ice') {
           this.advanceIce()
         }
         else if (adv === 'waterlog') {
           this.advanceWaterlog()
+        }
+        else if (adv === 'vine') {
+          this.advanceVine()
         }
 
         blocked = this.isAnimationBlocking()
@@ -634,12 +638,22 @@ export default class Board extends Thing {
     }
   }
 
-  advanceBurn() {
+  advanceFire() {
     // Iterate over fire guys
     const firePlayers = this.getThingsByName('player').filter((t) => t.type === 'fire')
     for (const player of firePlayers) {
       if (!player.active) {
         this.executeFire(player)
+      }
+    }
+  }
+
+  advanceVine() {
+    // Iterate over vine guys
+    const vinePlayers = this.getThingsByName('player').filter((t) => t.type === 'vine')
+    for (const player of vinePlayers) {
+      if (!player.active) {
+        this.executeExtendVines(player)
       }
     }
   }
@@ -924,7 +938,13 @@ export default class Board extends Thing {
         // Blocked by deco
         const blockingDeco = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
         if (blockingDeco) {
-          break
+          if (blockingDeco.owner === player.id) {
+            // Skip past own vines
+            continue
+          }
+          else {
+            break
+          }
         }
 
         // Kill players that get in the way
