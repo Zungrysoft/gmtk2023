@@ -19,6 +19,7 @@ await game.loadAssets({
     player_wind: 'images/windguy.png',
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
+    player_water: 'images/waterguy.png',
 
     // Terrain
     tileGrass: 'images/tile_grass.png',
