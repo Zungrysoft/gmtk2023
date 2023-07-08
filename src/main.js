@@ -59,8 +59,9 @@ await game.loadAssets({
 
   json: {
     intro: 'json/levels/intro.json',
-    swimAround: 'json/levels/swim_around.json',
+    swim: 'json/levels/swim.json',
     shutter: 'json/levels/shutter.json',
+    maze: 'json/levels/maze.json',
   },
 
   sounds: {
@@ -80,7 +81,7 @@ const { assets } = game
 
 // console.log(assets)
 
-game.globals.levelCount = 3
+game.globals.levelCount = 4
 game.globals.levelCompletions = []
 game.globals.usingGamepad = false
 

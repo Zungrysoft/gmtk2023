@@ -4,8 +4,9 @@ export function getLevel(lvl) {
   // Retrieve level data
   const levelList = [
     "intro",
-    "swimAround",
+    "swim",
     "shutter",
+    "maze",
   ]
   let json = JSON.parse(assets.json[levelList[lvl-1]])
 
