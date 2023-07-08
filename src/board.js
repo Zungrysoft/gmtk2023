@@ -808,7 +808,7 @@ export default class Board extends Thing {
             j --
           }
           // Wood
-          if (thing.name === 'deco' && ['wood', 'vine', 'box'].includes(thing.type)) {
+          if (thing.name === 'deco' && ['wood', /*'vine', 'box'*/].includes(thing.type)) {
             this.state.things.splice(j, 1)
             j --
           }
@@ -835,6 +835,16 @@ export default class Board extends Thing {
       return true
     }
 
+    return false
+  }
+
+  isPushableByWind(thing) {
+    if (thing.name === 'player') {
+      return true
+    }
+    if (thing.name === 'deco' && thing.type === 'box') {
+      return true
+    }
     return false
   }
 
@@ -870,13 +880,13 @@ export default class Board extends Thing {
       }
 
       // Wind is blocked by deco objects
-      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && !this.isPushableByWind(x))[0]
       if (blockingThing) {
         return
       }
 
       // Found a player to push
-      foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
+      foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && this.isPushableByWind(x))[0]
       if (foundThing) {
         break
       }
