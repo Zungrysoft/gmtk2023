@@ -10,8 +10,6 @@ document.title = 'Elemental Cave'
 
 await game.loadAssets({
   images: {
-    square: 'images/square.png',
-
     // Player
     player_person: 'images/guy.png',
     player_fire: 'images/fireguy.png',
@@ -21,20 +19,6 @@ await game.loadAssets({
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
     player_water: 'images/waterguy.png',
-
-    // Terrain
-    tileGrass: 'images/tile_grass.png',
-    tileGrassBlades: 'images/tile_grass_blades.png',
-    tileWater: 'images/tile_water.png',
-    wallRock: 'images/wall_rock.png',
-    conGrassTop: 'images/con_grass_top.png',
-    conGrassBottom: 'images/con_grass_bottom.png',
-    conGrassLeft: 'images/con_grass_left.png',
-    conGrassRight: 'images/con_grass_right.png',
-    conGrassCliffTopLeft: 'images/con_grass_cliff_top_left.png',
-    conGrassCliffTopRight: 'images/con_grass_cliff_top_right.png',
-    conGrassCliffLeft: 'images/con_grass_cliff_left.png',
-    conGrassCliffRight: 'images/con_grass_cliff_right.png',
 
     // Deco Objects
     deco_rock: 'images/rock.png',
@@ -49,7 +33,6 @@ await game.loadAssets({
     deco_wave: 'images/wave.png',
 
     // UI
-    iconSelected: 'images/icon_occupied_player.png',
     iconNearest: 'images/selection_arrows.png',
     selectorArrow: 'images/selector_arrow.png',
     aimArrow: 'images/aim_arrow.png',
