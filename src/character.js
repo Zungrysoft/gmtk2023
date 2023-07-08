@@ -139,7 +139,8 @@ export default class Character extends Thing {
         ctx.save()
         ctx.translate(...this.drawPosition.map(x => Math.floor(x)))
         ctx.translate(-32, -30)
-        ctx.drawImage(game.assets.images.deco_vine, 0, 0)
+        const dir = vec2.directionToVector(this.tileThingReference.direction)
+        ctx.drawImage(dir[1] === 0 ? game.assets.images.deco_vine : game.assets.images.deco_vine_v, 0, 0)
         ctx.restore()
       }
     }

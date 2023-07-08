@@ -1148,12 +1148,15 @@ export default class Board extends Thing {
         // Deco Objects
         if (thing.name === 'deco') {
           if (thing.waterlogged) {
-            const image = thing.type ? ("deco_waterlogged_" + thing.type) : 'undefined'
+            const image = thing.type ? ('deco_waterlogged_' + thing.type) : 'undefined'
             if (image) {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }
           } else {
-            const image = thing.type ? ("deco_" + thing.type) : 'undefined'
+            let image = thing.type ? ('deco_' + thing.type) : 'undefined'
+            if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
+              image = 'deco_vine_v'
+            }
             if (image) {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }
