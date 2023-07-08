@@ -2,8 +2,8 @@ import * as game from './core/game.js'
 import * as gfx from './core/webgl.js'
 import Board from './board.js'
 
-game.config.width = 256
-game.config.height = 144
+//game.config.width = 1600 * 3/4
+//game.config.height = 1200 * 3/4
 //game.config.isWebglEnabled = false
 document.title = 'Elemental Cave'
 
@@ -12,12 +12,12 @@ await game.loadAssets({
     square: 'images/square.png',
 
     // Player
-    player_fire: 'images/player_fire.png',
-    player_golem: 'images/player_golem.png',
-    player_rock: 'images/player_rock.png',
-    player_wind: 'images/player_wind.png',
-    player_ice: 'images/player_ice.png',
-    player_plant: 'images/player_plant.png',
+    player_fire: 'images/fireguy.png',
+    player_golem: 'images/rockguy.png',
+    player_rock: 'images/plantguy.png',
+    player_wind: 'images/windguy.png',
+    player_ice: 'images/iceguy.png',
+    player_plant: 'images/plantguy.png',
 
     // Monsters
     monsterOctopus: 'images/monster_octopus.png',
@@ -38,7 +38,7 @@ await game.loadAssets({
 
     // Deco Objects
     deco_rock: 'images/deco_rocks.png',
-    deco_wood: 'images/deco_wood.png',
+    deco_wood: 'images/plant1.png',
     deco_ice: 'images/deco_ice.png',
 
     // Items
