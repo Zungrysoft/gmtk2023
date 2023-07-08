@@ -6,6 +6,7 @@ import * as mat from './core/matrices.js'
 import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
+import Fire from './fire.js'
 
 export default class Character extends Thing {
   sprite = 'player_fire'
@@ -57,6 +58,15 @@ export default class Character extends Thing {
     if (board) {
       if (this.tileThingReference === board.getActivePlayer()) {
         game.getCamera2D().position = this.position
+      } else {
+        this.rotation = 0
+      }
+    }
+
+    // Constantly create fire if I'm the fire guy
+    if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
+      if (!this.timer('fire')) {
+        this.after(50, () => this.createFire(), 'fire')
       }
     }
 
@@ -93,5 +103,14 @@ export default class Character extends Thing {
 
   announce () {
     this.after(15, null, 'announce')
+  }
+
+  createFire () {
+    for (let a = 0; a < 8; a += 1) {
+      const angle = a * Math.PI / 4
+      const x = this.tileThingReference.position[0] + Math.round(Math.cos(angle))
+      const y = this.tileThingReference.position[1] + Math.round(Math.sin(angle))
+      game.addThing(new Fire([x, y]))
+    }
   }
 }

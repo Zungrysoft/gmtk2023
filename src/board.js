@@ -533,6 +533,16 @@ export default class Board extends Thing {
 
       player.lastActive = this.state.turns - 1
 
+      // Clear out all current fire animation things
+      for (const thing of game.getThings()) {
+        if (thing instanceof Fire) {
+          thing.dead = true
+        }
+        if (thing instanceof Character) {
+          thing.cancelTimer('fire')
+        }
+      }
+
       // Vine guy ability
       if (player.type === 'vine') {
         this.executeExtendVines(player)
@@ -683,7 +693,9 @@ export default class Board extends Thing {
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
 
-      game.addThing(new Fire(pos))
+      if (player === this.getActivePlayer()) {
+        game.addThing(new Fire(pos))
+      }
 
       // Don't deal damage if the ground of a different height
       const tileHeight = this.getTileHeight(pos) || 1
