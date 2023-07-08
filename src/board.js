@@ -153,7 +153,7 @@ export default class Board extends Thing {
       }
     }
 
-    if (this.time % 30 === 0) {
+    if (this.time % 15 === 0) {
       if (this.getActivePlayer()) {
         const x = u.random(game.config.width / -2, game.config.width / 2)
         const y = u.random(game.config.height / -2, game.config.height / 2)
