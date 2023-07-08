@@ -151,6 +151,8 @@ export default class Board extends Thing {
         // Reset all animations
         this.resetAnimations()
 
+        soundmanager.playSound('undo', 0.3)
+
         // Clear advancement queue
         this.advancementData.queue = []
       }
@@ -597,6 +599,7 @@ export default class Board extends Thing {
 
     if (player.type === 'fire') {
       this.executeFire(player)
+      soundmanager.playSound('fire', 0.2)
     }
     if (player.type === 'wind') {
       this.executeWind(player)

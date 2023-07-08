@@ -25,6 +25,7 @@ await game.loadAssets({
     deco_waterlogged_rock: 'images/waterlogged_rock.png',
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
+    deco_waterlogged_ice: 'images/ice.png',
     deco_vine: 'images/vine_v.png',
     deco_box: 'images/box.png',
     deco_waterlogged_box: 'images/waterlogged_box.png',
@@ -67,6 +68,8 @@ await game.loadAssets({
     wind: 'sounds/wind.wav',
     game_over: 'sounds/game_over.wav',
     win: 'sounds/win.wav',
+    undo: 'sounds/undo.wav',
+    fire: 'sounds/fire.wav',
   },
 })
 
