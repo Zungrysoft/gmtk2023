@@ -10,7 +10,7 @@ import Thing from './core/thing.js'
 export default class Fire extends Thing {
   sprite = 'deco_fire'
   time = 0
-  liveTime = 45
+  liveTime = 60
 
   constructor (position) {
     super()

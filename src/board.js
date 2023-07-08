@@ -632,7 +632,9 @@ export default class Board extends Thing {
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
 
-      game.addThing(new Fire(pos))
+      if (player === this.getActivePlayer()) {
+        game.addThing(new Fire(pos))
+      }
 
       // Don't deal damage if the ground of a different height
       const tileHeight = this.getTileHeight(pos) || 1
