@@ -40,7 +40,7 @@ await game.loadAssets({
     deco_rock: 'images/rock.png',
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
-    deco_vine: 'images/deco_ice.png',
+    deco_vine: 'images/vine_v.png',
     deco_box: 'images/box.png',
     deco_fire: 'images/fire1.png',
 
