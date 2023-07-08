@@ -39,6 +39,7 @@ export default class Board extends Thing {
   time = 0
   nextId = 1000
   depth = -1
+  lastActivePlayer = null
 
   constructor () {
     super()
@@ -166,6 +167,10 @@ export default class Board extends Thing {
         }
       }
     }
+
+    // Store the last active player, so that when the currently active player dies
+    // the game knows what death to focus on
+    this.lastActivePlayer = this.getActivePlayer() || this.lastActivePlayer
 
     // =============
     // Game controls
@@ -752,6 +757,27 @@ export default class Board extends Thing {
         }
       }
     }
+  }
+
+  isBlockingAt (curPos, players = false) {
+    // Blocked by walls
+    const tileHeight = this.getTileHeight(curPos)
+    if (tileHeight > 1) {
+      return true
+    }
+
+    // Blocked by deco objects
+    const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+    if (blockingThing) {
+      return true
+    }
+
+    const foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
+    if (foundThing && players) {
+      return true
+    }
+
+    return false
   }
 
   executeWind(player) {

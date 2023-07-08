@@ -79,7 +79,7 @@ export default class Character extends Thing {
       if (this.timers.focusCamera) {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
       } else {
-        if (this.tileThingReference === board.getActivePlayer() || this.tileThingReference.dead) {
+        if (this.tileThingReference === board.lastActivePlayer) {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
         } else {
           this.rotation = 0
@@ -127,17 +127,26 @@ export default class Character extends Thing {
 
     // Draw cursor over myself when i'm the next to be selected
     if (board) {
-      if (this.isSelected) {
+      if (this.isSelected && tileThing.type !== 'person') {
         ctx.save()
         ctx.translate(this.position[0], this.position[1])
-        ctx.rotate(this.time / (tileThing.type === 'person' ? 120 : 30))
+        ctx.rotate(this.time / 30)
         const scale = this.timers.newlySelected !== undefined ? u.map(this.timer('newlySelected'), 0, 1, 4, 1) : 1
         ctx.scale(scale, scale)
-        if (tileThing.type === 'person') {
-          ctx.globalAlpha = 0.5
-        }
         ctx.translate(-64, -64)
         ctx.drawImage(game.assets.images.iconNearest, 0, 0)
+        ctx.restore()
+      }
+
+      if (this.checkIsActive() && tileThing.type !== 'person') {
+        ctx.save()
+        ctx.translate(this.position[0], this.position[1])
+        //ctx.rotate(this.time / 120)
+        //const scale = this.timers.newlySelected !== undefined ? u.map(this.timer('newlySelected'), 0, 1, 4, 1) : 1
+        //ctx.scale(scale, scale)
+        ctx.globalAlpha = 0.5
+        ctx.translate(-32, -80 + Math.sin(this.time / 20) * 4)
+        ctx.drawImage(game.assets.images.selectorArrow, 0, 0)
         ctx.restore()
       }
     }
@@ -180,9 +189,14 @@ export default class Character extends Thing {
   }
 
   createWind () {
-    for (let i = 0; i < 4; i += 1) {
+    const board = game.getThing('board')
+    if (!board) return
+    for (let i = 0; i < 15; i += 1) {
       const dir = vec2.directionToVector(this.tileThingReference.direction)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
+      if (board.isBlockingAt(pos, true)) {
+        break
+      }
       game.addThing(new Wind(pos, dir))
     }
   }
