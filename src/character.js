@@ -83,7 +83,7 @@ export default class Character extends Thing {
     // Draw cursor over myself when i'm the next to be selected
     const board = game.getThing('board')
     if (board) {
-      if (this.tileThingReference.id === board.getNextPlayer()?.id) {
+      if (this.tileThingReference.id === board.getSwitchPlayer()?.id) {
         ctx.save()
         ctx.translate(this.position[0], this.position[1])
         ctx.rotate(this.time / 120)

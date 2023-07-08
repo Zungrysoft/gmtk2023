@@ -13,6 +13,7 @@ await game.loadAssets({
     square: 'images/square.png',
 
     // Player
+    player_person: 'images/guy.png',
     player_fire: 'images/fireguy.png',
     player_golem: 'images/rockguy.png',
     player_rock: 'images/plantguy.png',
