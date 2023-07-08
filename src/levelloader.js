@@ -8,6 +8,7 @@ export function getLevel(lvl) {
     "shutter",
     "maze",
     "dodging",
+    "corners",
   ]
   let json = JSON.parse(assets.json[levelList[lvl-1] || "intro"])
 
