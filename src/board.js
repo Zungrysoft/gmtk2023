@@ -682,7 +682,6 @@ export default class Board extends Thing {
         break
       }
     }
-
   }
 
   executeFire(player) {
@@ -714,7 +713,7 @@ export default class Board extends Thing {
             j --
           }
           // Wood
-          if (thing.name === 'deco' && thing.type === 'wood') {
+          if (thing.name === 'deco' && ['wood', 'vine', 'box'].includes(thing.type)) {
             this.state.things.splice(j, 1)
             j --
           }
