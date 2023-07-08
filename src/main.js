@@ -63,6 +63,7 @@ await game.loadAssets({
     shutter: 'json/levels/shutter.json',
     maze: 'json/levels/maze.json',
     dodging: 'json/levels/dodging.json',
+    corners: 'json/levels/corners.json',
   },
 
   sounds: {
