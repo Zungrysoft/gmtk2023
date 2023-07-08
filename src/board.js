@@ -190,6 +190,7 @@ export default class Board extends Thing {
             control: setControl,
             queue: [
               'move',
+              'wind',
               'waterlog',
               'action',
               'switch',
@@ -466,6 +467,34 @@ export default class Board extends Thing {
     }
   }
 
+  tileIsInWindTunnel(position) {
+    for (const delta of [[1,0], [1,0], [-1,0], [0,-1]]) {
+      let curPos = position
+      for (let i = 0; i < 15; i ++) {
+        curPos = vec2.add(curPos, delta)
+
+        // Found a wind guy
+        let foundWind = this.state.things.filter(x => vec2.equals(curPos, x.position) && x.name === 'player' && x.type === 'wind' && !(x.active))[0]
+        if (foundWind) {
+          return true
+        }
+
+        // Wind is blocked by walls
+        const tileHeight = this.getTileHeight(curPos)
+        if (tileHeight > 1) {
+          break
+        }
+
+        // Wind is blocked by deco objects
+        const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco', 'player'].includes(x.name))[0]
+        if (blockingThing) {
+          break
+        }
+      }
+    }
+    return false
+  }
+
   advanceMove(control) {
     // Check control
     if (!['left', 'right', 'up', 'down'].includes(control)) {
@@ -487,9 +516,12 @@ export default class Board extends Thing {
 
     // Player can't swim
     if (this.getTileHeight(newPosition) <= 0 && !(newPosition in this.state.waterlogged)) {
-      if (!(player.name === 'player' && player.type === 'water')) {
-        return
-
+      // ...but waterguy can
+      if (!(player.type === 'water')) {
+        // ...but the play can enter a wind tunnel over water
+        if (!this.tileIsInWindTunnel(newPosition)) {
+          return
+        }
       }
     }
 
@@ -794,6 +826,8 @@ export default class Board extends Thing {
     let foundThing = undefined
     let i = 0
 
+    let didPushSound = false
+
     // Play the wind animation on the wind guy's character
     for (const thing of game.getThings()) {
       if (thing.tileThingReference === player) {
@@ -821,7 +855,6 @@ export default class Board extends Thing {
       // Found a player to push
       foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
       if (foundThing) {
-        soundmanager.playSound('wind', 0.1)
         break
       }
     }
@@ -836,19 +869,24 @@ export default class Board extends Thing {
         // Push is blocked by walls
         const tileHeight = this.getTileHeight(curPos)
         if (tileHeight > 1) {
-          return
+          break
         }
 
         // Push is blocked by players and deco objects
         const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco', 'player'].includes(x.name))[0]
         if (blockingThing) {
-          return
+          break
         }
 
         // Wasn't blocked. Push player.
         foundThing.position = curPos
+        didPushSound = true
       }
       this.executeUpdatePlayer(foundThing)
+    }
+
+    if (didPushSound) {
+      soundmanager.playSound('wind', 0.1)
     }
   }
 
