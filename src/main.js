@@ -54,6 +54,7 @@ await game.loadAssets({
     selectorArrow: 'images/selector_arrow.png',
     aimArrow: 'images/aim_arrow.png',
     skull: 'images/skull.png',
+    goal: 'images/win_flag.png',
     undefined: 'images/mystery.png',
   },
 
@@ -77,6 +78,7 @@ await game.loadAssets({
     sploosh: 'sounds/sploosh.wav',
     wind: 'sounds/wind.wav',
     game_over: 'sounds/game_over.wav',
+    win: 'sounds/win.wav',
   },
 })
 

@@ -1115,6 +1115,10 @@ export default class Board extends Thing {
             }
           }
         }
+
+        if (thing.name === 'goal') {
+          ctx.drawImage(assets.images.goal, screenX, screenY - 2, tileWidth, tileDepth)
+        }
       }
     }
   }

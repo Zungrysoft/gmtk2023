@@ -7,23 +7,20 @@ import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 
-export default class DeathScreen extends Thing {
-  time = -80
+export default class WinScreen extends Thing {
+  time = -10
+  depth = 10000
 
   constructor () {
     super()
-    game.setThingName(this, 'deathscreen')
+    game.setThingName(this, 'winscreen')
   }
 
   update () {
     this.time += 1
-
-    if (this.time === 20) {
-      soundmanager.playSound('game_over', 0.45)
-    }
-
     if (this.time >= 0) {
       if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
+        game.globals.level += 1
         game.resetScene()
       }
     }
@@ -33,7 +30,7 @@ export default class DeathScreen extends Thing {
     const { ctx } = game
     ctx.save()
     ctx.fillStyle = '#21235B'
-    ctx.globalAlpha = u.map(this.time, 0, 30, 0, 0.65, true)
+    ctx.globalAlpha = u.map(this.time, 0, 30, 0, 1, true)
     ctx.fillRect(0, 0, game.config.width, game.config.height)
     ctx.restore()
 
@@ -44,10 +41,10 @@ export default class DeathScreen extends Thing {
     ctx.textAlign = 'center'
     ctx.translate(-6, 6)
     ctx.fillStyle = '#21235B'
-    ctx.fillText('You Died!', 0, 0)
+    ctx.fillText('You Win!', 0, 0)
     ctx.translate(6, -6)
-    ctx.fillStyle = '#FF711C'
-    ctx.fillText('You Died!', 0, 0)
+    ctx.fillStyle = '#02A800'
+    ctx.fillText('You Win!', 0, 0)
     ctx.restore()
 
     ctx.save()
@@ -56,7 +53,7 @@ export default class DeathScreen extends Thing {
     ctx.textAlign = 'right'
     ctx.fillStyle = '#88ACEA'
     ctx.globalAlpha = u.map(this.time, 80, 120, 0, u.map(Math.sin(this.time / 10), -1, 1, 0.6, 0.9), true)
-    ctx.fillText('Press any button to restart!', 0, 0)
+    ctx.fillText('Press any button to continue!', 0, 0)
     ctx.restore()
   }
 }
