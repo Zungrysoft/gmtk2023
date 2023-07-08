@@ -417,7 +417,8 @@ export default class Board extends Thing {
     const blockingThing = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
     if (blockingThing) {
       const canBeMovedByGolem = blockingThing.name === 'player' || (blockingThing.name === 'deco' && blockingThing.type === 'rock')
-      if (player.type === 'golem' && canBeMovedByGolem) {
+      const canBeMovedByAny = blockingThing.name === 'deco' && blockingThing.type === 'box'
+      if (canBeMovedByAny || (player.type === 'golem' && canBeMovedByGolem)) {
         // Check if the space behind this is free
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
