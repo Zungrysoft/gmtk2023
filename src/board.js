@@ -129,7 +129,7 @@ export default class Board extends Thing {
     if (game.keysPressed.Space || game.buttonsPressed[0]) {
       setControl = 'action'
     }
-    if (game.keysPressed.ShiftLeft || game.buttonsPressed[1]) {
+    if (game.keysPressed.ShiftLeft || game.buttonsPressed[1] || (this.getActivePlayer()?.type === 'person' && (game.keysPressed.Space || game.buttonsPressed[0]))) {
       setControl = 'switch'
     }
 
