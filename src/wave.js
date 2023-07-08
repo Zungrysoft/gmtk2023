@@ -11,6 +11,7 @@ export default class Wave extends Thing {
   sprite = 'deco_wave'
   time = 0
   liveTime = 60 * 2
+  depth = -10
 
   constructor (position, fade = true) {
     super()

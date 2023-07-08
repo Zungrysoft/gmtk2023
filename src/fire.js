@@ -17,6 +17,7 @@ export default class Fire extends Thing {
     this.position = position.map(x => x * 64 + 32)
     this.position[1] -= 10
     this.fade = fade
+    if (game.getThing('board').getTileHeight(position) > 1) { this.dead = true }
   }
 
   update () {

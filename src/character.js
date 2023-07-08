@@ -32,6 +32,7 @@ export default class Character extends Thing {
     this.position = this.getDestination()
     this.drawPosition = [...this.position]
     this.lastPosition = [...this.position]
+    this.npcAnimations(true)
   }
 
   update () {
@@ -75,23 +76,7 @@ export default class Character extends Thing {
       }
     }
 
-    // NPC animations
-    this.animation = 'idle'
-    if (this.tileThingReference !== board.getActivePlayer()) {
-      if (this.tileThingReference.type === 'fire') {
-        if (!this.timer('fire')) {
-          this.after(50, () => this.createFire(false), 'fire')
-        }
-      }
-      if (this.tileThingReference.type === 'wind') {
-        if (!this.timer('wind')) {
-          this.after(50, () => this.createWind(), 'wind')
-        }
-      }
-      if (this.tileThingReference.type === 'person') {
-        this.animation = 'think'
-      }
-    }
+    this.npcAnimations()
 
     if (this.tileThingReference.dead) { this.dead = true }
 
@@ -107,8 +92,9 @@ export default class Character extends Thing {
 
   draw () {
     const { ctx } = game
-    // Draw the vine behind the plant guy
     const board = game.getThing('board')
+
+    // Draw the vine behind the plant guy
     if (this.tileThingReference !== board?.getActivePlayer()) {
       if (this.tileThingReference.type === 'vine') {
         ctx.save()
@@ -120,8 +106,15 @@ export default class Character extends Thing {
     }
 
     super.draw(...this.drawPosition)
+  }
 
+  postDraw () {
+    const { ctx } = game
+    ctx.save()
+    ctx.translate(game.config.width / 2, game.config.height / 2)
+    ctx.translate(...game.getCamera2D().position.map(x => x * -1))
     const tileThing = this.tileThingReference
+    const board = game.getThing('board')
 
     // Draw cursor over myself when i'm the next to be selected
     if (board) {
@@ -151,6 +144,7 @@ export default class Character extends Thing {
       ctx.drawImage(game.assets.images.aimArrow, 0, 0)
       ctx.restore()
     }
+    ctx.restore()
   }
 
   getDestination () {
@@ -181,6 +175,28 @@ export default class Character extends Thing {
       const dir = vec2.directionToVector(this.tileThingReference.direction)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
       game.addThing(new Wind(pos, dir))
+    }
+  }
+
+  npcAnimations (init = false) {
+    this.animation = 'idle'
+    const board = game.getThing('board')
+    if (board && this.tileThingReference !== board.getActivePlayer()) {
+      if (this.tileThingReference.type === 'fire') {
+        if (!this.timer('fire')) {
+          if (init) { this.createFire() }
+          this.after(50, () => this.createFire(false), 'fire')
+        }
+      }
+      if (this.tileThingReference.type === 'wind') {
+        if (!this.timer('wind')) {
+          if (init) { this.createWind() }
+          this.after(50, () => this.createWind(), 'wind')
+        }
+      }
+      if (this.tileThingReference.type === 'person') {
+        this.animation = 'think'
+      }
     }
   }
 }
