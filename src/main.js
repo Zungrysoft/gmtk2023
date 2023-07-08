@@ -40,6 +40,7 @@ await game.loadAssets({
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
     deco_vine: 'images/deco_ice.png',
+    deco_box: 'images/box.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
@@ -66,12 +67,6 @@ await game.loadAssets({
 
 
 const { assets } = game
-
-assets.textures = Object.fromEntries(
-  Object.entries(assets.images).map(([name, image]) => [
-    name, gfx.createTexture(image)
-  ])
-)
 
 // console.log(assets)
 
