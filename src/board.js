@@ -445,6 +445,7 @@ export default class Board extends Thing {
 
         // Move the other thing
         blockingThing.position = newPosition2
+        this.executeUpdatePlayer(blockingThing)
       }
       else {
         return
@@ -490,6 +491,14 @@ export default class Board extends Thing {
       otherPlayer.active = true
 
       player.lastActive = this.state.turns - 1
+
+      // Vine guy ability
+      if (player.type === 'vine') {
+        this.executeExtendVines(player)
+      }
+      if (otherPlayer.type === 'vine') {
+        this.executeRetractVines(otherPlayer)
+      }
     }
   }
 
@@ -553,6 +562,11 @@ export default class Board extends Thing {
     for (let i = this.state.things.length-1; i >= 0; i --) {
       let thing = this.state.things[i]
 
+      // Do not waterlog vines
+      if (thing.name === 'deco' && thing.type === 'vine') {
+        continue
+      }
+
       // If this position is water...
       if (this.getTileHeight(thing.position) === 0) {
         // If there is not already a waterlogged thing at this position...
@@ -565,6 +579,7 @@ export default class Board extends Thing {
           }
 
           // And remove it from the main thing list
+          this.executePlayerDeath(thing)
           this.state.things.splice(i, 1)
         }
       }
@@ -600,6 +615,7 @@ export default class Board extends Thing {
           // Player
           else if (thing.name === 'player') {
             blocked = true
+            this.executePlayerDeath(thing)
             this.state.things.splice(j, 1)
             j --
           }
@@ -633,6 +649,7 @@ export default class Board extends Thing {
         if (vec2.equals(thing.position, pos)) {
           // Player
           if (thing.name === 'player') {
+            this.executePlayerDeath(thing)
             this.state.things.splice(j, 1)
             j --
           }
@@ -642,7 +659,6 @@ export default class Board extends Thing {
             j --
           }
         }
-
       }
     }
   }
@@ -699,7 +715,110 @@ export default class Board extends Thing {
         // Wasn't blocked. Push player.
         foundThing.position = curPos
       }
+      this.executeUpdatePlayer(foundThing)
     }
+  }
+
+  executeExtendVines(player) {
+    // Do both directions
+    const vineLength = 15
+    for (const direction of [player.direction, vec2.oppositeDirection(player.direction)]) {
+      // Get delta
+      const delta = vec2.directionToVector(direction)
+
+      // Iterate forwards until we hit something
+      let curPos = player.position
+      for (let i = 0; i < vineLength; i ++) {
+        curPos = vec2.add(curPos, delta)
+
+        // Blocked by wall
+        if (this.getTileHeight(curPos) > 1) {
+          break
+        }
+
+        // Blocked by deco
+        const blockingDeco = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+        if (blockingDeco) {
+          break
+        }
+
+        // Kill players that get in the way
+        for (let i = this.state.things.length-1; i >= 0; i --) {
+          const thing = this.state.things[i]
+          if (vec2.equals(thing.position, curPos) && thing.name === 'player') {
+            this.executePlayerDeath(thing)
+            this.state.things.splice(i, 1)
+          }
+        }
+
+        // Create vine object
+        this.state.things.push({
+          name: 'deco',
+          type: 'vine',
+          owner: player.id,
+          id: this.nextId ++,
+          position: curPos,
+        })
+      }
+
+    }
+  }
+
+  executeRetractVines(player) {
+    // Iterate over and delete all vine objects which are owned by this
+    for (let i = this.state.things.length-1; i >= 0; i --) {
+      const thing = this.state.things[i]
+      if (thing.name === 'deco' && thing.type === 'vine' && thing.owner === player.id) {
+        this.state.things.splice(i, 1)
+      }
+    }
+  }
+
+  executeUpdatePlayer(player) {
+    // Exit if this is not a player
+    if (player.name !== 'player') {
+      return
+    }
+
+    // Vine guys must update their vines
+    if (player.type === 'vine') {
+      this.executeRetractVines(player)
+      this.executeExtendVines(player)
+    }
+  }
+
+  executePlayerDeath(player) {
+    // Exit if this is not a player
+    if (player.name !== 'player') {
+      return
+    }
+
+    // Vine guys must update their vines
+    if (player.type === 'vine') {
+      this.executeRetractVines(player)
+    }
+  }
+
+  tileBlocked(position, {ignoreNames=[], ignoreTypes=[]}={}) {
+    if (this.getTileHeight(position) >= 2) {
+      return true
+    }
+
+    for (const thing of this.state.things) {
+      if (vec2.equals(thing.position, position)) {
+        if (ignoreNames.includes(thing.name)) {
+          continue
+        }
+        if (ignoreTypes.includes(thing.type)) {
+          continue
+        }
+
+        return thing
+      }
+
+    }
+
+    return false
   }
 
   draw () {

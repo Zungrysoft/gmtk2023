@@ -76,6 +76,20 @@ export function directionToVector(d) {
   return directions[d] || [1, 0]
 }
 
+export function oppositeDirection(d) {
+  const directions = {
+    up: 'down',
+    north: 'south',
+    down: 'up',
+    south: 'north',
+    left: 'right',
+    west: 'east',
+    right: 'left',
+    east: 'west',
+  }
+  return directions[d] || 'east'
+}
+
 export function lerp (v1, v2, t) {
   return [
     (1 - t) * v1[0] + t * v2[0],
