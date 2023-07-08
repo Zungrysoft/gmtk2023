@@ -760,6 +760,11 @@ export default class Board extends Thing {
   }
 
   executeExtendVines(player) {
+    // Do not extend vines if this is the active player
+    if (player.active) {
+      return
+    }
+
     // Do both directions
     const vineLength = 15
     for (const direction of [player.direction, vec2.oppositeDirection(player.direction)]) {
