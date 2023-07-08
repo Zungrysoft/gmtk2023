@@ -214,7 +214,7 @@ export default class Character extends Thing {
   createWind () {
     const board = game.getThing('board')
     if (!board) return
-    for (let i = 0; i < 15; i += 1) {
+    for (let i = 0; i < 12; i += 1) {
       const dir = vec2.directionToVector(this.tileThingReference.direction)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
       if (board.isBlockingAt(pos, true)) {

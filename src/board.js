@@ -471,7 +471,7 @@ export default class Board extends Thing {
     for (const direction of ['up', 'down', 'right', 'left']) {
       let delta = vec2.directionToVector(direction)
       let curPos = position
-      for (let i = 0; i < 15; i ++) {
+      for (let i = 0; i < 12; i ++) {
         curPos = vec2.add(curPos, delta)
 
         // Found a wind guy
@@ -586,6 +586,7 @@ export default class Board extends Thing {
     }
     if (player.type === 'wind') {
       this.executeWind(player)
+      soundmanager.playSound('wind', 0.1)
     }
     // if (player.type === 'person') {
     //   this.advanceSwitch('switch')
@@ -829,7 +830,7 @@ export default class Board extends Thing {
 
     let curPos = player.position
     let delta = vec2.directionToVector(player.direction)
-    const blowDistance = 15
+    const blowDistance = 12
     let foundThing = undefined
     let i = 0
 
