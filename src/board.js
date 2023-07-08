@@ -386,6 +386,44 @@ export default class Board extends Thing {
     return players[0]
   }
 
+  getSwitchPlayer() {
+    let activePlayer = this.getActivePlayer()
+    if (!activePlayer) {
+      return undefined
+    }
+
+    // Get all other players
+    let players = this.getThingsByName('player')
+
+    // If there is only one (or zero) players, there is no player to switch to
+    if (players.length <= 0) {
+      return undefined
+    }
+
+    // If this is person guy, do LOS check
+    if (activePlayer.type === 'person') {
+      let curPos = activePlayer.position
+      for (let i = 0; i < 15; i ++) {
+        curPos = vec2.add(curPos, vec2.directionToVector(activePlayer.direction))
+        if (this.getTileHeight(curPos) > 1) {
+          return undefined
+        }
+        const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+        if (blockingThing) {
+          return undefined
+        }
+        const hitPlayer = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
+        if (hitPlayer) {
+          return hitPlayer
+        }
+      }
+    }
+    // Otherwise, go back to person guy
+    else {
+      return players.filter((x) => x.type === 'person')[0]
+    }
+  }
+
   advanceMove(control) {
     // Check control
     if (!['left', 'right', 'up', 'down'].includes(control)) {
@@ -399,6 +437,11 @@ export default class Board extends Thing {
     }
 
     const newPosition = vec2.add(player.position, vec2.directionToVector(control))
+
+    // Rotate person guy
+    if (player.type === 'person') {
+      player.direction = control
+    }
 
     // Player can't swim
     if (this.getTileHeight(newPosition) <= 0 && !(newPosition in this.state.waterlogged)) {
@@ -474,7 +517,7 @@ export default class Board extends Thing {
       return undefined
     }
 
-    let otherPlayer = this.getNextPlayer()
+    let otherPlayer = this.getSwitchPlayer()
 
     if (otherPlayer) {
       player.active = false
@@ -938,9 +981,6 @@ export default class Board extends Thing {
     const minY = Math.round(game.getCamera2D().position[1] / tileWidth - Math.floor(tilesY/2) - 1)
     const maxY = Math.round(game.getCamera2D().position[1] / tileWidth + Math.floor(tilesY/2) + 4)
 
-    // Determine nearest player
-    const nearestPlayerId = this.getNextPlayer()?.id
-
     // Render terrain
     for (let y = minY; y <= maxY; y ++) {
       // Terrain
@@ -1061,10 +1101,6 @@ export default class Board extends Thing {
           // Selected Marker
           if (thing.active) {
             //ctx.drawImage(assets.images.iconSelected, screenX, screenY-1, tileWidth, tileDepth)
-          }
-
-          // Nearest Marker
-          if (thing.id === nearestPlayerId) {
           }
 
           // Player sprite
