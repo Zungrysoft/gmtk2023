@@ -525,6 +525,16 @@ export default class Board extends Thing {
 
       player.lastActive = this.state.turns - 1
 
+      // Clear out all current fire animation things
+      for (const thing of game.getThings()) {
+        if (thing instanceof Fire) {
+          thing.dead = true
+        }
+        if (thing instanceof Character) {
+          thing.cancelTimer('fire')
+        }
+      }
+
       // Vine guy ability
       if (player.type === 'vine') {
         this.executeExtendVines(player)
