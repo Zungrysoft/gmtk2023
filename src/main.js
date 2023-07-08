@@ -17,6 +17,7 @@ await game.loadAssets({
     player_rock: 'images/player_rock.png',
     player_wind: 'images/player_wind.png',
     player_ice: 'images/player_ice.png',
+    player_plant: 'images/player_plant.png',
 
     // Monsters
     monsterOctopus: 'images/monster_octopus.png',
