@@ -21,8 +21,7 @@ export default class Character extends Thing {
   walkBob = 0
   depth = 10
   animations = {
-    idle: { frames: [0] },
-    idleAnim: { frames: [0, 1], speed: 0.035 }
+    idle: { frames: [0, 1], speed: 0.035 }
   }
 
   constructor (tileThingReference) {
@@ -42,6 +41,8 @@ export default class Character extends Thing {
     // Do a little animation when I become selected
     if (this.tileThingReference.active && !this.wasActive) {
       this.announce()
+      this.cancelTimer('fire')
+      this.cancelTimer('wind')
     }
     if (this.timer('announce')) {
       const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.5, 1)
@@ -81,7 +82,6 @@ export default class Character extends Thing {
         }
       }
       if (this.tileThingReference.type === 'wind') {
-        this.animation = 'idleAnim'
         if (!this.timer('wind')) {
           this.after(50, () => this.createWind(), 'wind')
         }
@@ -101,13 +101,24 @@ export default class Character extends Thing {
   }
 
   draw () {
-    super.draw(...this.drawPosition)
     const { ctx } = game
+    // Draw the vine behind the plant guy
+    const board = game.getThing('board')
+    if (this.tileThingReference !== board?.getActivePlayer()) {
+      if (this.tileThingReference.type === 'vine') {
+        ctx.save()
+        ctx.translate(...this.drawPosition)
+        ctx.translate(-32, -30)
+        ctx.drawImage(game.assets.images.deco_vine, 0, 0)
+        ctx.restore()
+      }
+    }
+
+    super.draw(...this.drawPosition)
 
     const tileThing = this.tileThingReference
 
     // Draw cursor over myself when i'm the next to be selected
-    const board = game.getThing('board')
     if (board) {
       if (this.isSelected) {
         ctx.save()
