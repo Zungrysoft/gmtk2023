@@ -44,6 +44,7 @@ await game.loadAssets({
     deco_box: 'images/box.png',
     deco_fire: 'images/fire1.png',
     deco_wind: 'images/wind.png',
+    deco_wave: 'images/wave.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
