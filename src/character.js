@@ -109,8 +109,8 @@ export default class Character extends Thing {
       if (this.tileThingReference.type === 'person') {
         const goal = board.state.things.filter(x => vec2.equals(this.tileThingReference.position, x.position) && x.name === 'goal')[0]
         if (goal && !game.getThing('winscreen')) {
-          this.tileThingReference.movementDisabled = true
-          soundmanager.playSound('win', 0.45, [1, 1.1])
+          board.movementDisabled = true
+          soundmanager.playSound('win', 0.45, [1, 1])
           game.addThing(new WinScreen())
         }
       }
@@ -161,6 +161,7 @@ export default class Character extends Thing {
     const board = game.getThing('board')
 
     if (tileThing.dead) { return }
+    if (game.getThing('titlescreen')) { return }
 
     ctx.save()
     ctx.translate(game.config.width / 2, game.config.height / 2)

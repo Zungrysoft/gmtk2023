@@ -41,6 +41,7 @@ export default class Board extends Thing {
   nextId = 1000
   depth = -1
   lastActivePlayer = null
+  movementDisabled = false
 
   constructor () {
     super()
@@ -526,7 +527,7 @@ export default class Board extends Thing {
     }
 
     // Don't move during the level win animation
-    if (player.movementDisabled) {
+    if (this.movementDisabled) {
       return
     }
 
@@ -1077,6 +1078,7 @@ export default class Board extends Thing {
 
   postDraw () {
     if (game.getThing('winscreen')) { return }
+    if (game.getThing('titlescreen')) { return }
     const { ctx } = game
     ctx.save()
     ctx.translate(32, game.config.height - 32)

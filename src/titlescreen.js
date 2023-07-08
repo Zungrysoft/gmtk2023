@@ -12,51 +12,39 @@ export default class DeathScreen extends Thing {
 
   constructor () {
     super()
-    if (game.getThing('deathscreen')) {
-      game.getThing('deathscreen').dead = true
-    }
-    game.setThingName(this, 'deathscreen')
+    game.setThingName(this, 'titlescreen')
+    game.getThing('board').movementDisabled = true
   }
 
   update () {
     this.time += 1
-
-    if (this.time === 20) {
-      soundmanager.playSound('game_over', 0.45)
+    if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
+      game.resetScene()
     }
-
-    /*
-    if (this.time >= 0) {
-      if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
-        game.resetScene()
-      }
-    }
-    */
   }
 
   postDraw () {
     const { ctx } = game
     ctx.save()
     ctx.fillStyle = '#21235B'
-    ctx.globalAlpha = u.map(this.time, 0, 30, 0, 0.25, true)
+    ctx.globalAlpha = 0.45
     ctx.fillRect(0, 0, game.config.width, game.config.height)
     ctx.restore()
 
-    if (this.time < 30) return
     ctx.save()
-    ctx.translate(game.config.width / 2, game.config.height / 4)
+    ctx.globalAlpha = u.squareMap(this.time, 0, 120, 0, 1, true)
+    ctx.translate(256 + 64, 180)
     ctx.translate(-200, -100 + Math.sin(this.time / 40) * 10)
-    ctx.drawImage(game.assets.images.you_died, 0, 0)
+    ctx.drawImage(game.assets.images.title, 0, 0)
     ctx.restore()
 
     ctx.save()
-    ctx.translate(game.config.width / 2, game.config.height / 4 + 96)
-    //ctx.translate(game.config.width - 64, game.config.height - 64)
+    ctx.translate(game.config.width - 64, game.config.height - 64)
     ctx.font = 'italic bold 28px Arial'
-    ctx.textAlign = 'center'
+    ctx.textAlign = 'right'
     ctx.fillStyle = 'white'
     ctx.globalAlpha = u.map(this.time, 80, 120, 0, u.map(Math.sin(this.time / 15), -1, 1, 0.8, 1), true)
-    ctx.fillText('Press U to undo your last move!', 0, 0)
+    ctx.fillText('Press any key', 0, 0)
     ctx.restore()
   }
 }
