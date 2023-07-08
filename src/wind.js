@@ -17,6 +17,8 @@ export default class Wind extends Thing {
     super()
     this.position = position.map(x => x * 64 + 32)
     this.position[1] -= 10
+    this.position[0] -= direction[0] * 16
+    this.position[1] -= direction[1] * 16
     this.direction = direction
   }
 

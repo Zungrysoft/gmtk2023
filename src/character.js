@@ -79,7 +79,7 @@ export default class Character extends Thing {
       if (this.timers.focusCamera) {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
       } else {
-        if (this.tileThingReference === board.getActivePlayer() || this.tileThingReference.dead) {
+        if (this.tileThingReference === board.lastActivePlayer) {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
         } else {
           this.rotation = 0
@@ -189,9 +189,14 @@ export default class Character extends Thing {
   }
 
   createWind () {
-    for (let i = 0; i < 4; i += 1) {
+    const board = game.getThing('board')
+    if (!board) return
+    for (let i = 0; i < 15; i += 1) {
       const dir = vec2.directionToVector(this.tileThingReference.direction)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
+      if (board.isBlockingAt(pos, true)) {
+        break
+      }
       game.addThing(new Wind(pos, dir))
     }
   }
