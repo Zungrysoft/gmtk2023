@@ -76,6 +76,7 @@ await game.loadAssets({
     move_stone: 'sounds/move_stone.wav',
     sploosh: 'sounds/sploosh.wav',
     wind: 'sounds/wind.wav',
+    game_over: 'sounds/game_over.wav',
   },
 })
 

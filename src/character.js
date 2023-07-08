@@ -43,6 +43,7 @@ export default class Character extends Thing {
     this.time += 1
     this.updateTimers()
     this.animate()
+    const board = game.getThing('board')
 
     // Do a little animation when I become selected
     if (this.tileThingReference.active && !this.wasActive) {
@@ -52,9 +53,11 @@ export default class Character extends Thing {
       this.after(12, null, 'focusCamera')
 
       if (this.tileThingReference.type === 'person') {
-        soundmanager.playSound('stop_possession', 0.1)
+        if (board && board.getActivePlayer()) {
+        soundmanager.playSound('stop_possession', 0.2)
+        }
       } else {
-        soundmanager.playSound('start_possession', 0.1)
+        soundmanager.playSound('start_possession', 0.2)
       }
     }
     if (this.timer('announce')) {
@@ -72,7 +75,7 @@ export default class Character extends Thing {
     }
 
     if (destination[0] !== this.lastDestination[0] || destination[1] !== this.lastDestination[1]) {
-      soundmanager.playSound('step', 0.02, [0.55, 1.45])
+      soundmanager.playSound('step', 0.05, [0.55, 1.45])
     }
     this.lastDestination = [...destination]
 
@@ -84,11 +87,10 @@ export default class Character extends Thing {
 
     if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined && !this.dead) {
       this.after(120, () => this.dead = true, 'death')
-      soundmanager.playSound('death', 0.1)
+      soundmanager.playSound('death', 0.25)
     }
 
     // Camera should follow me when I'm the active player
-    const board = game.getThing('board')
     if (board) {
       if (this.timers.focusCamera) {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
@@ -108,7 +110,7 @@ export default class Character extends Thing {
     const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
     if (selected && !this.wasSelected && this.tileThingReference.type !== 'person') {
       this.after(10, null, 'newlySelected')
-      soundmanager.playSound('select', 0.1)
+      soundmanager.playSound('select', 0.2)
     }
     this.isSelected = selected
     this.wasSelected = selected
@@ -119,7 +121,7 @@ export default class Character extends Thing {
     const board = game.getThing('board')
 
     // Draw the vine behind the plant guy
-    if (this.tileThingReference !== board?.getActivePlayer()) {
+    if (this.tileThingReference !== board?.getActivePlayer() && !this.tileThingReference.dead) {
       if (this.tileThingReference.type === 'vine') {
         ctx.save()
         ctx.translate(...this.drawPosition.map(x => Math.floor(x)))
@@ -142,12 +144,14 @@ export default class Character extends Thing {
 
   postDraw () {
     const { ctx } = game
-    ctx.save()
-    ctx.translate(game.config.width / 2, game.config.height / 2)
-    ctx.translate(...game.getCamera2D().position.map(x => x * -1))
     const tileThing = this.tileThingReference
     const board = game.getThing('board')
 
+    if (tileThing.dead) { return }
+
+    ctx.save()
+    ctx.translate(game.config.width / 2, game.config.height / 2)
+    ctx.translate(...game.getCamera2D().position.map(x => x * -1))
     // Draw cursor over myself when i'm the next to be selected
     if (board) {
       if (this.isSelected && tileThing.type !== 'person') {

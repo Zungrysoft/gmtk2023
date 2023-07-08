@@ -11,6 +11,7 @@ import { getLevel } from './levelloader.js'
 import Character from './character.js'
 import Fire from './fire.js'
 import Wave from './wave.js'
+import DeathScreen from './deathscreen.js'
 
 const tileWidth = 64
 const tileDepth = 64
@@ -560,7 +561,7 @@ export default class Board extends Thing {
         // Move the other thing
         blockingThing.position = newPosition2
         this.executeUpdatePlayer(blockingThing)
-        soundmanager.playSound('move_stone', 0.1, [0.95, 1.05])
+        soundmanager.playSound('move_stone', 0.2, [0.95, 1.05])
       }
       else {
         return
@@ -586,7 +587,7 @@ export default class Board extends Thing {
     }
     if (player.type === 'wind') {
       this.executeWind(player)
-      soundmanager.playSound('wind', 0.1)
+      soundmanager.playSound('wind', 0.2)
     }
     // if (player.type === 'person') {
     //   this.advanceSwitch('switch')
@@ -714,7 +715,7 @@ export default class Board extends Thing {
             this.state.waterlogged[thing.position] = thing
           }
 
-          soundmanager.playSound('sploosh', 0.2)
+          soundmanager.playSound('sploosh', 0.4)
 
           // And remove it from the main thing list
           this.executePlayerDeath(thing)
@@ -894,7 +895,7 @@ export default class Board extends Thing {
     }
 
     if (didPushSound) {
-      soundmanager.playSound('wind', 0.1)
+      soundmanager.playSound('wind', 0.2)
     }
   }
 
@@ -942,9 +943,9 @@ export default class Board extends Thing {
           owner: player.id,
           id: this.nextId ++,
           position: curPos,
+          direction
         })
       }
-
     }
   }
 
@@ -982,6 +983,14 @@ export default class Board extends Thing {
     // Vine guys must update their vines
     if (player.type === 'vine') {
       this.executeRetractVines(player)
+    }
+
+    // If person guy is killed, the active player dies too
+    if (player.type === 'person') {
+      if (this.getActivePlayer() && this.getActivePlayer().type !== 'person') {
+        this.executePlayerDeath(this.getActivePlayer())
+      }
+      game.addThing(new DeathScreen())
     }
 
     // Reset active player
@@ -1025,6 +1034,7 @@ export default class Board extends Thing {
   }
 
   postDraw () {
+    if (game.getThing('deathscreen')) { return }
     const { ctx } = game
     ctx.save()
     ctx.translate(32, game.config.height - 32)
@@ -1076,60 +1086,6 @@ export default class Board extends Thing {
             ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
             ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
           }
-        }
-      }
-
-      // Overlays
-      for (let x = minX; x <= maxX; x ++) {
-        // Determine terrain height at this coordinate
-        const tileHeight = this.getTileHeight([x, y])
-
-        // Determine where these overlays will be rendered on screen
-        let screenX, screenY
-        ;[screenX, screenY] = this.positionOnScreen([x, y])
-
-        // Render
-        if (tileHeight > 0) {
-          // Get heights of adjacent tiles
-          const leftHeight = this.getTileHeight([x-1, y])
-          const rightHeight = this.getTileHeight([x+1, y])
-          const topHeight = this.getTileHeight([x, y-1])
-          const bottomHeight = this.getTileHeight([x, y+1])
-
-          // Rock wall
-          for (let i = 0; i < tileHeight; i ++) {
-            if (i >= this.getTileHeight([x, y+1])) {
-              // Left
-              if (i >= leftHeight) {
-                //ctx.drawImage(assets.images.conGrassCliffRight, screenX - tileWidth, screenY, tileWidth, tileDepth)
-              }
-              // Right
-              if (i >= rightHeight) {
-                //ctx.drawImage(assets.images.conGrassCliffLeft, screenX + tileWidth, screenY, tileWidth, tileDepth)
-              }
-            }
-            screenY -= wallDepth
-          }
-
-          // Grass hanging overlays
-          // Left
-          /*
-          if (leftHeight < tileHeight) {
-            ctx.drawImage(assets.images.conGrassRight, screenX - tileWidth, screenY, tileWidth, tileDepth)
-          }
-          // Right
-          if (rightHeight < tileHeight) {
-            ctx.drawImage(assets.images.conGrassLeft, screenX + tileWidth, screenY, tileWidth, tileDepth)
-          }
-          // Top
-          if (topHeight !== tileHeight) {
-            ctx.drawImage(assets.images.conGrassBottom, screenX, screenY - tileDepth, tileWidth, tileDepth)
-          }
-          // Bottom
-          if (bottomHeight < tileHeight) {
-            ctx.drawImage(assets.images.conGrassTop, screenX, screenY + tileDepth, tileWidth, tileDepth)
-          }
-          */
         }
       }
 
