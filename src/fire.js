@@ -12,10 +12,11 @@ export default class Fire extends Thing {
   time = 0
   liveTime = 60
 
-  constructor (position) {
+  constructor (position, fade = true) {
     super()
     this.position = position.map(x => x * 64 + 32)
     this.position[1] -= 10
+    this.fade = fade
   }
 
   update () {
@@ -30,7 +31,9 @@ export default class Fire extends Thing {
   draw () {
     const { ctx } = game
     ctx.save()
-    ctx.globalAlpha = u.squareMap(this.time, 0, this.liveTime, 1, 0.2)
+    if (this.fade) {
+      ctx.globalAlpha = u.squareMap(this.time, 0, this.liveTime, 1, 0.2)
+    }
     super.draw()
     ctx.restore()
   }

@@ -17,7 +17,7 @@ await game.loadAssets({
     player_fire: 'images/fireguy.png',
     player_golem: 'images/rockguy.png',
     player_rock: 'images/plantguy.png',
-    player_wind: 'images/windguy.png',
+    player_wind: 'images/windguy2.png',
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
     player_water: 'images/waterguy.png',
@@ -43,6 +43,7 @@ await game.loadAssets({
     deco_vine: 'images/vine_v.png',
     deco_box: 'images/box.png',
     deco_fire: 'images/fire1.png',
+    deco_wind: 'images/wind.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
