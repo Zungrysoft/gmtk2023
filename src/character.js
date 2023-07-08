@@ -13,24 +13,37 @@ const typeToSprite = {
   rock: 'player_golem',
   ice: 'player_ice',
   wind: 'player_wind',
-  plant: 'player_plant',
+  plant: 'player_vine',
+  vine: 'player_vine',
 }
 
 export default class Character extends Thing {
   sprite = 'player_fire'
   time = 0
+  wasActive = false
 
   constructor (tileThingReference) {
     super()
     this.tileThingReference = tileThingReference
     this.sprite = typeToSprite[tileThingReference.type]
+    this.position = this.getDestination()
   }
 
   update () {
     this.time += 1
+    this.updateTimers()
 
-    const destination = this.tileThingReference.position.map(x => x * 64 + 32)
-    destination[1] -= 16
+    // Do a little animation when I become selected
+    if (this.tileThingReference.active && !this.wasActive) {
+      this.announce()
+    }
+    if (this.timer('announce')) {
+      const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.5, 1)
+      this.scale = [scalar, scalar]
+    }
+
+    // Move towards and face towards my destination
+    const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
     if (destination[0] < this.position[0]) {
       this.scale[0] = Math.abs(this.scale[0]) * -1
@@ -38,6 +51,7 @@ export default class Character extends Thing {
       this.scale[0] = Math.abs(this.scale[0])
     }
 
+    // Camera should follow me when I'm the active player
     const board = game.getThing('board')
     if (board) {
       if (this.tileThingReference === board.getActivePlayer()) {
@@ -46,12 +60,15 @@ export default class Character extends Thing {
     }
 
     if (this.tileThingReference.dead) { this.dead = true }
+
+    this.wasActive = this.tileThingReference.active
   }
 
   draw () {
     super.draw()
     const { ctx } = game
 
+    // Draw cursor over myself when i'm the next to be selected
     const board = game.getThing('board')
     if (board) {
       if (this.tileThingReference.id === board.getNextPlayer()?.id) {
@@ -64,5 +81,15 @@ export default class Character extends Thing {
         ctx.restore()
       }
     }
+  }
+
+  getDestination () {
+    const destination = this.tileThingReference.position.map(x => x * 64 + 32)
+    destination[1] -= 16
+    return destination
+  }
+
+  announce () {
+    this.after(15, null, 'announce')
   }
 }

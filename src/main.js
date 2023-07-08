@@ -18,7 +18,7 @@ await game.loadAssets({
     player_rock: 'images/plantguy.png',
     player_wind: 'images/windguy.png',
     player_ice: 'images/iceguy.png',
-    player_plant: 'images/plantguy.png',
+    player_vine: 'images/plantguy.png',
 
     // Terrain
     tileGrass: 'images/tile_grass.png',
@@ -38,6 +38,7 @@ await game.loadAssets({
     deco_rock: 'images/rock.png',
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
+    deco_vine: 'images/deco_ice.png',
 
     // UI
     iconSelected: 'images/icon_occupied_player.png',
