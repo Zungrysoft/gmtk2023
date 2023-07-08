@@ -71,12 +71,13 @@ await game.loadAssets({
   sounds: {
     step: 'sounds/step.wav',
     death: 'sounds/death.wav',
-    select: 'sounds/select.wav',
+    select: 'sounds/select1.wav',
     start_possession: 'sounds/start_possession.wav',
     stop_possession: 'sounds/stop_possession.wav',
     move_stone: 'sounds/move_stone.wav',
     sploosh: 'sounds/sploosh.wav',
     wind: 'sounds/wind.wav',
+    game_over: 'sounds/game_over.wav',
   },
 })
 
