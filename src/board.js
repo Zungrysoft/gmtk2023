@@ -688,7 +688,6 @@ export default class Board extends Thing {
     const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
     // Check all adjacent tiles
-    const beamHeight = this.getThingHeight(player)
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
 
@@ -696,18 +695,12 @@ export default class Board extends Thing {
         game.addThing(new Fire(pos))
       }
 
-      // Don't deal damage if the ground of a different height
-      const tileHeight = this.getTileHeight(pos) || 1
-      if (tileHeight !== beamHeight) {
-        continue
-      }
-
       // Loop over things and see if we have struck something
       for (let j = 0; j < this.state.things.length; j ++) {
         let thing = this.state.things[j]
         if (vec2.equals(thing.position, pos)) {
           // Player
-          if (thing.name === 'player') {
+          if (thing.name === 'player' && thing.type !== 'golem') {
             this.executePlayerDeath(thing)
             this.state.things.splice(j, 1)
             j --
