@@ -65,6 +65,7 @@ await game.loadAssets({
     dodging: 'json/levels/dodging.json',
     corners: 'json/levels/corners.json',
     windy: 'json/levels/windy.json',
+    swamp: 'json/levels/swamp.json',
   },
 
   sounds: {

@@ -4,6 +4,7 @@ export function getLevel(lvl) {
   // Retrieve level data
   const levelList = [
     "intro",
+    "swamp",
     "swim",
     "shutter",
     "maze",
