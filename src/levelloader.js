@@ -7,8 +7,9 @@ export function getLevel(lvl) {
     "swim",
     "shutter",
     "maze",
+    "dodging",
   ]
-  let json = JSON.parse(assets.json[levelList[lvl-1]])
+  let json = JSON.parse(assets.json[levelList[lvl-1] || "intro"])
 
   // Merge layers together
   let ret = {

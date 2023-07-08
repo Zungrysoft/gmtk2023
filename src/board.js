@@ -726,6 +726,11 @@ export default class Board extends Thing {
   }
 
   executeFire(player) {
+    if (player.dead) {
+      return
+    }
+
+
     const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
     // Check all adjacent tiles
@@ -741,7 +746,7 @@ export default class Board extends Thing {
         let thing = this.state.things[j]
         if (vec2.equals(thing.position, pos)) {
           // Player
-          if (thing.name === 'player' && thing.type !== 'golem') {
+          if (thing.name === 'player' && !(['golem'].includes(thing.type))) {
             this.executePlayerDeath(thing)
             this.state.things.splice(j, 1)
             j --
@@ -778,6 +783,10 @@ export default class Board extends Thing {
   }
 
   executeWind(player) {
+    if (player.dead) {
+      return
+    }
+
     let curPos = player.position
     let delta = vec2.directionToVector(player.direction)
     const blowDistance = 15
