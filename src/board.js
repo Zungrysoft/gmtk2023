@@ -62,6 +62,11 @@ export default class Board extends Thing {
     // }
     //game.getCamera2D().position = this.getActivePlayer()?.position || [0, 0]
 
+    // Update all players
+    for (const thing of this.state.things) {
+      this.executeUpdatePlayer(thing)
+    }
+
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
 
