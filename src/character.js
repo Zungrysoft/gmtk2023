@@ -21,7 +21,8 @@ export default class Character extends Thing {
   walkBob = 0
   depth = 10
   animations = {
-    idle: { frames: [0, 1], speed: 0.035 }
+    idle: { frames: [0, 1], speed: 0.035 },
+    think: { frames: [2, 3], speed: 0.1 }
   }
 
   constructor (tileThingReference) {
@@ -75,6 +76,7 @@ export default class Character extends Thing {
     }
 
     // NPC animations
+    this.animation = 'idle'
     if (this.tileThingReference !== board.getActivePlayer()) {
       if (this.tileThingReference.type === 'fire') {
         if (!this.timer('fire')) {
@@ -85,6 +87,9 @@ export default class Character extends Thing {
         if (!this.timer('wind')) {
           this.after(50, () => this.createWind(), 'wind')
         }
+      }
+      if (this.tileThingReference.type === 'person') {
+        this.animation = 'think'
       }
     }
 
