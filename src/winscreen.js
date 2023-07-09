@@ -14,6 +14,7 @@ export default class WinScreen extends Thing {
   constructor () {
     super()
     game.setThingName(this, 'winscreen')
+    game.globals.levelCompletions[game.globals.level] = true
   }
 
   update () {

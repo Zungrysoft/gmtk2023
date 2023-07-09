@@ -53,6 +53,7 @@ export default class LevelSelect extends Thing {
       if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) {
         if (!this.selected) {
           this.after(20, () => { this.dead = true; game.resetScene() }, 'fadeout')
+          soundmanager.playSound('wind', 0.1, [0.75, 0.85])
         }
         this.selected = true
       }
@@ -68,6 +69,7 @@ export default class LevelSelect extends Thing {
     }
 
     if (this.selection !== lastSelection) {
+      soundmanager.playSound('menu_move', 0.2)
       for (const thing of game.getThings()) {
         if (thing !== this) {
           thing.dead = true
@@ -130,7 +132,7 @@ export default class LevelSelect extends Thing {
       ctx.translate(0, i * 48)
       ctx.translate(0, this.scroll * -48)
 
-      const checkbox = game.globals.levelCompletions[i] ? 'checkbox_checked' : 'checkbox_unchecked'
+      const checkbox = game.globals.levelCompletions[i + 1] ? 'checkbox_checked' : 'checkbox_unchecked'
       ctx.drawImage(game.assets.images[checkbox], -80, -48)
 
       ctx.save()
@@ -146,6 +148,27 @@ export default class LevelSelect extends Thing {
 
       ctx.restore()
     }
+    ctx.restore()
+
+    ctx.save()
+    ctx.fillStyle = '#21235B'
+    ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    if (this.timers.fadeout) {
+      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+    }
+    //ctx.globalAlpha = ctx.globalAlpha ** 2
+    ctx.fillRect(0, 0, 700, 90)
+    ctx.restore()
+
+    ctx.save()
+    ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    if (this.timers.fadeout) {
+      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+    }
+    ctx.fillStyle = 'white'
+    ctx.font = 'italic bold 48px Arial'
+    ctx.textAlign = 'center'
+    ctx.fillText('Level Select', 350, 60)
     ctx.restore()
 
     ctx.save()
