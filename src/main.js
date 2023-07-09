@@ -112,6 +112,15 @@ for (let i = 0; i < game.globals.levelCount; i++) {
 game.globals.level = 1
 game.globals.showTitle = true
 
+if (localStorage.levelCompletions && localStorage.personGuyVersion === '1') {
+  try {
+    game.globals.levelCompletions = JSON.parse(localStorage.levelCompletions)
+  } catch (e) {
+    game.globals.levelCompletions = []
+  }
+}
+localStorage.personGuyVersion = '1'
+
 game.setScene(() => {
   game.addThing(new Board())
   if (game.globals.showTitle) {

@@ -15,6 +15,7 @@ export default class WinScreen extends Thing {
     super()
     game.setThingName(this, 'winscreen')
     game.globals.levelCompletions[game.globals.level] = true
+    localStorage.levelCompletions = JSON.stringify(game.globals.levelCompletions)
   }
 
   update () {
