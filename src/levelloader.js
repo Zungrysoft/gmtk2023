@@ -9,6 +9,7 @@ export let levelList = [
   { name: 'One-Guy Mission', level: 'islands' },
   { name: 'Alongside the Maze', level: 'maze' },
   { name: 'Windy Day', level: 'windy' },
+  { name: 'Over the Seas', level: 'boat' },
   { name: 'An Early Christmas', level: 'snowman' },
   { name: 'Wall of Thorns', level: 'blocking' },
   { name: 'Crossway', level: 'vine' },

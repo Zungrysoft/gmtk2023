@@ -64,6 +64,7 @@ await game.loadAssets({
     islets: 'json/levels/islets.json',
     sokoban: 'json/levels/sokoban.json',
     snowman: 'json/levels/snowman.json',
+    boat: 'json/levels/boat.json',
   },
 
   sounds: {
