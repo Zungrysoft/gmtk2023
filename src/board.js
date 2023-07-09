@@ -1110,6 +1110,7 @@ export default class Board extends Thing {
     if (game.getThing('titlescreen')) { return }
     if (game.getThing('levelselect')) { return }
     if (game.getThing('pausemenu')) { return }
+    if (game.getThing('optionsmenu')) { return }
     const { ctx } = game
 
     {

@@ -106,6 +106,8 @@ const { assets } = game
 game.globals.levelCount = 50
 game.globals.levelCompletions = []
 game.globals.usingGamepad = false
+game.globals.musicOn = true
+game.globals.soundOn = true
 
 for (let i = 0; i < game.globals.levelCount; i++) {
   game.globals.levelCompletions.push(false)
