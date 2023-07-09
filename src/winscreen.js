@@ -6,6 +6,8 @@ import * as mat from './core/matrices.js'
 import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
+import { levelList } from './levelloader.js'
+import LevelSelect from './levelselect.js'
 
 export default class WinScreen extends Thing {
   time = -10
@@ -22,8 +24,13 @@ export default class WinScreen extends Thing {
     this.time += 1
     if (this.time >= 0) {
       if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
-        game.globals.level += 1
-        game.resetScene()
+        if (game.globals.level >= levelList.length) {
+          this.dead = true
+          game.addThing(new LevelSelect())
+        } else {
+          game.globals.level += 1
+          game.resetScene()
+        }
       }
     }
   }
