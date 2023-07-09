@@ -679,37 +679,10 @@ export default class Board extends Thing {
   }
 
   advanceIce() {
-    // Delete all existing ice things
-    for (const key in this.state.waterlogged) {
-      let thing = this.state.waterlogged[key]
-      if (thing.type === 'ice') {
-        delete this.state.waterlogged[key]
-      }
-    }
-
     // Iterate over ice guys
     const icePlayers = this.getThingsByName('player').filter((t) => t.type === 'ice')
     for (const player of icePlayers) {
-      // Build ice around this player
-      const [px, py] = player.position
-      const iceRadius = 1
-      for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
-        for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
-          const icePos = [x, y]
-
-          // If this is a valid spot for ice...
-          if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
-            // Build the ice
-            this.state.waterlogged[icePos] = {
-              name: 'deco',
-              type: 'ice',
-              waterlogged: true,
-              id: this.nextId ++,
-              position: icePos,
-            }
-          }
-        }
-      }
+      this.executeIce(player)
     }
   }
 
@@ -951,6 +924,38 @@ export default class Board extends Thing {
     }
   }
 
+  executeIce(player) {
+    // Delete all existing ice things owned by this player
+    for (const key in this.state.waterlogged) {
+      let thing = this.state.waterlogged[key]
+      if (thing.type === 'ice' && thing.owner === player.id) {
+        delete this.state.waterlogged[key]
+      }
+    }
+
+    // Build ice around this player
+    const [px, py] = player.position
+    const iceRadius = 1
+    for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
+      for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
+        const icePos = [x, y]
+
+        // If this is a valid spot for ice...
+        if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
+          // Build the ice
+          this.state.waterlogged[icePos] = {
+            name: 'deco',
+            type: 'ice',
+            waterlogged: true,
+            owner: player.id,
+            id: this.nextId ++,
+            position: icePos,
+          }
+        }
+      }
+    }
+  }
+
   executeExtendVines(player) {
     // Do not extend vines if this is the active player
     if (player.active) {
@@ -1027,6 +1032,11 @@ export default class Board extends Thing {
     if (player.type === 'vine') {
       this.executeRetractVines(player)
       this.executeExtendVines(player)
+    }
+
+    // Ice guys must update their ice
+    if (player.type === 'ice') {
+      this.executeIce(player)
     }
   }
 

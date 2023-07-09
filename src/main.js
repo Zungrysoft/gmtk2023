@@ -50,7 +50,6 @@ await game.loadAssets({
 
   json: {
     intro: 'json/levels/intro.json',
-    blocking: 'json/levels/blocking.json',
     swim: 'json/levels/swim.json',
     shutter: 'json/levels/shutter.json',
     maze: 'json/levels/maze.json',
@@ -59,10 +58,12 @@ await game.loadAssets({
     windy: 'json/levels/windy.json',
     swamp: 'json/levels/swamp.json',
     vine: 'json/levels/vine.json',
+    blocking: 'json/levels/blocking.json',
     big: 'json/levels/big.json',
     islands: 'json/levels/islands.json',
     islets: 'json/levels/islets.json',
     sokoban: 'json/levels/sokoban.json',
+    snowman: 'json/levels/snowman.json',
   },
 
   sounds: {
