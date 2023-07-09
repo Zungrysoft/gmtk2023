@@ -16,6 +16,8 @@ await game.loadAssets({
     player_golem: 'images/rockguy.png',
     player_rock: 'images/plantguy.png',
     player_wind: 'images/windguy2.png',
+    player_wind_front: 'images/windguy3.png',
+    player_wind_back: 'images/windguy4.png',
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
     player_water: 'images/waterguy.png',
