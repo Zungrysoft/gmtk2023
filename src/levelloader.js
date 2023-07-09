@@ -12,7 +12,7 @@ export let levelList = [
   { name: 'Dodge and Burn', level: 'dodging' },
   { name: 'Far Out', level: 'safety' },
   { name: 'Rockoban', level: 'sokoban' },
-  { name: 'One-Guy Mission', level: 'islands' },
+  { name: 'Hop Across', level: 'islands' },
   { name: 'Cavern Lake', level: 'lake' },
   { name: 'Windy Day', level: 'windy' },
   { name: 'Alongside the Maze', level: 'maze' },
