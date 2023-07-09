@@ -41,6 +41,7 @@ export default class Board extends Thing {
   nextId = 1000
   depth = -1
   lastActivePlayer = null
+  movementDisabled = false
 
   constructor () {
     super()
@@ -115,46 +116,48 @@ export default class Board extends Thing {
 
     // Camera controls
     let setControl = ''
-    if (game.keysPressed.ArrowUp || game.keysPressed.KeyW || game.buttonsPressed[12]) {
-      setControl = 'up'
-    }
-    if (game.keysPressed.ArrowDown || game.keysPressed.KeyS || game.buttonsPressed[13]) {
-      setControl = 'down'
-    }
-    if (game.keysPressed.ArrowRight || game.keysPressed.KeyD || game.buttonsPressed[15]) {
-      setControl = 'right'
-    }
-    if (game.keysPressed.ArrowLeft || game.keysPressed.KeyA || game.buttonsPressed[14]) {
-      setControl = 'left'
-    }
-    if (game.keysPressed.Space || game.buttonsPressed[0]) {
-      setControl = 'action'
-    }
-    if (game.keysPressed.ShiftLeft || game.buttonsPressed[1] || (this.getActivePlayer()?.type === 'person' && (game.keysPressed.Space || game.buttonsPressed[0]))) {
-      setControl = 'switch'
-    }
+    if (!this.movementDisabled) {
+      if (game.keysPressed.ArrowUp || game.keysPressed.KeyW || game.buttonsPressed[12]) {
+        setControl = 'up'
+      }
+      if (game.keysPressed.ArrowDown || game.keysPressed.KeyS || game.buttonsPressed[13]) {
+        setControl = 'down'
+      }
+      if (game.keysPressed.ArrowRight || game.keysPressed.KeyD || game.buttonsPressed[15]) {
+        setControl = 'right'
+      }
+      if (game.keysPressed.ArrowLeft || game.keysPressed.KeyA || game.buttonsPressed[14]) {
+        setControl = 'left'
+      }
+      if (game.keysPressed.Space || game.buttonsPressed[0]) {
+        setControl = 'action'
+      }
+      if (game.keysPressed.ShiftLeft || game.buttonsPressed[1] || (this.getActivePlayer()?.type === 'person' && (game.keysPressed.Space || game.buttonsPressed[0]))) {
+        setControl = 'switch'
+      }
 
-    // Undo function
-    if (game.keysPressed.KeyU || game.keysPressed.KeyZ || game.buttonsPressed[5]) {
-      // Make sure there are actually things to undo
-      if (this.stateStack.length > 0) {
-        let newState = this.stateStack.pop()
-        let oldState = JSON.stringify(this.state)
+      // Undo function
+      if (game.keysPressed.KeyU || game.keysPressed.KeyZ || game.buttonsPressed[5]) {
+        // Make sure there are actually things to undo
+        if (this.stateStack.length > 0) {
+          let newState = this.stateStack.pop()
+          let oldState = JSON.stringify(this.state)
 
-        // If the new state matches the old state, that means one duplicate state got pushed
-        // So go to the next state
-        if (newState === oldState && this.stateStack.length > 0) {
-          newState = this.stateStack.pop()
+          // If the new state matches the old state, that means one duplicate state got pushed
+          // So go to the next state
+          if (newState === oldState && this.stateStack.length > 0) {
+            newState = this.stateStack.pop()
+          }
+          this.state = JSON.parse(newState)
+
+          // Reset all animations
+          this.resetAnimations()
+
+          soundmanager.playSound('undo', 0.3)
+
+          // Clear advancement queue
+          this.advancementData.queue = []
         }
-        this.state = JSON.parse(newState)
-
-        // Reset all animations
-        this.resetAnimations()
-
-        soundmanager.playSound('undo', 0.3)
-
-        // Clear advancement queue
-        this.advancementData.queue = []
       }
     }
 
@@ -531,11 +534,6 @@ export default class Board extends Thing {
       return
     }
 
-    // Don't move during the level win animation
-    if (player.movementDisabled) {
-      return
-    }
-
     const newPosition = vec2.add(player.position, vec2.directionToVector(control))
 
     // Rotate person guy
@@ -807,6 +805,8 @@ export default class Board extends Thing {
 
     const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
+    let burnSound = false
+
     // Check all adjacent tiles
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
@@ -824,14 +824,20 @@ export default class Board extends Thing {
             this.executePlayerDeath(thing)
             this.state.things.splice(j, 1)
             j --
+            burnSound = true
           }
           // Wood
           if (thing.name === 'deco' && ['wood', /*'vine', 'box'*/].includes(thing.type)) {
             this.state.things.splice(j, 1)
             j --
+            burnSound = true
           }
         }
       }
+    }
+
+    if (burnSound) {
+      soundmanager.playSound('fire', 0.2)
     }
   }
 
@@ -1083,6 +1089,9 @@ export default class Board extends Thing {
 
   postDraw () {
     if (game.getThing('winscreen')) { return }
+    if (game.getThing('titlescreen')) { return }
+    if (game.getThing('levelselect')) { return }
+    if (game.getThing('pausemenu')) { return }
     const { ctx } = game
     ctx.save()
     ctx.translate(32, game.config.height - 32)
@@ -1152,12 +1161,15 @@ export default class Board extends Thing {
         // Deco Objects
         if (thing.name === 'deco') {
           if (thing.waterlogged) {
-            const image = thing.type ? ("deco_waterlogged_" + thing.type) : 'undefined'
+            const image = thing.type ? ('deco_waterlogged_' + thing.type) : 'undefined'
             if (image) {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }
           } else {
-            const image = thing.type ? ("deco_" + thing.type) : 'undefined'
+            let image = thing.type ? ('deco_' + thing.type) : 'undefined'
+            if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
+              image = 'deco_vine_v'
+            }
             if (image) {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }

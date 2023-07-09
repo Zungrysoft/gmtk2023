@@ -1,7 +1,7 @@
 import * as game from './core/game.js'
 import * as gfx from './core/webgl.js'
 import Board from './board.js'
-import Character from './character.js'
+import TitleScreen from './titlescreen.js'
 
 //game.config.width = 1600 * 3/4
 //game.config.height = 1200 * 3/4
@@ -26,7 +26,8 @@ await game.loadAssets({
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
     deco_waterlogged_ice: 'images/ice.png',
-    deco_vine: 'images/vine_v.png',
+    deco_vine: 'images/vine_h.png',
+    deco_vine_v: 'images/vine_v.png',
     deco_box: 'images/box.png',
     deco_waterlogged_box: 'images/waterlogged_box.png',
     deco_fire: 'images/fire1.png',
@@ -41,6 +42,7 @@ await game.loadAssets({
     goal: 'images/win_flag.png',
     you_win: 'images/you_win.png',
     you_died: 'images/you_died.png',
+    title: 'images/title.png',
     undefined: 'images/mystery.png',
   },
 
@@ -87,9 +89,12 @@ for (let i = 0; i < game.globals.levelCount; i++) {
   game.globals.levelCompletions.push(false)
 }
 game.globals.level = 1
-
+game.globals.showTitle = true
 
 game.setScene(() => {
   game.addThing(new Board())
-  //game.addThing(new Character())
+  if (game.globals.showTitle) {
+    game.addThing(new TitleScreen())
+    game.globals.showTitle = false
+  }
 })

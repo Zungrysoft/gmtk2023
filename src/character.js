@@ -40,6 +40,7 @@ export default class Character extends Thing {
     this.npcAnimations(true)
     if (this.tileThingReference.type === 'person') {
       game.getCamera2D().position = [...this.position]
+      game.setThingName(this, 'playercharacter')
     }
   }
 
@@ -91,7 +92,7 @@ export default class Character extends Thing {
 
     if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined && !this.dead) {
       this.after(120, () => this.dead = true, 'death')
-      soundmanager.playSound('death', 0.25)
+      soundmanager.playSound('death', 0.2)
     }
 
     // Camera should follow me when I'm the active player
@@ -109,8 +110,8 @@ export default class Character extends Thing {
       if (this.tileThingReference.type === 'person') {
         const goal = board.state.things.filter(x => vec2.equals(this.tileThingReference.position, x.position) && x.name === 'goal')[0]
         if (goal && !game.getThing('winscreen')) {
-          this.tileThingReference.movementDisabled = true
-          soundmanager.playSound('win', 0.45, [1, 1.1])
+          board.movementDisabled = true
+          soundmanager.playSound('win', 0.45, [1, 1])
           game.addThing(new WinScreen())
         }
       }
@@ -139,7 +140,8 @@ export default class Character extends Thing {
         ctx.save()
         ctx.translate(...this.drawPosition.map(x => Math.floor(x)))
         ctx.translate(-32, -30)
-        ctx.drawImage(game.assets.images.deco_vine, 0, 0)
+        const dir = vec2.directionToVector(this.tileThingReference.direction)
+        ctx.drawImage(dir[1] === 0 ? game.assets.images.deco_vine : game.assets.images.deco_vine_v, 0, 0)
         ctx.restore()
       }
     }
@@ -161,6 +163,8 @@ export default class Character extends Thing {
     const board = game.getThing('board')
 
     if (tileThing.dead) { return }
+    if (game.getThing('titlescreen')) { return }
+    if (game.getThing('levelselect')) { return }
 
     ctx.save()
     ctx.translate(game.config.width / 2, game.config.height / 2)
