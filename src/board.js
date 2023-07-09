@@ -12,6 +12,7 @@ import Character from './character.js'
 import Fire from './fire.js'
 import Wave from './wave.js'
 import DeathScreen from './deathscreen.js'
+import LevelSelect from './levelselect.js'
 
 const tileWidth = 64
 const tileDepth = 64
@@ -131,6 +132,9 @@ export default class Board extends Thing {
       }
       if (game.keysPressed.Space || game.buttonsPressed[0]) {
         setControl = 'action'
+      }
+      if (game.keysPressed.Escape) {
+        game.addThing(new LevelSelect())
       }
       if (game.keysPressed.ShiftLeft || game.buttonsPressed[1] || (this.getActivePlayer()?.type === 'person' && (game.keysPressed.Space || game.buttonsPressed[0]))) {
         setControl = 'switch'

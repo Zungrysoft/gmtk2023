@@ -97,13 +97,15 @@ export default class Character extends Thing {
 
     // Camera should follow me when I'm the active player
     if (board) {
-      if (this.timers.focusCamera) {
+      if (!board.movementDisabled) {
+        if (this.timers.focusCamera) {
           game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
-      } else {
-        if (this.tileThingReference === board.lastActivePlayer) {
-          game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
         } else {
-          this.rotation = 0
+          if (this.tileThingReference === board.lastActivePlayer) {
+            game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
+          } else {
+            this.rotation = 0
+          }
         }
       }
 

@@ -15,21 +15,27 @@ export default class TitleScreen extends Thing {
     super()
     game.setThingName(this, 'titlescreen')
     game.getThing('board').movementDisabled = true
+    game.getCamera2D().position = [...game.getThing('playercharacter').position]
   }
 
   update () {
     this.time += 1
+    this.updateTimers()
     if (this.time > 30) {
-      if (game.keysPressed.Space || game.buttonsPressed[0]) {
+      if (game.keysPressed.Space || game.buttonsPressed[0] && !this.timers.transition) {
         this.selected = true
-        this.dead = true
-        game.addThing(new LevelSelect())
+        this.after(20, () => { this.dead = true; game.addThing(new LevelSelect()) }, 'transition')
       }
       //if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
         //game.resetScene()
         //this.dead = true
         //game.addThing(new LevelSelect())
       //}
+    }
+    if (this.timers.transition) {
+      const pos = game.getThing('playercharacter').position
+      const target = [pos[0] - 350, pos[1]]
+      game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, target, 0.25)
     }
   }
 
@@ -43,6 +49,9 @@ export default class TitleScreen extends Thing {
 
     ctx.save()
     ctx.globalAlpha = u.squareMap(this.time, 0, 30, 0, 1, true)
+    if (this.timers.transition) {
+      ctx.globalAlpha = u.squareMap(this.timer('transition'), 0, 0.25, 1, 0, true)
+    }
     //ctx.translate(256 + 64, 180)
     ctx.translate(game.config.width / 2, game.config.height / 2 - 140)
     ctx.translate(-200, -100 + Math.sin(this.time / 40) * 10)
@@ -56,7 +65,10 @@ export default class TitleScreen extends Thing {
     ctx.textAlign = 'center'
     ctx.fillStyle = 'white'
     ctx.globalAlpha = u.map(this.time, 80, 120, 0, u.map(Math.sin(this.time / 15), -1, 1, 0.8, 1), true)
-    ctx.fillText('Press any key', 0, 0)
+    if (this.timers.transition) {
+      ctx.globalAlpha = u.squareMap(this.timer('transition'), 0, 0.25, 1, 0, true)
+    }
+    ctx.fillText('Press space', 0, 0)
     ctx.restore()
   }
 }
