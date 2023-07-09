@@ -4,14 +4,15 @@ export let levelList = [
   { name: 'Baby\'s first mind control', level: 'intro' },
   { name: 'Going For a Swim', level: 'swim' },
   { name: 'Dodge and Burn', level: 'dodging' },
+  { name: 'Tiny Islets', level: 'islets' },
   { name: 'One-Guy Mission', level: 'islands' },
   { name: 'Alongside the Maze', level: 'maze' },
   { name: 'Windy Day', level: 'windy' },
   { name: 'Wall of Thorns', level: 'blocking' },
-  { name: 'Open and Shut', level: 'shutter' },
   { name: 'Crossway', level: 'vine' },
   { name: 'Corners', level: 'corners' },
   { name: 'Carnivorous Cove', level: 'swamp' },
+  { name: 'Open and Shut', level: 'shutter' },
   { name: 'Roundabout', level: 'big' },
 ]
 

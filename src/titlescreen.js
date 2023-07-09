@@ -68,7 +68,7 @@ export default class TitleScreen extends Thing {
     if (this.timers.transition) {
       ctx.globalAlpha = u.squareMap(this.timer('transition'), 0, 0.25, 1, 0, true)
     }
-    ctx.fillText('Press space', 0, 0)
+    ctx.fillText('Press space to start!', 0, 0)
     ctx.restore()
   }
 }

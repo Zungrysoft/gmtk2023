@@ -61,6 +61,7 @@ await game.loadAssets({
     vine: 'json/levels/vine.json',
     big: 'json/levels/big.json',
     islands: 'json/levels/islands.json',
+    islets: 'json/levels/islets.json',
   },
 
   sounds: {
