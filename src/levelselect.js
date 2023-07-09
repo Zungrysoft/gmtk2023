@@ -104,7 +104,6 @@ export default class LevelSelect extends Thing {
       ctx.translate(0, i * 48)
       ctx.translate(0, this.scroll * -48)
 
-      console.log(game.globals)
       const checkbox = game.globals.levelCompletions[i] ? 'checkbox_checked' : 'checkbox_unchecked'
       ctx.drawImage(game.assets.images[checkbox], -80, -48)
 
