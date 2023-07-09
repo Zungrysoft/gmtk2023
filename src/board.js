@@ -69,7 +69,7 @@ export default class Board extends Thing {
     let didActive = false
     for (const thing of this.state.things) {
       if (thing.name === 'player') {
-        this.executeUpdatePlayer(thing)
+        this.executeUpdatePlayer(thing, true)
         if (thing.type === 'person' && !didActive) {
           didActive = true
           thing.active = true
@@ -950,7 +950,7 @@ export default class Board extends Thing {
     }
   }
 
-  executeExtendVines(player) {
+  executeExtendVines(player, noSound=false) {
     // Do not extend vines if this is the active player
     if (player.active) {
       return
@@ -1008,12 +1008,12 @@ export default class Board extends Thing {
       }
     }
 
-    if (createdVine) {
-      soundmanager.playSound('vine', 0.2, [1.0, 1.0])
+    if (createdVine && !noSound) {
+      soundmanager.playSound('vine', 0.2, [1.8, 1.8])
     }
   }
 
-  executeRetractVines(player) {
+  executeRetractVines(player, noSound=false) {
     // Iterate over and delete all vine objects which are owned by this
     let destroyedVine = false
     for (let i = this.state.things.length-1; i >= 0; i --) {
@@ -1023,12 +1023,12 @@ export default class Board extends Thing {
         destroyedVine = true
       }
     }
-    if (destroyedVine) {
-      soundmanager.playSound('vine', 0.2, [0.7, 0.7])
+    if (destroyedVine && !noSound) {
+      soundmanager.playSound('vine', 0.2, [1.1, 1.1])
     }
   }
 
-  executeUpdatePlayer(player) {
+  executeUpdatePlayer(player, noSound=false) {
     // Exit if this is not a player
     if (player.name !== 'player') {
       return
@@ -1036,8 +1036,8 @@ export default class Board extends Thing {
 
     // Vine guys must update their vines
     if (player.type === 'vine') {
-      this.executeRetractVines(player)
-      this.executeExtendVines(player)
+      this.executeRetractVines(player, noSound)
+      this.executeExtendVines(player, noSound)
     }
 
     // Ice guys must update their ice

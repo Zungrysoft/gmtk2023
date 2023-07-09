@@ -81,6 +81,7 @@ await game.loadAssets({
 
   sounds: {
     step: 'sounds/step.wav',
+    vine: 'sounds/vine.wav',
     death: 'sounds/death.wav',
     select: 'sounds/select1.wav',
     start_possession: 'sounds/start_possession.wav',
