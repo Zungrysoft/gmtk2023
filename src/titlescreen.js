@@ -25,6 +25,7 @@ export default class TitleScreen extends Thing {
       if ((game.keysPressed.Space || game.buttonsPressed[0]) && !this.timers.transition) {
         this.selected = true
         this.after(20, () => { this.dead = true; game.addThing(new LevelSelect()) }, 'transition')
+        soundmanager.playSound('menu_ok', 0.2)
       }
       //if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
         //game.resetScene()
@@ -54,7 +55,7 @@ export default class TitleScreen extends Thing {
     }
     //ctx.translate(256 + 64, 180)
     ctx.translate(game.config.width / 2, game.config.height / 2 - 140)
-    ctx.translate(-200, -100 + Math.sin(this.time / 40) * 10)
+    ctx.translate(-225, -100 + Math.sin(this.time / 40) * 10)
     ctx.drawImage(game.assets.images.title, 0, 0)
     ctx.restore()
 

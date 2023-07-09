@@ -77,6 +77,9 @@ await game.loadAssets({
     win: 'sounds/win.wav',
     undo: 'sounds/undo.wav',
     fire: 'sounds/fire.wav',
+    menu_move: 'sounds/menu_move.wav',
+    menu_ok: 'sounds/menu_ok.wav',
+    menu_back: 'sounds/menu_back.wav',
   },
 })
 
