@@ -67,6 +67,7 @@ await game.loadAssets({
     snowblower: 'json/levels/snowblower.json',
     corridors: 'json/levels/corridors.json',
     four: 'json/levels/four.json',
+    fire: 'json/levels/fire.json',
   },
 
   sounds: {
