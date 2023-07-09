@@ -87,6 +87,15 @@ export default class Board extends Thing {
   update () {
     super.update()
 
+    if (game.getThing('titlescreen') || game.getThing('levelselect')) {
+      game.assets.sounds.puzzle_music.pause()
+    } else {
+      game.assets.sounds.title_music.pause()
+      if (game.assets.sounds.puzzle_music.paused) {
+        soundmanager.playMusic('puzzle_music', 0.125)
+      }
+    }
+
     this.time ++
 
     // Decide whether to show keyboard controls or gamepad controls based on which was used most recently

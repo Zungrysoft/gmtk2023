@@ -19,6 +19,9 @@ export default class TitleScreen extends Thing {
   }
 
   update () {
+    if (game.assets.sounds.title_music.paused) {
+      soundmanager.playMusic('title_music', 0.125)
+    }
     this.time += 1
     this.updateTimers()
     if (this.time > 30) {
