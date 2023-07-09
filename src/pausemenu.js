@@ -34,14 +34,14 @@ export default class PauseMenu extends Thing {
     this.time += 1
     this.scroll = u.lerp(this.scroll, this.scrollTarget, 0.25)
 
-    if (game.keysPressed.Escape) {
+    if (game.keysPressed.Escape || game.keysPressed.Backspace) {
       this.selection = 0
       this.offsets = this.menu.map(_ => 0)
       this.offsets[0] = 1
     }
 
     if (this.time > 10) {
-      if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0] || game.keysPressed.Escape) {
+      if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0] || game.keysPressed.Escape || game.keysPressed.Backspace) {
         if (!this.selected) {
           let callback = () => { this.dead = true; game.getThing('board').movementDisabled = false }
           if (this.selection === 1) {
