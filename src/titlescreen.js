@@ -20,11 +20,16 @@ export default class TitleScreen extends Thing {
   update () {
     this.time += 1
     if (this.time > 30) {
-      if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
-        //game.resetScene()
+      if (game.keysPressed.Space || game.buttonsPressed[0]) {
+        this.selected = true
         this.dead = true
         game.addThing(new LevelSelect())
       }
+      //if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
+        //game.resetScene()
+        //this.dead = true
+        //game.addThing(new LevelSelect())
+      //}
     }
   }
 

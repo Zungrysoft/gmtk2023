@@ -16,6 +16,8 @@ export default class LevelSelect extends Thing {
   offsets = this.menu.map(_ => 0)
   selected = false
   fadeout = 0
+  scroll = 0
+  scrollTarget = 0
 
   constructor () {
     super()
@@ -25,6 +27,7 @@ export default class LevelSelect extends Thing {
 
   update () {
     this.time += 1
+    this.scroll = u.lerp(this.scroll, this.scrollTarget, 0.25)
     if (this.selected) {
       this.offsets[this.selection] += 2
       this.fadeout += 0.1
@@ -49,10 +52,19 @@ export default class LevelSelect extends Thing {
     }
 
     if (this.selection !== lastSelection) {
-      game.getThing('board').dead = true
+      for (const thing of game.getThings()) {
+        if (thing !== this) {
+          thing.dead = true
+        }
+      }
       game.globals.level = this.selection + 1
       game.addThing(new Board())
       game.getThing('board').movementDisabled = true
+    }
+
+    const scrollStart = 8
+    if (this.selection >= scrollStart) {
+      this.scrollTarget = this.selection - scrollStart
     }
 
     for (let i = 0; i < this.menu.length; i += 1) {
@@ -70,7 +82,7 @@ export default class LevelSelect extends Thing {
     ctx.fillStyle = '#21235B'
     ctx.globalAlpha = 0.45
     if (this.fadeout > 0) {
-      ctx.globalAlpha = u.map(this.fadeout, 0, 1, 1, 0, true)
+      ctx.globalAlpha = u.map(this.fadeout, 0, 1, 0.45, 0, true)
     }
     ctx.fillRect(0, 0, game.config.width, game.config.height)
     ctx.restore()
@@ -89,14 +101,24 @@ export default class LevelSelect extends Thing {
           ctx.globalAlpha = u.map(this.fadeout, 0, 1, 1, 0, true)
         }
       }
-      ctx.translate(this.offsets[i] * 48, i * 48)
+      ctx.translate(0, i * 48)
+      ctx.translate(0, this.scroll * -48)
+
+      console.log(game.globals)
+      const checkbox = game.globals.levelCompletions[i] ? 'checkbox_checked' : 'checkbox_unchecked'
+      ctx.drawImage(game.assets.images[checkbox], -80, -48)
+
+      ctx.save()
+      ctx.translate(this.offsets[i] * 48, 0)
       const factor = Math.min(this.offsets[i], 1)
       ctx.translate(u.lerp(0, Math.cos(this.time / 51) * 4, factor), u.lerp(0, Math.sin(this.time / 30) * 4, factor))
-      const levelName = `Level ${i}: ${this.menu[i].name}`
+      const levelName = `Level ${i + 1}: ${this.menu[i].name}`
       ctx.fillStyle = '#21235B'
       ctx.fillText(levelName, 0, 0)
       ctx.fillStyle = 'white'
-      ctx.fillText(levelName, -4, -4)
+      ctx.fillText(levelName, 4, -4)
+      ctx.restore()
+
       ctx.restore()
     }
     ctx.restore()

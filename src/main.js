@@ -43,6 +43,8 @@ await game.loadAssets({
     you_win: 'images/you_win.png',
     you_died: 'images/you_died.png',
     title: 'images/title.png',
+    checkbox_unchecked: 'images/checkbox_unchecked.png',
+    checkbox_checked: 'images/checkbox_checked.png',
     undefined: 'images/mystery.png',
   },
 
