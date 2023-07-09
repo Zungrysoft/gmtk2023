@@ -22,7 +22,7 @@ export default class TitleScreen extends Thing {
     this.time += 1
     this.updateTimers()
     if (this.time > 30) {
-      if ((game.keysPressed.Space || game.buttonsPressed[0]) && !this.timers.transition) {
+      if ((game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) && !this.timers.transition) {
         this.selected = true
         this.after(20, () => { this.dead = true; game.addThing(new LevelSelect()) }, 'transition')
       }

@@ -50,7 +50,7 @@ export default class LevelSelect extends Thing {
     }
 
     if (this.time > 10) {
-      if (game.keysPressed.Space || game.buttonsPressed[0]) {
+      if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) {
         if (!this.selected) {
           this.after(20, () => { this.dead = true; game.resetScene() }, 'fadeout')
         }

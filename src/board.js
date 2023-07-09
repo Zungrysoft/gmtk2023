@@ -130,13 +130,13 @@ export default class Board extends Thing {
       if (game.keysPressed.ArrowLeft || game.keysPressed.KeyA || game.buttonsPressed[14]) {
         setControl = 'left'
       }
-      if (game.keysPressed.Space || game.buttonsPressed[0]) {
+      if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) {
         setControl = 'action'
       }
       if (game.keysPressed.Escape) {
         game.addThing(new LevelSelect())
       }
-      if (game.keysPressed.ShiftLeft || game.buttonsPressed[1] || (this.getActivePlayer()?.type === 'person' && (game.keysPressed.Space || game.buttonsPressed[0]))) {
+      if (game.keysPressed.ShiftLeft || game.buttonsPressed[1]) {
         setControl = 'switch'
       }
 
@@ -613,9 +613,9 @@ export default class Board extends Thing {
       this.executeWind(player)
       soundmanager.playSound('wind', 0.2)
     }
-    // if (player.type === 'person') {
-    //   this.advanceSwitch('switch')
-    // }
+    if (player.type === 'person') {
+      this.advanceSwitch('switch')
+    }
   }
 
   advanceSwitch(control) {
