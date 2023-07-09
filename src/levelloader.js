@@ -17,12 +17,12 @@ export let levelList = [
   { name: 'Windy Day', level: 'windy' },
   { name: 'Over the Seas', level: 'boat' },
   { name: 'Corridors', level: 'corridors' },
+  { name: 'Corners', level: 'corners' },
   { name: 'Wall of Thorns', level: 'blocking' },
   { name: 'Special Delivery', level: 'snowblower' },
-  { name: 'Crossway', level: 'vine' },
-  { name: 'Corners', level: 'corners' },
-  { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Open and Shut', level: 'shutter' },
+  { name: 'Crossway', level: 'vine' },
+  { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
 ]
 
