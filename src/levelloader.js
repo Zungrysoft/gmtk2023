@@ -3,6 +3,7 @@ import { assets } from './core/game.js'
 export let levelList = [
   { name: 'Baby\'s first mind control', level: 'intro' },
   { name: 'Four Square', level: 'four' },
+  { name: 'Double Trouble', level: 'fire' },
   { name: 'Going For a Swim', level: 'swim' },
   { name: 'Dodge and Burn', level: 'dodging' },
   { name: 'Tiny Islets', level: 'islets' },
