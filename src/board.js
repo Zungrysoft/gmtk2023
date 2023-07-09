@@ -956,6 +956,8 @@ export default class Board extends Thing {
       return
     }
 
+    let createdVine = false
+
     // Do both directions
     const vineLength = 15
     for (const direction of [player.direction, vec2.oppositeDirection(player.direction)]) {
@@ -1002,17 +1004,27 @@ export default class Board extends Thing {
           position: curPos,
           direction
         })
+        createdVine = true
       }
+    }
+
+    if (createdVine) {
+      soundmanager.playSound('vine', 0.2, [1.0, 1.0])
     }
   }
 
   executeRetractVines(player) {
     // Iterate over and delete all vine objects which are owned by this
+    let destroyedVine = false
     for (let i = this.state.things.length-1; i >= 0; i --) {
       const thing = this.state.things[i]
       if (thing.name === 'deco' && thing.type === 'vine' && thing.owner === player.id) {
         this.state.things.splice(i, 1)
+        destroyedVine = true
       }
+    }
+    if (destroyedVine) {
+      soundmanager.playSound('vine', 0.2, [0.7, 0.7])
     }
   }
 
