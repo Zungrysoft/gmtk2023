@@ -279,7 +279,9 @@ export default class Character extends Thing {
         this.animation = 'think'
       }
     }
-    if (this.tileThingReference.type === 'water' && board.getTileHeight(this.tileThingReference.position) === 0) {
+    if (this.tileThingReference.type === 'water' &&
+        board.getTileHeight(this.tileThingReference.position) === 0 &&
+        !(this.tileThingReference.position in board.state.waterlogged)) {
       this.animation = 'swim'
     }
     if (this.timers.death !== undefined) {
