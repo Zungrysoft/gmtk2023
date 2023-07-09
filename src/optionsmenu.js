@@ -18,7 +18,7 @@ export default class OptionsMenu extends Thing {
     globals.musicOn ? 'Music: ON' : 'Music OFF',
     globals.soundOn ? 'Sound: ON' : 'Music OFF',
     //'Delete Save Data',
-    'Save & Exit'
+    'Back'
   ]
   offsets = this.menu.map(_ => 0)
   selected = false

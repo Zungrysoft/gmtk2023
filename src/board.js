@@ -124,7 +124,7 @@ export default class Board extends Thing {
       if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) {
         setControl = 'action'
       }
-      if (game.keysPressed.Escape || game.keysPressed.Backspace) {
+      if (game.keysPressed.Escape || game.keysPressed.Backspace || game.buttonsPressed[8] || game.buttonsPressed[9]) {
         game.addThing(new PauseMenu())
       }
       if (game.keysPressed.ShiftLeft || game.buttonsPressed[1]) {
