@@ -28,6 +28,7 @@ export default class Character extends Thing {
     none: { frames: [0] }
   }
   lastDestination = [0, 0]
+  fireList = []
 
   constructor (tileThingReference) {
     super()
@@ -56,6 +57,8 @@ export default class Character extends Thing {
     this.animate()
     const board = game.getThing('board')
 
+    this.fireList = this.fireList.filter(x => !x.dead)
+
     // Do a little animation when I become selected
     if (this.tileThingReference.active && !this.wasActive) {
       this.announce()
@@ -65,10 +68,15 @@ export default class Character extends Thing {
 
       if (this.tileThingReference.type === 'person') {
         if (board && board.getActivePlayer()) {
-        soundmanager.playSound('stop_possession', 0.2)
+          soundmanager.playSound('stop_possession', 0.2)
         }
       } else {
         soundmanager.playSound('start_possession', 0.2)
+      }
+
+      // When I become selected, kill all of my NPC fires
+      for (const fire of this.fireList) {
+        fire.dead = true
       }
     }
     if (this.timer('announce')) {
@@ -131,6 +139,11 @@ export default class Character extends Thing {
       }
     }
 
+    if (!this.tileThingReference.active && this.wasActive && this.tileThingReference.type === 'fire') {
+      delete this.timers.fire
+      this.createFire(false)
+    }
+
     this.npcAnimations()
 
     this.wasActive = this.tileThingReference.active
@@ -160,6 +173,27 @@ export default class Character extends Thing {
       }
     }
 
+    /*
+    if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
+      ctx.save()
+      ctx.translate(...this.position)
+      //ctx.translate(game.config.width / 2, game.config.height / 2)
+      //ctx.translate(...game.getCamera2D().position.map(x => x * -1))
+      for (let a = 0; a < 8; a += 1) {
+        const angle = a * Math.PI / 4
+        ctx.save()
+        const delta = [Math.round(Math.cos(angle)), Math.round(Math.sin(angle))]
+        ctx.translate(...vec2.scale(delta, 64))
+        if (board.getTileHeight(vec2.add(this.tileThingReference.position, delta)) > 1) { ctx.restore(); continue }
+        ctx.rotate(this.time / 20)
+        ctx.translate(-32, -32)
+        ctx.drawImage(game.assets.images.deco_fire, 0, 0)
+        ctx.restore()
+      }
+      ctx.restore()
+    }
+    */
+
     ctx.save()
     const prevScale = this.scale
     if (this.timers.death !== undefined) {
@@ -169,6 +203,7 @@ export default class Character extends Thing {
     super.draw(...this.drawPosition)
     this.scale = prevScale
     ctx.restore()
+
   }
 
   postDraw () {
@@ -242,7 +277,9 @@ export default class Character extends Thing {
       const angle = a * Math.PI / 4
       const x = this.tileThingReference.position[0] + Math.round(Math.cos(angle))
       const y = this.tileThingReference.position[1] + Math.round(Math.sin(angle))
-      game.addThing(new Fire([x, y], fade))
+
+      // Record my fires so I can kill them later if I'm selected
+      this.fireList.push(game.addThing(new Fire([x, y], fade)))
     }
   }
 
@@ -265,7 +302,7 @@ export default class Character extends Thing {
     if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead) {
       if (this.tileThingReference.type === 'fire') {
         if (!this.timer('fire')) {
-          if (init) { this.createFire() }
+          if (init) { this.createFire(false) }
           this.after(50, () => this.createFire(false), 'fire')
         }
       }
