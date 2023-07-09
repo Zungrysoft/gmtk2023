@@ -7,7 +7,7 @@ import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 import { assets } from './core/game.js'
-import { getLevel } from './levelloader.js'
+import { getLevel, levelList } from './levelloader.js'
 import Character from './character.js'
 import Fire from './fire.js'
 import Wave from './wave.js'
@@ -1107,15 +1107,36 @@ export default class Board extends Thing {
     if (game.getThing('levelselect')) { return }
     if (game.getThing('pausemenu')) { return }
     const { ctx } = game
-    ctx.save()
-    ctx.translate(32, game.config.height - 32)
-    ctx.font = 'italic bold 40px Arial'
-    ctx.fillStyle = '#21235B'
-    ctx.fillText(`Level ${game.globals.level}`, 0, 0)
-    ctx.translate(4, -4)
-    ctx.fillStyle = 'white'
-    ctx.fillText(`Level ${game.globals.level}`, 0, 0)
-    ctx.restore()
+
+    {
+      ctx.save()
+      ctx.translate(32, game.config.height - 32)
+      ctx.font = 'italic bold 20px Arial'
+      ctx.fillStyle = '#21235B'
+      const levelName = `Level ${game.globals.level}: ${levelList[game.globals.level - 1].name}`
+      ctx.fillText(levelName, 0, 0)
+      ctx.translate(4, -4)
+      ctx.fillStyle = 'white'
+      ctx.fillText(levelName, 0, 0)
+      ctx.restore()
+    }
+
+    {
+      ctx.save()
+      ctx.translate(game.config.width - 32, game.config.height - 32)
+      ctx.font = 'italic bold 32px Arial'
+      ctx.fillStyle = '#21235B'
+      ctx.textAlign = 'right'
+      let levelName = 'You are dead'
+      if (this.getActivePlayer()) {
+        levelName = `You are ${this.getActivePlayer().type} guy`
+      }
+      ctx.fillText(levelName, 0, 0)
+      ctx.translate(4, -4)
+      ctx.fillStyle = 'white'
+      ctx.fillText(levelName, 0, 0)
+      ctx.restore()
+    }
   }
 
   draw () {
