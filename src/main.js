@@ -6,7 +6,7 @@ import TitleScreen from './titlescreen.js'
 //game.config.width = 1600 * 3/4
 //game.config.height = 1200 * 3/4
 //game.config.isWebglEnabled = false
-document.title = 'Elemental Cave'
+document.title = 'You Are Person Guy'
 
 await game.loadAssets({
   images: {
@@ -58,6 +58,7 @@ await game.loadAssets({
     swamp: 'json/levels/swamp.json',
     vine: 'json/levels/vine.json',
     big: 'json/levels/big.json',
+    islands: 'json/levels/islands.json',
   },
 
   sounds: {

@@ -827,7 +827,7 @@ export default class Board extends Thing {
             burnSound = true
           }
           // Wood
-          if (thing.name === 'deco' && ['wood', /*'vine', 'box'*/].includes(thing.type)) {
+          if (thing.name === 'deco' && ['wood', 'box'].includes(thing.type)) {
             this.state.things.splice(j, 1)
             j --
             burnSound = true
