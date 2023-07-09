@@ -40,6 +40,7 @@ export default class Character extends Thing {
     this.npcAnimations(true)
     if (this.tileThingReference.type === 'person') {
       game.getCamera2D().position = [...this.position]
+      game.setThingName(this, 'playercharacter')
     }
   }
 
@@ -163,6 +164,7 @@ export default class Character extends Thing {
 
     if (tileThing.dead) { return }
     if (game.getThing('titlescreen')) { return }
+    if (game.getThing('levelselect')) { return }
 
     ctx.save()
     ctx.translate(game.config.width / 2, game.config.height / 2)

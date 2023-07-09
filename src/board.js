@@ -1079,6 +1079,8 @@ export default class Board extends Thing {
   postDraw () {
     if (game.getThing('winscreen')) { return }
     if (game.getThing('titlescreen')) { return }
+    if (game.getThing('levelselect')) { return }
+    if (game.getThing('pausemenu')) { return }
     const { ctx } = game
     ctx.save()
     ctx.translate(32, game.config.height - 32)

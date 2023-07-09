@@ -6,6 +6,7 @@ import * as mat from './core/matrices.js'
 import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
+import LevelSelect from './levelselect.js'
 
 export default class TitleScreen extends Thing {
   time = -10
@@ -20,7 +21,9 @@ export default class TitleScreen extends Thing {
     this.time += 1
     if (this.time > 30) {
       if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
-        game.resetScene()
+        //game.resetScene()
+        this.dead = true
+        game.addThing(new LevelSelect())
       }
     }
   }
@@ -36,14 +39,14 @@ export default class TitleScreen extends Thing {
     ctx.save()
     ctx.globalAlpha = u.squareMap(this.time, 0, 30, 0, 1, true)
     //ctx.translate(256 + 64, 180)
-    ctx.translate(game.config.width / 2, game.config.height / 2 - 50)
+    ctx.translate(game.config.width / 2, game.config.height / 2 - 140)
     ctx.translate(-200, -100 + Math.sin(this.time / 40) * 10)
     ctx.drawImage(game.assets.images.title, 0, 0)
     ctx.restore()
 
     ctx.save()
     //ctx.translate(game.config.width - 64, game.config.height - 64)
-    ctx.translate(game.config.width / 2, game.config.height / 2 + 120)
+    ctx.translate(game.config.width / 2, game.config.height / 2 + 75)
     ctx.font = 'italic 28px Arial'
     ctx.textAlign = 'center'
     ctx.fillStyle = 'white'

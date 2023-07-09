@@ -1,20 +1,21 @@
 import { assets } from './core/game.js'
 
+export let levelList = [
+  { name: 'Baby\'s first mind control', level: 'intro' },
+  { name: 'Blocking', level: 'blocking' },
+  { name: 'Going for a swim', level: 'swim' },
+  { name: 'Open and shut', level: 'shutter' },
+  { name: 'Maze', level: 'maze' },
+  { name: 'Dodge', level: 'dodging' },
+  { name: 'Corners', level: 'corners' },
+  { name: 'Windy day', level: 'windy' },
+  { name: 'Swamp', level: 'swamp' },
+  { name: 'Vines', level: 'vine' },
+]
+
 export function getLevel(lvl) {
   // Retrieve level data
-  const levelList = [
-    "intro",
-    "blocking",
-    "vine",
-    "swamp",
-    "swim",
-    "shutter",
-    "maze",
-    "dodging",
-    "corners",
-    "windy",
-  ]
-  let json = JSON.parse(assets.json[levelList[lvl-1] || "intro"])
+  let json = JSON.parse(assets.json[levelList[lvl-1].level || "intro"])
 
   // Merge layers together
   let ret = {
