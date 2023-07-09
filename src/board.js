@@ -464,7 +464,7 @@ export default class Board extends Thing {
         if (blockingThing) {
           return undefined
         }
-        const hitPlayer = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['player'].includes(x.name))[0]
+        const hitPlayer = this.state.things.filter(x => vec2.equals(curPos, x.position) && (!x.dead) && ['player'].includes(x.name))[0]
         if (hitPlayer) {
           return hitPlayer
         }
