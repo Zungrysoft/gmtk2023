@@ -56,7 +56,7 @@ export default class TitleScreen extends Thing {
     ctx.textAlign = 'center'
     ctx.fillStyle = 'white'
     ctx.globalAlpha = u.map(this.time, 80, 120, 0, u.map(Math.sin(this.time / 15), -1, 1, 0.8, 1), true)
-    ctx.fillText('Press any key', 0, 0)
+    ctx.fillText('Press Space to start!', 0, 0)
     ctx.restore()
   }
 }
