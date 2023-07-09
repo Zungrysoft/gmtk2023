@@ -55,6 +55,7 @@ await game.loadAssets({
     windy: 'json/levels/windy.json',
     swamp: 'json/levels/swamp.json',
     vine: 'json/levels/vine.json',
+    big: 'json/levels/big.json',
   },
 
   sounds: {
