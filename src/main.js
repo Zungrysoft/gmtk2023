@@ -72,6 +72,7 @@ await game.loadAssets({
     cove: 'json/levels/cove.json',
     fountain: 'json/levels/fountain.json',
     bird: 'json/levels/bird.json',
+    lake: 'json/levels/lake.json',
   },
 
   sounds: {
