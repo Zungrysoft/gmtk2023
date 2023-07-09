@@ -33,6 +33,12 @@ export default class Character extends Thing {
     super()
     this.tileThingReference = tileThingReference
     this.sprite = "player_" + tileThingReference.type
+    if (tileThingReference.type === 'wind' && vec2.directionToVector(tileThingReference.direction)[1] === -1) {
+      this.sprite = 'player_wind_back'
+    }
+    if (tileThingReference.type === 'wind' && vec2.directionToVector(tileThingReference.direction)[1] === 1) {
+      this.sprite = 'player_wind_front'
+    }
     this.position = this.getDestination()
     this.drawPosition = [...this.position]
     this.lastPosition = [...this.position]
@@ -73,10 +79,16 @@ export default class Character extends Thing {
     // Move towards and face towards my destination
     const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
-    if (destination[0] < this.position[0]) {
-      this.scale[0] = Math.abs(this.scale[0]) * -1
+    if (this.tileThingReference.type !== 'wind') {
+      if (destination[0] < this.position[0]) {
+        this.scale[0] = Math.abs(this.scale[0]) * -1
+      } else {
+        this.scale[0] = Math.abs(this.scale[0])
+      }
     } else {
-      this.scale[0] = Math.abs(this.scale[0])
+      if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
+        this.scale[0] = Math.abs(this.scale[0]) * -1
+      }
     }
 
     if (destination[0] !== this.lastDestination[0] || destination[1] !== this.lastDestination[1]) {
@@ -267,7 +279,9 @@ export default class Character extends Thing {
         this.animation = 'think'
       }
     }
-    if (this.tileThingReference.type === 'water' && board.getTileHeight(this.tileThingReference.position) === 0) {
+    if (this.tileThingReference.type === 'water' &&
+        board.getTileHeight(this.tileThingReference.position) === 0 &&
+        !(this.tileThingReference.position in board.state.waterlogged)) {
       this.animation = 'swim'
     }
     if (this.timers.death !== undefined) {
