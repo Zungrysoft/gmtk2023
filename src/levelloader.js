@@ -5,6 +5,7 @@ export let levelList = [
   { name: 'Going For a Swim', level: 'swim' },
   { name: 'Dodge and Burn', level: 'dodging' },
   { name: 'Tiny Islets', level: 'islets' },
+  { name: 'Rockoban', level: 'sokoban' },
   { name: 'One-Guy Mission', level: 'islands' },
   { name: 'Alongside the Maze', level: 'maze' },
   { name: 'Windy Day', level: 'windy' },
