@@ -144,5 +144,25 @@ export default class PauseMenu extends Thing {
     }
     ctx.fillText('Press space to select!', 0, 0)
     ctx.restore()
+
+    ctx.save()
+    ctx.translate(64, game.config.height - 64)
+    ctx.font = 'italic 24px Arial'
+    ctx.fillStyle = 'white'
+    ctx.globalAlpha = 0.75
+    if (this.timers.fadeout) {
+      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+    }
+    ctx.translate(0, -32 * 4 - 16)
+    ctx.fillText('Controls:', 0, 0)
+    ctx.translate(0, 32 + 16)
+    ctx.fillText('WASD / Arrow keys to move', 0, 0)
+    ctx.translate(0, 32)
+    ctx.fillText('Space to possess guy', 0, 0)
+    ctx.translate(0, 32)
+    ctx.fillText('Shift to return to your body', 0, 0)
+    ctx.translate(0, 32)
+    ctx.fillText('Space to use special abillity', 0, 0)
+    ctx.restore()
   }
 }

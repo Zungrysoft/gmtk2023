@@ -1133,7 +1133,9 @@ export default class Board extends Thing {
       ctx.textAlign = 'right'
       let levelName = 'You are dead'
       if (this.getActivePlayer()) {
-        levelName = `You are ${this.getActivePlayer().type} guy`
+        const name = this.getActivePlayer().type
+        const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
+        levelName = `You are ${capitalizedName} Guy`
       }
       ctx.fillText(levelName, 0, 0)
       ctx.translate(4, -4)
