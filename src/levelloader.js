@@ -1,7 +1,7 @@
 import { assets } from './core/game.js'
 
 export let levelList = [
-  { name: 'Baby\'s first mind control', level: 'intro' },
+  { name: 'Baby\'s First Mind Control', level: 'intro' },
   { name: 'Four Square', level: 'four' },
   { name: 'Double Trouble', level: 'fire' },
   { name: 'Fountain of Flame', level: 'fountain' },
@@ -12,17 +12,17 @@ export let levelList = [
   { name: 'Dodge and Burn', level: 'dodging' },
   { name: 'Far Out', level: 'safety' },
   { name: 'Rockoban', level: 'sokoban' },
-  { name: 'One-Guy Mission', level: 'islands' },
-  { name: 'Alongside the Maze', level: 'maze' },
+  { name: 'Hop Across', level: 'islands' },
   { name: 'Cavern Lake', level: 'lake' },
   { name: 'Windy Day', level: 'windy' },
+  { name: 'Alongside the Maze', level: 'maze' },
   { name: 'Over the Seas', level: 'boat' },
   { name: 'Corridors', level: 'corridors' },
   { name: 'Corners', level: 'corners' },
   { name: 'Wall of Thorns', level: 'blocking' },
   { name: 'Special Delivery', level: 'snowblower' },
-  { name: 'Open and Shut', level: 'shutter' },
   { name: 'Crossway', level: 'vine' },
+  { name: 'Open and Shut', level: 'shutter' },
   { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
 ]
