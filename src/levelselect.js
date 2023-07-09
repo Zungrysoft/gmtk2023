@@ -44,6 +44,10 @@ export default class LevelSelect extends Thing {
     this.time += 1
     this.scroll = u.lerp(this.scroll, this.scrollTarget, 0.25)
 
+    if (game.assets.sounds.title_music.paused) {
+      soundmanager.playMusic('title_music', 0.125)
+    }
+
     if (this.timers.fadeout) {
       const pos = game.getThing('playercharacter').position
       game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, pos, 0.25)
