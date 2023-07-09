@@ -102,18 +102,18 @@ export default class Board extends Thing {
       if (game.keysPressed.Backspace || game.keysPressed.KeyR || game.buttonsPressed[4]) {
         //game.resetScene()
       }
-      if (game.keysPressed.BracketLeft || game.keysPressed.Minus || game.keysPressed.NumpadSubtract || game.buttonsPressed[6]) {
-        if (game.globals.level > 1) {
-          game.globals.level --
-          game.resetScene()
-        }
-      }
-      if (game.keysPressed.BracketRight || game.keysPressed.Equal || game.keysPressed.NumpadAdd || game.buttonsPressed[7]) {
-        if (game.globals.level < game.globals.levelCount) {
-          game.globals.level ++
-          game.resetScene()
-        }
-      }
+      // if (game.keysPressed.BracketLeft || game.keysPressed.Minus || game.keysPressed.NumpadSubtract || game.buttonsPressed[6]) {
+      //   if (game.globals.level > 1) {
+      //     game.globals.level --
+      //     game.resetScene()
+      //   }
+      // }
+      // if (game.keysPressed.BracketRight || game.keysPressed.Equal || game.keysPressed.NumpadAdd || game.buttonsPressed[7]) {
+      //   if (game.globals.level < game.globals.levelCount) {
+      //     game.globals.level ++
+      //     game.resetScene()
+      //   }
+      // }
     }
 
     // Camera controls
@@ -1055,6 +1055,16 @@ export default class Board extends Thing {
     // Vine guys must update their vines
     if (player.type === 'vine') {
       this.executeRetractVines(player)
+    }
+
+    // Ice guy must kill all his ice
+    if (player.type === 'ice') {
+      for (const key in this.state.waterlogged) {
+        let thing = this.state.waterlogged[key]
+        if (thing.type === 'ice' && thing.owner === player.id) {
+          delete this.state.waterlogged[key]
+        }
+      }
     }
 
     // If person guy is killed, the active player dies too
