@@ -13,6 +13,7 @@ export default class Sign extends Thing {
   text = []
   width = 0
   height = 0
+  time = 0
 
   constructor (tileThingReference) {
     super()
@@ -28,7 +29,6 @@ export default class Sign extends Thing {
     }
     ctx.restore()
     this.height = this.text.length * 32 + 32
-    console.log(this.width, this.height)
   }
 
   update () {
@@ -37,14 +37,33 @@ export default class Sign extends Thing {
       const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.5, 1)
       this.scale = [scalar, scalar]
     }
+
+    const board = game.getThing('board')
+    if (board && !board.movementDisabled) {
+      const player = board.getActivePlayer()
+      if (player && vec2.distance(this.tileThingReference.position, player.position) < 3) {
+        this.time += 1
+      } else {
+        this.time = 0
+      }
+    }
+
+    this.scale = [
+      1,//u.map(Math.cos(this.time / 10), -1, 1, 0.8, 1.2),
+      u.map(Math.sin(this.time / 10), -1, 1, 0.9, 1.3),
+    ]
   }
 
   draw () {
     super.draw()
     const { ctx } = game
-    const player = game.getThing('playercharacter')
+    const board = game.getThing('board')
+    if (!board || board.movementDisabled) {
+      return
+    }
+    const player = board.getActivePlayer()
     if (!player) { return }
-    if (vec2.distance(this.position, player.position) < 64 * 3) {
+    if (vec2.distance(this.tileThingReference.position, player.position) < 3) {
       ctx.save()
       ctx.fillStyle = '#21235B'
       ctx.globalAlpha = 0.75
