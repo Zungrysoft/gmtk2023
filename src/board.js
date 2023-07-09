@@ -1053,6 +1053,16 @@ export default class Board extends Thing {
       this.executeRetractVines(player)
     }
 
+    // Ice guy must kill all his ice
+    if (player.type === 'ice') {
+      for (const key in this.state.waterlogged) {
+        let thing = this.state.waterlogged[key]
+        if (thing.type === 'ice' && thing.owner === player.id) {
+          delete this.state.waterlogged[key]
+        }
+      }
+    }
+
     // If person guy is killed, the active player dies too
     if (player.type === 'person') {
       if (this.getActivePlayer() && this.getActivePlayer().type !== 'person') {
