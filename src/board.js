@@ -101,18 +101,18 @@ export default class Board extends Thing {
       if (game.keysPressed.Backspace || game.keysPressed.KeyR || game.buttonsPressed[4]) {
         game.resetScene()
       }
-      if (game.keysPressed.BracketLeft || game.keysPressed.Minus || game.keysPressed.NumpadSubtract || game.buttonsPressed[6]) {
-        if (game.globals.level > 1) {
-          game.globals.level --
-          game.resetScene()
-        }
-      }
-      if (game.keysPressed.BracketRight || game.keysPressed.Equal || game.keysPressed.NumpadAdd || game.buttonsPressed[7]) {
-        if (game.globals.level < game.globals.levelCount) {
-          game.globals.level ++
-          game.resetScene()
-        }
-      }
+      // if (game.keysPressed.BracketLeft || game.keysPressed.Minus || game.keysPressed.NumpadSubtract || game.buttonsPressed[6]) {
+      //   if (game.globals.level > 1) {
+      //     game.globals.level --
+      //     game.resetScene()
+      //   }
+      // }
+      // if (game.keysPressed.BracketRight || game.keysPressed.Equal || game.keysPressed.NumpadAdd || game.buttonsPressed[7]) {
+      //   if (game.globals.level < game.globals.levelCount) {
+      //     game.globals.level ++
+      //     game.resetScene()
+      //   }
+      // }
     }
 
     // Camera controls
