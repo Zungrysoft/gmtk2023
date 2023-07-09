@@ -97,37 +97,43 @@ export default class LevelSelect extends Thing {
 
   postDraw () {
     const { ctx } = game
+    const slideIn = u.squareMap(this.time, -10, 10, -800, 0, true)
     ctx.save()
     ctx.fillStyle = '#21235B'
     ctx.globalAlpha = 0.45
     if (this.timers.fadeout) {
       ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 0.45, 0, true)
+      //ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
     }
     ctx.fillRect(0, 0, game.config.width, game.config.height)
     ctx.restore()
 
     ctx.save()
     ctx.fillStyle = '#21235B'
-    ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    //ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    ctx.translate(slideIn, 0)
     if (this.timers.fadeout) {
-      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+      //ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+      ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
     }
     ctx.fillRect(0, 0, 700, game.config.height)
     ctx.restore()
 
     ctx.save()
-    ctx.globalAlpha = u.squareMap(this.time, 0, 30, 0, 1, true)
+    //ctx.globalAlpha = u.squareMap(this.time, 0, 30, 0, 1, true)
+    ctx.translate(slideIn, 0)
     ctx.translate(128, 128)
     ctx.font = 'italic bold 32px Arial'
     ctx.textAlign = 'left'
     for (let i = 0; i < this.menu.length; i += 1) {
       ctx.save()
       if (this.timers.fadeout) {
-        if (i === this.selection) {
-          ctx.globalAlpha = 1
-        } else {
-          ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
-        }
+        //if (i === this.selection) {
+          //ctx.globalAlpha = 1
+        //} else {
+          //ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+          ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
+        //}
       }
       ctx.translate(0, i * 48)
       ctx.translate(0, this.scroll * -48)
@@ -152,18 +158,22 @@ export default class LevelSelect extends Thing {
 
     ctx.save()
     ctx.fillStyle = '#21235B'
-    ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    //ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    ctx.translate(slideIn, 0)
     if (this.timers.fadeout) {
-      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+      //ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+      ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
     }
     //ctx.globalAlpha = ctx.globalAlpha ** 2
     ctx.fillRect(0, 0, 700, 90)
     ctx.restore()
 
     ctx.save()
-    ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    //ctx.globalAlpha = u.map(this.time, 0, 10, 0, 1, true)
+    ctx.translate(slideIn, 0)
     if (this.timers.fadeout) {
-      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+      //ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
+      ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
     }
     ctx.fillStyle = 'white'
     ctx.font = 'italic bold 48px Arial'
