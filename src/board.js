@@ -12,7 +12,7 @@ import Character from './character.js'
 import Fire from './fire.js'
 import Wave from './wave.js'
 import DeathScreen from './deathscreen.js'
-import LevelSelect from './levelselect.js'
+import PauseMenu from './pausemenu.js'
 
 const tileWidth = 64
 const tileDepth = 64
@@ -99,7 +99,7 @@ export default class Board extends Thing {
     // Level controls
     if (this.time > 5) {
       if (game.keysPressed.Backspace || game.keysPressed.KeyR || game.buttonsPressed[4]) {
-        game.resetScene()
+        //game.resetScene()
       }
       if (game.keysPressed.BracketLeft || game.keysPressed.Minus || game.keysPressed.NumpadSubtract || game.buttonsPressed[6]) {
         if (game.globals.level > 1) {
@@ -134,7 +134,7 @@ export default class Board extends Thing {
         setControl = 'action'
       }
       if (game.keysPressed.Escape) {
-        game.addThing(new LevelSelect())
+        game.addThing(new PauseMenu())
       }
       if (game.keysPressed.ShiftLeft || game.buttonsPressed[1]) {
         setControl = 'switch'
