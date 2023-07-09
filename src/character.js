@@ -171,7 +171,7 @@ export default class Character extends Thing {
         if (board.getTileHeight(vec2.add(this.tileThingReference.position, delta)) > 1) { continue }
         ctx.save()
         ctx.translate(...vec2.scale(delta, 64))
-        ctx.rotate(this.time / 20)
+        ctx.rotate(this.time / -20)
         ctx.translate(-32, -32)
         ctx.drawImage(game.assets.images.deco_fire, 0, 0)
         ctx.restore()

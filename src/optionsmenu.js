@@ -7,13 +7,19 @@ import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 import { levelList, getLevel } from './levelloader.js'
-import LevelSelect from './levelselect.js'
-import OptionsMenu from './optionsmenu.js'
+import PauseMenu from './pausemenu.js'
 
-export default class PauseMenu extends Thing {
+const globals = game.globals
+
+export default class OptionsMenu extends Thing {
   time = 0
   selection = 0
-  menu = ['Resume', 'Restart', 'Options', 'Exit & Switch Level']
+  menu = [
+    globals.musicOn ? 'Music: ON' : 'Music OFF',
+    globals.soundOn ? 'Sound: ON' : 'Music OFF',
+    //'Delete Save Data',
+    'Save & Exit'
+  ]
   offsets = this.menu.map(_ => 0)
   selected = false
   fadeout = 0
@@ -21,7 +27,7 @@ export default class PauseMenu extends Thing {
 
   constructor () {
     super()
-    game.setThingName(this, 'pausemenu')
+    game.setThingName(this, 'optionsmenu')
     game.getThing('board').movementDisabled = true
     //this.snapCamera()
   }
@@ -45,20 +51,37 @@ export default class PauseMenu extends Thing {
     if (this.time > 10) {
       if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0] || game.keysPressed.Escape || game.keysPressed.Backspace) {
         if (!this.selected) {
-          let callback = () => { this.dead = true; game.getThing('board').movementDisabled = false }
+          let callback = () => {
+            globals.musicOn = !globals.musicOn
+            soundmanager.setMusicVolume(globals.musicOn ? 1 : 0)
+            this.menu[0] = globals.musicOn ? 'Music: ON' : 'Music: OFF'
+          }
           if (this.selection === 1) {
-            callback = () => { this.dead = true; game.resetScene() }
+            callback = () => {
+              globals.soundOn = !globals.soundOn
+              soundmanager.setSoundVolume(globals.soundOn ? 1 : 0)
+              this.menu[1] = globals.soundOn ? 'Sound: ON' : 'Sound: OFF'
+            }
           }
+          /*
           if (this.selection === 2) {
-            callback = () => { this.dead = true; game.addThing(new OptionsMenu()) }
+            callback = () => {
+              globals.levelCompletions = []
+              for (let i = 0; i < game.globals.levelCount; i++) {
+                game.globals.levelCompletions.push(false)
+              }
+            }
+            localStorage.levelCompletions = JSON.stringify(game.globals.levelCompletions)
           }
-          if (this.selection === 3) {
-            callback = () => { this.dead = true; game.addThing(new LevelSelect()) }
+          */
+          if (this.selection === 2) {
+            this.dead = true
+            game.addThing(new PauseMenu())
+            this.selected = true
           }
-          this.after(20, callback, 'fadeout')
+          this.after(this.selection === 3 ? 20 : 1, callback, 'fadeout')
           soundmanager.playSound('menu_ok', 0.1, [0.75, 0.85])
         }
-        this.selected = true
       }
     }
     if (this.selected) return
@@ -135,7 +158,7 @@ export default class PauseMenu extends Thing {
     ctx.fillStyle = 'white'
     ctx.font = 'italic bold 48px Arial'
     ctx.textAlign = 'center'
-    ctx.fillText('Paused', game.config.width / 2, 300)
+    ctx.fillText('Options', game.config.width / 2, 300)
     ctx.restore()
 
     ctx.save()
@@ -148,26 +171,6 @@ export default class PauseMenu extends Thing {
       ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
     }
     ctx.fillText('Press space to select!', 0, 0)
-    ctx.restore()
-
-    ctx.save()
-    ctx.translate(64, game.config.height - 64)
-    ctx.font = 'italic 24px Arial'
-    ctx.fillStyle = 'white'
-    ctx.globalAlpha = 0.75
-    if (this.timers.fadeout) {
-      ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
-    }
-    ctx.translate(0, -32 * 4 - 16)
-    ctx.fillText('Controls:', 0, 0)
-    ctx.translate(0, 32 + 16)
-    ctx.fillText('WASD / Arrow keys to move', 0, 0)
-    ctx.translate(0, 32)
-    ctx.fillText('Space to possess guy', 0, 0)
-    ctx.translate(0, 32)
-    ctx.fillText('Shift to return to your body', 0, 0)
-    ctx.translate(0, 32)
-    ctx.fillText('Space to use special abillity', 0, 0)
     ctx.restore()
   }
 }
