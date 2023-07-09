@@ -74,5 +74,17 @@ export default class TitleScreen extends Thing {
     }
     ctx.fillText('Press space to start!', 0, 0)
     ctx.restore()
+
+    ctx.save()
+    ctx.translate(game.config.width / 2, game.config.height - 64)
+    ctx.font = 'italic 24px Arial'
+    ctx.textAlign = 'center'
+    ctx.fillStyle = 'white'
+    ctx.globalAlpha = 0.75
+    if (this.timers.transition) {
+      ctx.globalAlpha = u.map(this.timer('transition'), 0, 1, 0.75, 0, true)
+    }
+    ctx.fillText('Created by ZungryWare and Groverburger in 48 hours for GMTK 2023', 0, 0)
+    ctx.restore()
   }
 }
