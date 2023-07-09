@@ -1144,6 +1144,29 @@ export default class Board extends Thing {
       ctx.fillText(levelName, 0, 0)
       ctx.restore()
     }
+
+    {
+      ctx.save()
+      ctx.translate(game.config.width - 32, game.config.height - 32 - 48)
+      ctx.font = 'italic bold 20px Arial'
+      ctx.fillStyle = '#21235B'
+      ctx.textAlign = 'right'
+      let color = 'white'
+      let text = ''
+      if (this.getActivePlayer()?.type === 'fire') {
+        text = 'Press space to shoot fire!'
+        color = '#FF711C'
+      }
+      if (this.getActivePlayer()?.type === 'wind') {
+        text = 'Press space to blow wind!'
+        color = '#C1F3FF'
+      }
+      ctx.fillText(text, 0, 0)
+      ctx.translate(2, -2)
+      ctx.fillStyle = color
+      ctx.fillText(text, 0, 0)
+      ctx.restore()
+    }
   }
 
   draw () {
