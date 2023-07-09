@@ -92,7 +92,7 @@ export default class Character extends Thing {
 
     if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined && !this.dead) {
       this.after(120, () => this.dead = true, 'death')
-      soundmanager.playSound('death', 0.25)
+      soundmanager.playSound('death', 0.2)
     }
 
     // Camera should follow me when I'm the active player

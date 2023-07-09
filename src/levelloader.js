@@ -2,15 +2,17 @@ import { assets } from './core/game.js'
 
 export let levelList = [
   { name: 'Baby\'s first mind control', level: 'intro' },
-  { name: 'Blocking', level: 'blocking' },
-  { name: 'Going for a swim', level: 'swim' },
-  { name: 'Open and shut', level: 'shutter' },
-  { name: 'Maze', level: 'maze' },
-  { name: 'Dodge', level: 'dodging' },
+  { name: 'Going For a Swim', level: 'swim' },
+  { name: 'Dodge and Burn', level: 'dodging' },
+  { name: 'One-Guy Mission', level: 'islands' },
+  { name: 'Alongside the Maze', level: 'maze' },
+  { name: 'Windy Day', level: 'windy' },
+  { name: 'Wall of Thorns', level: 'blocking' },
+  { name: 'Open and Shut', level: 'shutter' },
+  { name: 'Crossway', level: 'vine' },
   { name: 'Corners', level: 'corners' },
-  { name: 'Windy day', level: 'windy' },
-  { name: 'Swamp', level: 'swamp' },
-  { name: 'Vines', level: 'vine' },
+  { name: 'Carnivorous Cove', level: 'swamp' },
+  { name: 'Roundabout', level: 'big' },
 ]
 
 export function getLevel(lvl) {
