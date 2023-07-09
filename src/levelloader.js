@@ -56,7 +56,7 @@ export function getLevel(lvl) {
   // To make things easier in the editor, convert unknown entities to deco
   for (let i = 0; i < ret.things.length; i ++) {
     const thing = ret.things[i]
-    if (!['player', 'deco', 'goal'].includes(thing.name)) {
+    if (!['player', 'deco', 'goal', 'sign'].includes(thing.name)) {
       thing.data.type = thing.name
       thing.name = 'deco'
     }

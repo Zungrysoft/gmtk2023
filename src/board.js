@@ -10,6 +10,7 @@ import { assets } from './core/game.js'
 import { getLevel, levelList } from './levelloader.js'
 import Character from './character.js'
 import Fire from './fire.js'
+import Sign from './sign.js'
 import Wave from './wave.js'
 import DeathScreen from './deathscreen.js'
 import PauseMenu from './pausemenu.js'
@@ -299,6 +300,9 @@ export default class Board extends Thing {
     this.state.things.forEach(thing => {
       if (thing.name === 'player') {
         game.addThing(new Character(thing))
+      }
+      if (thing.name === 'sign') {
+        game.addThing(new Sign(thing))
       }
     })
   }
@@ -1215,7 +1219,7 @@ export default class Board extends Thing {
             if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
               image = 'deco_vine_v'
             }
-            if (image) {
+            if (image && assets.images[image]) {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }
           }

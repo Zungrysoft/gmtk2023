@@ -19,6 +19,7 @@ await game.loadAssets({
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
     player_water: 'images/waterguy.png',
+    sign: 'images/sign.png',
 
     // Deco Objects
     deco_rock: 'images/rock.png',
