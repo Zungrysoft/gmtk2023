@@ -38,7 +38,7 @@ export default class Character extends Thing {
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
     this.npcAnimations(true)
-    if (this.tileThingReference.type === 'person') {
+    if (game.getThing('board').getActivePlayer() === this.tileThingReference) {
       game.getCamera2D().position = [...this.position]
       game.setThingName(this, 'playercharacter')
     }
