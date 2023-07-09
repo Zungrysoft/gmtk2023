@@ -10,6 +10,7 @@ export let levelList = [
   { name: 'Air Ride', level: 'bird' },
   { name: 'Tiny Islets', level: 'islets' },
   { name: 'Dodge and Burn', level: 'dodging' },
+  { name: 'Far Out', level: 'safety' },
   { name: 'Rockoban', level: 'sokoban' },
   { name: 'One-Guy Mission', level: 'islands' },
   { name: 'Alongside the Maze', level: 'maze' },
