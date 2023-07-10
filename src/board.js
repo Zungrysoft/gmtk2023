@@ -543,10 +543,12 @@ export default class Board extends Thing {
     if (this.getTileHeight(newPosition) <= 0 && !(newPosition in this.state.waterlogged)) {
       // ...but waterguy can
       if (!(player.type === 'water')) {
+        return
+
         // ...but the play can enter a wind tunnel over water
-        if (!this.tileIsInWindTunnel(newPosition)) {
-          return
-        }
+        // if (!this.tileIsInWindTunnel(newPosition)) {
+        //   return
+        // }
       }
     }
 
