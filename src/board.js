@@ -863,7 +863,7 @@ export default class Board extends Thing {
     let foundThing = undefined
     let i = 0
 
-    let didPushSound = false
+    let didPush = false
 
     while (i < blowDistance) {
       // Advance
@@ -910,13 +910,14 @@ export default class Board extends Thing {
 
         // Wasn't blocked. Push player.
         foundThing.position = curPos
-        didPushSound = true
+        didPush = true
       }
-      this.executeUpdatePlayer(foundThing)
     }
 
-    if (didPushSound) {
+    // If something was pushed at least one tile, play sound effect and update that thing
+    if (didPush) {
       soundmanager.playSound('wind', 0.2)
+      this.executeUpdatePlayer(foundThing)
     }
   }
 
