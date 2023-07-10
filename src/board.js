@@ -485,36 +485,34 @@ export default class Board extends Thing {
     }
   }
 
-  tileIsInWindTunnel(position) {
-    for (const direction of ['up', 'down', 'right', 'left']) {
-      let delta = vec2.directionToVector(direction)
-      let curPos = position
-      for (let i = 0; i < 12; i ++) {
-        curPos = vec2.add(curPos, delta)
+  tileIsInWindTunnel(position, direction) {
+    let delta = vec2.directionToVector(vec2.oppositeDirection(direction))
+    let curPos = position
+    for (let i = 0; i < 12; i ++) {
+      curPos = vec2.add(curPos, delta)
 
-        // Found a wind guy
-        let foundWind = this.state.things.filter(x =>
-          vec2.equals(curPos, x.position) &&
-          x.name === 'player' &&
-          x.type === 'wind' &&
-          x.direction === vec2.oppositeDirection(direction) &&
-          !(x.active)
-        )[0]
-        if (foundWind) {
-          return true
-        }
+      // Found a wind guy
+      let foundWind = this.state.things.filter(x =>
+        vec2.equals(curPos, x.position) &&
+        x.name === 'player' &&
+        x.type === 'wind' &&
+        x.direction === direction &&
+        !(x.active)
+      )[0]
+      if (foundWind) {
+        return true
+      }
 
-        // Wind is blocked by walls
-        const tileHeight = this.getTileHeight(curPos)
-        if (tileHeight > 1) {
-          break
-        }
+      // Wind is blocked by walls
+      const tileHeight = this.getTileHeight(curPos)
+      if (tileHeight > 1) {
+        break
+      }
 
-        // Wind is blocked by deco objects
-        const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco', 'player'].includes(x.name))[0]
-        if (blockingThing) {
-          break
-        }
+      // Wind is blocked by deco objects
+      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco', 'player'].includes(x.name))[0]
+      if (blockingThing) {
+        break
       }
     }
     return false
@@ -544,16 +542,19 @@ export default class Board extends Thing {
       // ...but waterguy can
       if (!(player.type === 'water')) {
         return
-
-        // ...but the play can enter a wind tunnel over water
-        // if (!this.tileIsInWindTunnel(newPosition)) {
-        //   return
-        // }
       }
     }
 
     // Player can't scale cliffs
     if (this.getTileHeight(newPosition) > this.getThingHeight(player)) {
+      return
+    }
+
+    // Player can't move towards a headwind
+    if (this.tileIsInWindTunnel(newPosition, vec2.oppositeDirection(control))) {
+      // Play wind sound
+      soundmanager.playSound('wind', 0.2)
+
       return
     }
 
@@ -657,6 +658,15 @@ export default class Board extends Thing {
       }
       if (otherPlayer.type === 'vine') {
         this.executeRetractVines(otherPlayer)
+      }
+
+      // Wind guy should immediately show a visual of his wind once you lose control of him
+      if (player.type === 'wind') {
+        for (const thing of game.getThings()) {
+          if (thing.tileThingReference === player) {
+            thing.createWind()
+          }
+        }
       }
     }
   }
