@@ -132,7 +132,7 @@ export default class Board extends Thing {
       }
 
       // Undo function
-      if (game.keysPressed.KeyU || game.keysPressed.KeyZ || game.buttonsPressed[5]) {
+      if (game.keysPressed.KeyU || game.keysPressed.KeyZ || game.buttonsPressed[4] || game.buttonsPressed[5]) {
         // Make sure there are actually things to undo
         if (this.stateStack.length > 0) {
           let newState = this.stateStack.pop()
@@ -608,6 +608,13 @@ export default class Board extends Thing {
     if (player.type === 'wind') {
       this.executeWind(player)
       soundmanager.playSound('wind', 0.2)
+
+      // Play the wind animation on the wind guy's character
+      for (const thing of game.getThings()) {
+        if (thing.tileThingReference === player) {
+          thing.createWind()
+        }
+      }
     }
     if (player.type === 'person') {
       this.advanceSwitch('switch')
@@ -857,13 +864,6 @@ export default class Board extends Thing {
     let i = 0
 
     let didPushSound = false
-
-    // Play the wind animation on the wind guy's character
-    for (const thing of game.getThings()) {
-      if (thing.tileThingReference === player) {
-        thing.createWind()
-      }
-    }
 
     while (i < blowDistance) {
       // Advance
