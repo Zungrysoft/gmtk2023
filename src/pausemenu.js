@@ -167,7 +167,7 @@ export default class PauseMenu extends Thing {
     ctx.translate(0, 32)
     ctx.fillText('Shift to return to your body', 0, 0)
     ctx.translate(0, 32)
-    ctx.fillText('U to undo', 0, 0)
+    ctx.fillText('U to undo your last move', 0, 0)
     ctx.restore()
   }
 }
