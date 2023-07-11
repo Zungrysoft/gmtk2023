@@ -69,13 +69,14 @@ export default class Board extends Thing {
     let didActive = false
     for (const thing of this.state.things) {
       if (thing.name === 'player') {
-        this.executeUpdatePlayer(thing, true)
+        this.playerMoved(thing, true)
         if (thing.type === 'person' && !didActive) {
           didActive = true
           thing.active = true
         }
       }
     }
+    this.requeueAdvancements()
 
     // Set nextId
     this.nextId = this.state.things.at(-1).id + 1
@@ -191,34 +192,8 @@ export default class Board extends Thing {
             control: setControl,
             queue: [
               'move',
-              'wind',
-              'wind',
-              'wind',
-              'wind',
-              'waterlog',
               'action',
               'switch',
-              'waterlog',
-              'wind',
-              'wind',
-              'wind',
-              'wind',
-              'waterlog',
-              'fire',
-              'wind',
-              'fire',
-              'wind',
-              'fire',
-              'wind',
-              'fire',
-              'wind',
-              'fire',
-              'wind',
-              'fire',
-              'wind',
-              'ice',
-              'vine',
-              'waterlog',
             ]
           }
 
@@ -398,55 +373,6 @@ export default class Board extends Thing {
     return undefined
   }
 
-  getNearestPlayer() {
-    // Get active player
-    let activePlayer = this.getActivePlayer()
-    if (!activePlayer) {
-      return undefined
-    }
-
-    // Get all other players
-    let players = this.getThingsByName('player')
-
-    // Find nearest player
-    let closest_dist = Infinity
-    let closest = undefined
-    for (const player of players) {
-      if (player.id !== activePlayer.id) {
-        const dist = vec2.distance(activePlayer.position, player.position)
-        if (dist < closest_dist || (dist === closest_dist && player.lastActive > closest?.lastActive)) {
-          closest_dist = dist
-          closest = player
-        }
-      }
-    }
-    return closest
-  }
-
-  getNextPlayer() {
-    // Get active player
-    let activePlayer = this.getActivePlayer()
-    if (!activePlayer) {
-      return undefined
-    }
-
-    // Get all other players
-    let players = this.getThingsByName('player')
-
-    // If there is only one (or zero) players, there is no next player
-    if (players.length <= 0) {
-      return undefined
-    }
-
-    // Iterate over players
-    for (let i = 0; i < players.length; i ++) {
-      if (players[i].id === activePlayer.id) {
-        return players[i+1] || players[0]
-      }
-    }
-    return players[0]
-  }
-
   getSwitchPlayer() {
     let activePlayer = this.getActivePlayer()
     if (!activePlayer) {
@@ -518,6 +444,21 @@ export default class Board extends Thing {
     return false
   }
 
+  requeueAdvancements() {
+    // Define what counts as a "movement advancement"
+    const advancements = ['fire', 'ice', 'wind', 'vine', 'waterlog']
+
+    // Remove all pre-existing movement items from the queue
+    for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
+      if (advancements.includes(this.advancementData.queue[i])) {
+        this.advancementData.queue.splice(i, 1)
+      }
+    }
+
+    // Reinstate movement items in queue
+    this.advancementData.queue.push(...advancements)
+  }
+
   advanceMove(control) {
     // Check control
     if (!['left', 'right', 'up', 'down'].includes(control)) {
@@ -580,7 +521,7 @@ export default class Board extends Thing {
 
         // Move the other thing
         blockingThing.position = newPosition2
-        this.executeUpdatePlayer(blockingThing)
+        // this.playerMoved(blockingThing)
         soundmanager.playSound('move_stone', 0.2, [0.95, 1.05])
       }
       else {
@@ -590,6 +531,9 @@ export default class Board extends Thing {
 
     // Move into this new position
     player.position = newPosition
+
+    // Queue advancements
+    this.requeueAdvancements()
   }
 
   advanceAction(control) {
@@ -668,6 +612,8 @@ export default class Board extends Thing {
           }
         }
       }
+
+      this.requeueAdvancements()
     }
   }
 
@@ -710,6 +656,8 @@ export default class Board extends Thing {
   }
 
   advanceWaterlog() {
+    let waterloggedSomething = false
+
     // Iterate over entities and see if they should be waterlogged
     for (let i = this.state.things.length-1; i >= 0; i --) {
       let thing = this.state.things[i]
@@ -735,55 +683,19 @@ export default class Board extends Thing {
             this.state.waterlogged[thing.position] = thing
           }
 
-          soundmanager.playSound('sploosh', 0.4)
-
           // And remove it from the main thing list
           this.executePlayerDeath(thing)
           this.state.things.splice(i, 1)
+
+          waterloggedSomething = true
         }
       }
     }
-  }
 
-  executeBolt(direction) {
-    const delta = vec2.directionToVector(direction)
-
-    // Find the player
-    let player = this.getThingsByName('player')[0]
-
-    // Raytrace the bolt forward
-    let pos = [...player.position]
-    const beamHeight = this.getThingHeight(player)
-    for (let i = 0; i < 20; i ++) {
-      pos = vec2.add(pos, delta)
-
-      // See if the terrain blocks this shot
-      if (this.getTileHeight(pos) > beamHeight) {
-        break
-      }
-
-      // Loop over things and see if we have struck something
-      let blocked = false
-      for (let j = 0; j < this.state.things.length; j ++) {
-        let thing = this.state.things[j]
-        if (vec2.equals(thing.position, pos)) {
-          // Blocking Object
-          if (thing.name === 'deco') {
-            blocked = true
-          }
-          // Player
-          else if (thing.name === 'player') {
-            blocked = true
-            this.executePlayerDeath(thing)
-            this.state.things.splice(j, 1)
-            j --
-          }
-        }
-
-      }
-      if (blocked) {
-        break
-      }
+    // If something was put into the water, play the sound effect and requeue advancements
+    if (waterloggedSomething) {
+      soundmanager.playSound('sploosh', 0.4)
+      this.requeueAdvancements()
     }
   }
 
@@ -792,10 +704,9 @@ export default class Board extends Thing {
       return
     }
 
-
     const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
-    let burnSound = false
+    let destroyedSomething = false
 
     // Check all adjacent tiles
     for (const delta of deltas) {
@@ -814,20 +725,22 @@ export default class Board extends Thing {
             this.executePlayerDeath(thing)
             this.state.things.splice(j, 1)
             j --
-            burnSound = true
+            destroyedSomething = true
           }
           // Wood
           if (thing.name === 'deco' && ['wood', 'box'].includes(thing.type)) {
             this.state.things.splice(j, 1)
             j --
-            burnSound = true
+            destroyedSomething = true
           }
         }
       }
     }
 
-    if (burnSound) {
+    // If something was destroyed, play the sound effect and requeue advancements
+    if (destroyedSomething) {
       soundmanager.playSound('fire', 0.2)
+      this.requeueAdvancements()
     }
   }
 
@@ -924,19 +837,23 @@ export default class Board extends Thing {
       }
     }
 
-    // If something was pushed at least one tile, play sound effect and update that thing
+    // If something was pushed at least one tile, play sound effect and requeue advancements
     if (didPush) {
       soundmanager.playSound('wind', 0.2)
-      this.executeUpdatePlayer(foundThing)
+      this.requeueAdvancements()
+      // this.playerMoved(foundThing)
     }
   }
 
   executeIce(player) {
+    let didRemoveIce = false
+
     // Delete all existing ice things owned by this player
     for (const key in this.state.waterlogged) {
       let thing = this.state.waterlogged[key]
       if (thing.type === 'ice' && thing.owner === player.id) {
         delete this.state.waterlogged[key]
+        didRemoveIce = true
       }
     }
 
@@ -961,13 +878,20 @@ export default class Board extends Thing {
         }
       }
     }
+
+    if (didRemoveIce) {
+      this.requeueAdvancements()
+    }
   }
 
-  executeExtendVines(player, noSound=false) {
+  executeExtendVines(player) {
     // Do not extend vines if this is the active player
     if (player.active) {
       return
     }
+
+    // Retract any vines which are no longer aligned with this guy
+    this.executeRetractVines(player, true)
 
     let createdVine = false
 
@@ -1021,41 +945,35 @@ export default class Board extends Thing {
       }
     }
 
-    if (createdVine && !noSound) {
+    if (createdVine) {
       soundmanager.playSound('vine', 0.2, [1.8, 1.8])
     }
   }
 
-  executeRetractVines(player, noSound=false) {
+  executeRetractVines(player, onlyMisaligned=false) {
     // Iterate over and delete all vine objects which are owned by this
     let destroyedVine = false
     for (let i = this.state.things.length-1; i >= 0; i --) {
       const thing = this.state.things[i]
       if (thing.name === 'deco' && thing.type === 'vine' && thing.owner === player.id) {
-        this.state.things.splice(i, 1)
-        destroyedVine = true
+        const axis = ['right', 'left', 'east', 'west'].includes(player.direction) ? 1 : 0
+        const misaligned = player.position[axis] !== thing.position[axis]
+        if (!onlyMisaligned || misaligned) {
+          this.state.things.splice(i, 1)
+          destroyedVine = true
+        }
       }
     }
-    if (destroyedVine && !noSound) {
+    if (destroyedVine) {
       soundmanager.playSound('vine', 0.2, [1.1, 1.1])
+      this.requeueAdvancements()
     }
   }
 
-  executeUpdatePlayer(player, noSound=false) {
+  playerMoved(player) {
     // Exit if this is not a player
     if (player.name !== 'player') {
       return
-    }
-
-    // Vine guys must update their vines
-    if (player.type === 'vine') {
-      this.executeRetractVines(player, noSound)
-      this.executeExtendVines(player, noSound)
-    }
-
-    // Ice guys must update their ice
-    if (player.type === 'ice') {
-      this.executeIce(player)
     }
 
     // Wind guy should reset his wind visual
