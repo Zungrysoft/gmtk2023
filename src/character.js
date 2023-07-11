@@ -161,22 +161,24 @@ export default class Character extends Thing {
     }
 
     if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
-      ctx.save()
-      ctx.translate(...this.position)
-      //ctx.translate(game.config.width / 2, game.config.height / 2)
-      //ctx.translate(...game.getCamera2D().position.map(x => x * -1))
-      for (let a = 0; a < 8; a += 1) {
-        const angle = a * Math.PI / 4
-        const delta = [Math.round(Math.cos(angle)), Math.round(Math.sin(angle))]
-        if (board.getTileHeight(vec2.add(this.tileThingReference.position, delta)) > 1) { continue }
+      if (this.timers.death === undefined) {
         ctx.save()
-        ctx.translate(...vec2.scale(delta, 64))
-        ctx.rotate(this.time / -20)
-        ctx.translate(-32, -32)
-        ctx.drawImage(game.assets.images.deco_fire, 0, 0)
+        ctx.translate(...this.position)
+        //ctx.translate(game.config.width / 2, game.config.height / 2)
+        //ctx.translate(...game.getCamera2D().position.map(x => x * -1))
+        for (let a = 0; a < 8; a += 1) {
+          const angle = a * Math.PI / 4
+          const delta = [Math.round(Math.cos(angle)), Math.round(Math.sin(angle))]
+          if (board.getTileHeight(vec2.add(this.tileThingReference.position, delta)) > 1) { continue }
+          ctx.save()
+          ctx.translate(...vec2.scale(delta, 64))
+          ctx.rotate(this.time / -20)
+          ctx.translate(-32, -32)
+          ctx.drawImage(game.assets.images.deco_fire, 0, 0)
+          ctx.restore()
+        }
         ctx.restore()
       }
-      ctx.restore()
     }
 
     ctx.save()
@@ -257,15 +259,6 @@ export default class Character extends Thing {
     return this.tileThingReference.active
   }
 
-  createFire (fade = true) {
-    for (let a = 0; a < 8; a += 1) {
-      const angle = a * Math.PI / 4
-      const x = this.tileThingReference.position[0] + Math.round(Math.cos(angle))
-      const y = this.tileThingReference.position[1] + Math.round(Math.sin(angle))
-      game.addThing(new Fire([x, y], fade))
-    }
-  }
-
   createWind () {
     const board = game.getThing('board')
     if (!board) return
@@ -283,12 +276,6 @@ export default class Character extends Thing {
     this.animation = 'idle'
     const board = game.getThing('board')
     if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead) {
-      if (this.tileThingReference.type === 'fire') {
-        //if (!this.timer('fire')) {
-          //if (init) { this.createFire() }
-          //this.after(50, () => this.createFire(false), 'fire')
-        //}
-      }
       if (this.tileThingReference.type === 'wind') {
         if (!this.timer('wind')) {
           if (init) { this.createWind() }
