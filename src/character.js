@@ -148,18 +148,6 @@ export default class Character extends Thing {
     const { ctx } = game
     const board = game.getThing('board')
 
-    // Draw the vine behind the plant guy
-    if (this.tileThingReference !== board?.getActivePlayer() && !this.tileThingReference.dead) {
-      if (this.tileThingReference.type === 'vine') {
-        ctx.save()
-        ctx.translate(...this.drawPosition.map(x => Math.floor(x)))
-        ctx.translate(-32, -30)
-        const dir = vec2.directionToVector(this.tileThingReference.direction)
-        ctx.drawImage(dir[1] === 0 ? game.assets.images.deco_vine : game.assets.images.deco_vine_v, 0, 0)
-        ctx.restore()
-      }
-    }
-
     if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
       if (this.timers.death === undefined) {
         ctx.save()
