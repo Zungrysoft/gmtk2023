@@ -1,3 +1,7 @@
+export function mod(a, b) {
+  return ((a % b) + b) % b;
+}
+
 export function lerp (a, b, t) {
   return (1 - t) * a + t * b
 }

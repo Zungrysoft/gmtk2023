@@ -77,6 +77,7 @@ await game.loadAssets({
     lake: 'json/levels/lake.json',
     safety: 'json/levels/safety.json',
     ferry: 'json/levels/ferry.json',
+    distance: 'json/levels/distance.json',
   },
 
   sounds: {

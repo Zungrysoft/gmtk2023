@@ -66,10 +66,10 @@ export default class LevelSelect extends Thing {
 
     const lastSelection = this.selection
     if (game.keysPressed.ArrowUp || game.keysPressed.KeyW || game.buttonsPressed[12]) {
-      this.selection = Math.max(0, this.selection - 1)
+      this.selection = u.mod((this.selection - 1), this.menu.length)
     }
     if (game.keysPressed.ArrowDown || game.keysPressed.KeyS || game.buttonsPressed[13]) {
-      this.selection = Math.min(this.menu.length - 1, this.selection + 1)
+      this.selection = u.mod((this.selection + 1), this.menu.length)
     }
 
     if (this.selection !== lastSelection) {
@@ -86,9 +86,10 @@ export default class LevelSelect extends Thing {
     }
 
     const scrollStart = 8
-    if (this.selection >= scrollStart) {
-      this.scrollTarget = this.selection - scrollStart
-    }
+    // if (this.selection >= scrollStart) {
+    //   this.scrollTarget = this.selection - scrollStart
+    // }
+    this.scrollTarget = Math.max(0, this.selection - scrollStart)
 
     for (let i = 0; i < this.menu.length; i += 1) {
       if (this.selection === i) {

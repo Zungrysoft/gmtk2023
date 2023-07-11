@@ -551,7 +551,7 @@ export default class Board extends Thing {
     }
 
     // Player can't move towards a headwind
-    if (this.tileIsInWindTunnel(newPosition, vec2.oppositeDirection(control))) {
+    if (this.tileIsInWindTunnel(player.position, vec2.oppositeDirection(control))) {
       // Play wind sound
       soundmanager.playSound('wind', 0.2)
 
