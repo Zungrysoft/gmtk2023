@@ -69,10 +69,12 @@ export default class Board extends Thing {
     let didActive = false
     for (const thing of this.state.things) {
       if (thing.name === 'player') {
-        this.playerMoved(thing, true)
         if (thing.type === 'person' && !didActive) {
           didActive = true
           thing.active = true
+        }
+        if (thing.type === 'vine') {
+          this.executeExtendVines(thing, true)
         }
       }
     }
@@ -846,12 +848,15 @@ export default class Board extends Thing {
   }
 
   executeIce(player) {
+    const iceRadius = 1
+
     let didRemoveIce = false
 
-    // Delete all existing ice things owned by this player
+    // Delete all ice owned by this player that is now too far away
     for (const key in this.state.waterlogged) {
       let thing = this.state.waterlogged[key]
-      if (thing.type === 'ice' && thing.owner === player.id) {
+      let distance = Math.max(Math.abs(thing.position[0] - player.position[0]), Math.abs(thing.position[1] - player.position[1]))
+      if (thing.type === 'ice' && thing.owner === player.id && distance > iceRadius) {
         delete this.state.waterlogged[key]
         didRemoveIce = true
       }
@@ -859,7 +864,6 @@ export default class Board extends Thing {
 
     // Build ice around this player
     const [px, py] = player.position
-    const iceRadius = 1
     for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
       for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
         const icePos = [x, y]
@@ -884,7 +888,7 @@ export default class Board extends Thing {
     }
   }
 
-  executeExtendVines(player) {
+  executeExtendVines(player, noSound=false) {
     // Do not extend vines if this is the active player
     if (player.active) {
       return
@@ -945,7 +949,7 @@ export default class Board extends Thing {
       }
     }
 
-    if (createdVine) {
+    if (createdVine && !noSound) {
       soundmanager.playSound('vine', 0.2, [1.8, 1.8])
     }
   }
@@ -1009,11 +1013,8 @@ export default class Board extends Thing {
       }
     }
 
-    // If person guy is killed, the active player dies too
+    // If person guy is killed, bring up death screen
     if (player.type === 'person') {
-      if (this.getActivePlayer() && this.getActivePlayer().type !== 'person') {
-        this.executePlayerDeath(this.getActivePlayer())
-      }
       game.addThing(new DeathScreen())
     }
 
