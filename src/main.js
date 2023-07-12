@@ -83,6 +83,7 @@ await game.loadAssets({
     // iceshuffle: 'json/levels/iceshuffle.json',
     iceshuffle2: 'json/levels/iceshuffle2.json',
     corridors2: 'json/levels/corridors2.json',
+    icecrawl: 'json/levels/icecrawl.json',
   },
 
   sounds: {
