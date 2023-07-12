@@ -231,11 +231,14 @@ export default class Board extends Thing {
         else if (adv === 'ice') {
           this.advanceIce()
         }
+        else if (adv === 'vine') {
+          this.advanceVine()
+        }
         else if (adv === 'waterlog') {
           this.advanceWaterlog()
         }
-        else if (adv === 'vine') {
-          this.advanceVine()
+        else if (adv === 'mine') {
+          this.advanceMine()
         }
 
         blocked = this.isAnimationBlocking()
@@ -448,7 +451,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'wind', 'waterlog', 'fire', 'vine']
+    const advancements = ['ice', 'wind', 'waterlog', 'mine', 'fire', 'vine']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -523,7 +526,7 @@ export default class Board extends Thing {
 
         // Move the other thing
         blockingThing.position = newPosition2
-        // this.playerMoved(blockingThing)
+        this.playerMoved(blockingThing)
         soundmanager.playSound('move_stone', 0.2, [0.95, 1.05])
       }
       else {
@@ -701,6 +704,70 @@ export default class Board extends Thing {
     }
   }
 
+  triggersMine(thing) {
+    if (thing.name === 'player') {
+      return true
+    }
+    if (thing.name === 'deco' && thing.type !== 'vine') {
+      return true
+    }
+    return false
+  }
+
+  advanceMine() {
+    let mineIds = []
+    let thingIds = []
+
+    // Iterate over mines
+    for (let j = this.state.things.length-1; j >= 0; j --) {
+      let mine = this.state.things[j]
+
+      // Skip this thing if it's not a mine
+      if (mine.name !== 'mine') {
+        continue
+      }
+
+      // Iterate over entities and see if they should be waterlogged
+      for (let i = this.state.things.length-1; i >= 0; i --) {
+        let thing = this.state.things[i]
+
+        // Skip this thing if it doesn't trigger mines
+        if (!this.triggersMine(thing)) {
+          continue
+        }
+
+        // Skip this thing if it's not in the same position
+        if (!vec2.equals(mine.position, thing.position)) {
+          continue
+        }
+
+        // Add this to list of indices to remove
+        mineIds.push(mine.id)
+        thingIds.push(thing.id)
+      }
+    }
+
+    // Remove entities
+    for (let i = this.state.things.length-1; i >= 0; i --) {
+      let thing = this.state.things[i]
+      if (thingIds.includes(thing.id)) {
+        thing.dead = true
+        this.executePlayerDeath(thing)
+        this.state.things.splice(i, 1)
+      }
+      if (mineIds.includes(thing.id)) {
+        this.executePlayerDeath(thing)
+        this.state.things.splice(i, 1)
+      }
+    }
+
+    // If something was put into the water, play the sound effect and requeue advancements
+    if (mineIds.length > 0) {
+      soundmanager.playSound('sploosh', 0.4)
+      this.requeueAdvancements()
+    }
+  }
+
   executeFire(player) {
     if (player.dead) {
       return
@@ -843,7 +910,7 @@ export default class Board extends Thing {
     if (didPush) {
       soundmanager.playSound('wind', 0.2)
       this.requeueAdvancements()
-      // this.playerMoved(foundThing)
+      this.playerMoved(foundThing)
     }
   }
 
@@ -1020,6 +1087,7 @@ export default class Board extends Thing {
 
     // Reset active player
     if (player.active && player.type !== 'person') {
+      player.wasActive = true
       player.active = false
       const person = this.state.things.filter((x) => x.type === 'person')[0]
       if (person) {
@@ -1200,6 +1268,14 @@ export default class Board extends Thing {
           ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
         }
 
+        // Mine
+        if (thing.name === 'mine') {
+          const mineTime = 40
+          const frame = (this.time % mineTime) > mineTime / 2 ? 0 : tileWidth
+          ctx.drawImage(assets.images.deco_mine, frame, 0, tileWidth, tileDepth, screenX, screenY, tileWidth, tileDepth)
+        }
+
+        // Goal
         if (thing.name === 'goal') {
           ctx.drawImage(assets.images.goal, screenX, screenY - 2, tileWidth, tileDepth)
         }

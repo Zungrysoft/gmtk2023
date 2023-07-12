@@ -31,6 +31,7 @@ export let levelList = [
   { name: 'Open and Shut', level: 'shutter' },
   { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
+  { name: 'Mines', level: 'mines' },
 ]
 
 export function getLevel(lvl) {
@@ -67,7 +68,7 @@ export function getLevel(lvl) {
   // To make things easier in the editor, convert unknown entities to deco
   for (let i = 0; i < ret.things.length; i ++) {
     const thing = ret.things[i]
-    if (!['player', 'deco', 'goal', 'sign'].includes(thing.name)) {
+    if (!['player', 'deco', 'goal', 'sign', 'mine'].includes(thing.name)) {
       thing.data.type = thing.name
       thing.name = 'deco'
     }

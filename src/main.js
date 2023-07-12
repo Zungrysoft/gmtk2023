@@ -36,6 +36,7 @@ await game.loadAssets({
     deco_fire: 'images/fire1.png',
     deco_wind: 'images/wind.png',
     deco_wave: 'images/wave.png',
+    deco_mine: 'images/mine.png',
 
     // UI
     iconNearest: 'images/selection_arrows.png',
@@ -84,6 +85,7 @@ await game.loadAssets({
     iceshuffle2: 'json/levels/iceshuffle2.json',
     corridors2: 'json/levels/corridors2.json',
     icecrawl: 'json/levels/icecrawl.json',
+    mines: 'json/levels/mines.json',
   },
 
   sounds: {

@@ -148,7 +148,7 @@ export default class Character extends Thing {
     const { ctx } = game
     const board = game.getThing('board')
 
-    if (this.tileThingReference.type === 'fire' && this.tileThingReference !== board.getActivePlayer()) {
+    if (this.tileThingReference.type === 'fire' && !this.tileThingReference.active && !this.tileThingReference.wasActive) {
       if (this.timers.death === undefined) {
         ctx.save()
         ctx.translate(...this.position)
