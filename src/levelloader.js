@@ -17,17 +17,19 @@ export let levelList = [
   { name: 'Cavern Lake', level: 'lake' },
   { name: 'Windy Day', level: 'windy' },
   { name: 'Over the Seas', level: 'boat' },
+  { name: 'The Snowman Shuffle', level: 'iceshuffle2' },
+  { name: 'Take the Ferry', level: 'ferry' },
   { name: 'Tight Squeeze', level: 'corridors' },
   { name: 'Mineral Transport', level: 'windwall' },
   { name: 'Corners', level: 'corners' },
   { name: 'Alongside the Maze', level: 'maze' },
-  { name: 'Take the Ferry', level: 'ferry' },
   { name: 'Wall of Thorns', level: 'blocking' },
   { name: 'Special Delivery', level: 'snowblower' },
   { name: 'Crossway', level: 'vine' },
   { name: 'Open and Shut', level: 'shutter' },
   { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
+  { name: 'Vines and Ice', level: 'vineice' },
 ]
 
 export function getLevel(lvl) {

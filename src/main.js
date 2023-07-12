@@ -52,7 +52,6 @@ await game.loadAssets({
   },
 
   json: {
-    intro: 'json/levels/intro.json',
     swim: 'json/levels/swim.json',
     shutter: 'json/levels/shutter.json',
     maze: 'json/levels/maze.json',
@@ -69,6 +68,7 @@ await game.loadAssets({
     boat: 'json/levels/boat.json',
     snowblower: 'json/levels/snowblower.json',
     corridors: 'json/levels/corridors.json',
+    intro: 'json/levels/intro.json',
     four: 'json/levels/four.json',
     fire: 'json/levels/fire.json',
     cove: 'json/levels/cove.json',
@@ -79,6 +79,9 @@ await game.loadAssets({
     ferry: 'json/levels/ferry.json',
     distance: 'json/levels/distance.json',
     windwall: 'json/levels/windwall.json',
+    vineice: 'json/levels/vineice.json',
+    // iceshuffle: 'json/levels/iceshuffle.json',
+    iceshuffle2: 'json/levels/iceshuffle2.json',
   },
 
   sounds: {
