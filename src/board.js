@@ -1107,6 +1107,9 @@ export default class Board extends Thing {
 
     player.dead = true
 
+    // Requeue advancements
+    this.requeueAdvancements()
+
     // Vine guys must update their vines
     if (player.type === 'vine' || player.isBlob) {
       this.executeRetractVines(player)

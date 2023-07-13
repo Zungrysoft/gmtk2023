@@ -54,6 +54,7 @@ await game.loadAssets({
     iconNearest: 'images/selection_arrows.png',
     selectorArrow: 'images/selector_arrow.png',
     aimArrow: 'images/aim_arrow.png',
+    aimArrowBlob: 'images/aim_arrow_blob.png',
     skull: 'images/skull.png',
     goal: 'images/win_flag.png',
     you_win: 'images/you_win.png',

@@ -265,13 +265,13 @@ export default class Character extends Thing {
 
     // Draw blob guy's aim arrow
     if (tileThing.isBlob) {
-      const position = vec2.add(this.position, vec2.scale(vec2.directionToVector(tileThing.blobDirection), 64))
+      const position = vec2.add(this.position, vec2.scale(vec2.directionToVector(tileThing.blobDirection), 60))
       ctx.save()
-      ctx.globalAlpha = 0.9
+      ctx.globalAlpha = 1.0
       ctx.translate(...position)
       ctx.rotate(u.angleTowards(0, 0, ...vec2.directionToVector(tileThing.blobDirection)))
       ctx.translate(-32, -32)
-      ctx.drawImage(game.assets.images.aimArrow, 0, 0)
+      ctx.drawImage(game.assets.images.aimArrowBlob, 0, 0)
       ctx.restore()
     }
 
