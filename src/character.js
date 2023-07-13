@@ -177,6 +177,11 @@ export default class Character extends Thing {
     // Sprite change
     if (this.timers.changedTypeFlash?.time === transformTime) {
       this.updateSprite()
+
+      // Play vine retract sound if we flashed vine guy
+      if (this.flashedType === 'vine') {
+        soundmanager.playSound('vine', 0.2, [1.1, 1.1])
+      }
     }
     else if (this.timers.changedTypeFlash?.time === transformTime*3) {
       this.updateSprite(this.flashedType)
@@ -208,6 +213,7 @@ export default class Character extends Thing {
     const { ctx } = game
     const board = game.getThing('board')
 
+    // Fire guy passive fire
     if (this.sprite.includes('fire') && !this.tileThingReference.active && !this.tileThingReference.wasActiveBeforeDeath) {
       if (this.timers.death === undefined) {
         ctx.save()
@@ -224,6 +230,51 @@ export default class Character extends Thing {
           ctx.restore()
         }
         ctx.restore()
+      }
+    }
+
+    // Vine guy edge-case vine rendering
+    // Usually happens if blob guy quick-switches to vine guy then switches back immediately
+    // This will render fake vines if the player looks like vine guy but doesn't actually have the type because he already switched back
+    if (this.sprite.includes('vine') && this.type !== 'vine' && !this.tileThingReference.active && !this.tileThingReference.wasActiveBeforeDeath) {
+      if (this.timers.death === undefined) {
+        const render = (position, direction) => {
+          const sprite = vec2.directionToVector(direction)[0] !== 0 ? 'deco_vine' : 'deco_vine_v'
+          ctx.save()
+          ctx.translate(...vec2.subtract(board.getPositionOnScreen(position),[0, 12]))
+          ctx.drawImage(game.assets.images[sprite], 0, 0)
+          ctx.restore()
+        }
+
+        let player = this.tileThingReference
+        const vineLength = 15
+        for (const direction of [player.direction, vec2.oppositeDirection(player.direction)]) {
+          // Get delta
+          const delta = vec2.directionToVector(direction)
+
+          // Iterate forwards until we hit something
+          let curPos = player.position
+          for (let i = 0; i < vineLength; i ++) {
+            curPos = vec2.add(curPos, delta)
+
+            // Blocked by wall
+            if (board.getTileHeight(curPos) > 1) {
+              break
+            }
+
+            // Blocked by deco
+            const blockingDeco = board.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+            if (blockingDeco) {
+              break
+            }
+
+            // Render vine
+            render(curPos, player.direction)
+          }
+        }
+
+        // Below the player sprite
+        render(player.position, player.direction)
       }
     }
 
@@ -357,8 +408,6 @@ export default class Character extends Thing {
     if (this.tileThingReference.isBlob && type !== 'blob') {
       this.sprite += '_blob'
     }
-
-    console.log(this.sprite)
   }
 
   npcAnimations (init = false) {

@@ -339,7 +339,7 @@ export default class Board extends Thing {
     return height
   }
 
-  positionOnScreen(pos) {
+  getPositionOnScreen(pos) {
     let screenX = tileWidth * pos[0]
     let screenY = tileDepth * pos[1]
     return [screenX, screenY]
@@ -820,7 +820,6 @@ export default class Board extends Thing {
     }
     else {
       player.type = 'blob'
-      player.direction = player.blobDirection
     }
 
     // If our type changed, we need to requeue advancements
@@ -1000,6 +999,11 @@ export default class Board extends Thing {
   executeExtendVines(player, noSound=false) {
     // Do not extend vines if this is the active player
     if (player.active) {
+      return
+    }
+
+    // Do not extend vines if dead
+    if (player.dead) {
       return
     }
 
@@ -1268,7 +1272,7 @@ export default class Board extends Thing {
 
         // Determine where this tile will be rendered on screen
         let screenX, screenY
-        ;[screenX, screenY] = this.positionOnScreen([x, y])
+        ;[screenX, screenY] = this.getPositionOnScreen([x, y])
 
         // Otherwise, render it as terrain
         if (tileHeight === 1) {
@@ -1296,7 +1300,7 @@ export default class Board extends Thing {
         // Determine where to render it.
         const getThingHeight = this.getThingHeight(thing)
         let screenX, screenY
-        ;[screenX, screenY] = this.positionOnScreen(thing.position)
+        ;[screenX, screenY] = this.getPositionOnScreen(thing.position)
         screenY -= (wallDepth * getThingHeight)
         if (thing.waterlogged) {
           screenY -= 2
@@ -1367,7 +1371,7 @@ class Walls extends Thing {
 
         // Determine where this tile will be rendered on screen
         let screenX, screenY
-        ;[screenX, screenY] = board.positionOnScreen([x, y])
+        ;[screenX, screenY] = board.getPositionOnScreen([x, y])
 
         // Create rock wall pattern
         if (tileHeight > 1) {
