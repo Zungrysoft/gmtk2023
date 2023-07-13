@@ -797,7 +797,7 @@ export default class Board extends Thing {
             destroyedSomething = true
           }
           // Wood
-          if (thing.name === 'deco' && ['wood', 'box'].includes(thing.type)) {
+          if (thing.name === 'deco' && ['wood'].includes(thing.type)) {
             this.state.things.splice(j, 1)
             j --
             destroyedSomething = true

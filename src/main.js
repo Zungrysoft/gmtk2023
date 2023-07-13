@@ -85,7 +85,9 @@ await game.loadAssets({
     iceshuffle2: 'json/levels/iceshuffle2.json',
     corridors2: 'json/levels/corridors2.json',
     icecrawl: 'json/levels/icecrawl.json',
-    mines: 'json/levels/mines.json',
+    dodging2: 'json/levels/dodging2.json',
+    dodging3: 'json/levels/dodging3.json',
+    vinewall: 'json/levels/vinewall.json',
   },
 
   sounds: {

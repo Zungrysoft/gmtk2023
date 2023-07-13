@@ -31,7 +31,7 @@ export let levelList = [
   { name: 'Open and Shut', level: 'shutter' },
   { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
-  { name: 'Mines', level: 'mines' },
+  { name: 'The Great Wall', level: 'vinewall' },
 ]
 
 export function getLevel(lvl) {
