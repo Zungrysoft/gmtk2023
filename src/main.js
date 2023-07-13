@@ -13,12 +13,12 @@ await game.loadAssets({
     // Player
     player_person: 'images/guy.png',
     player_fire: 'images/fireguy.png',
-    player_golem: 'images/rockguy.png',
+    player_golem: 'images/golemguy.png',
     player_wind: 'images/windguy2.png',
     player_wind_front: 'images/windguy3.png',
     player_wind_back: 'images/windguy4.png',
     player_ice: 'images/iceguy.png',
-    player_vine: 'images/plantguy.png',
+    player_vine: 'images/vineguy.png',
     player_water: 'images/waterguy.png',
 
     // Blob guy
@@ -26,12 +26,12 @@ await game.loadAssets({
     player_blob_front: 'images/blobguy2.png',
     player_blob_back: 'images/blobguy3.png',
     player_fire_blob: 'images/blobguy_fireguy.png',
-    player_golem_blob: 'images/blobguy_rockguy.png',
+    player_golem_blob: 'images/blobguy_golemguy.png',
     player_wind_blob: 'images/blobguy_windguy2.png',
     player_wind_front_blob: 'images/blobguy_windguy3.png',
     player_wind_back_blob: 'images/blobguy_windguy4.png',
     player_ice_blob: 'images/blobguy_iceguy.png',
-    player_vine_blob: 'images/blobguy_plantguy.png',
+    player_vine_blob: 'images/blobguy_vineguy.png',
     player_water_blob: 'images/blobguy_waterguy.png',
 
     // Deco Objects

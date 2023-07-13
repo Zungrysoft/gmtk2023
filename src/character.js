@@ -41,6 +41,7 @@ export default class Character extends Thing {
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
     this.lastType = this.tileThingReference.type
+    this.lastSwitchedFrom = 'blob'
     this.npcAnimations(true)
     if (game.getThing('board').getActivePlayer() === this.tileThingReference) {
       game.getCamera2D().position = [...this.position]
@@ -155,24 +156,46 @@ export default class Character extends Thing {
     this.isSelected = selected
     this.wasSelected = selected
 
-    // ============
-    // Transforming
-    // ============
+    // =================
+    // Blob Transforming
+    // =================
 
-    // Detect if the player changed type
     const transformTime = 10
-    if (this.tileThingReference.type !== this.lastType) {
+
+    // Detect if player changed type twice in one turn
+    if (this.tileThingReference.switchedFrom && this.tileThingReference.switchedFrom !== this.lastType) {
+      this.flashedType = this.tileThingReference.switchedFrom
+      console.log(this.flashedType, this.tileThingReference.switchedFrom, this.lastType)
+      this.after(transformTime * 4, null, 'changedTypeFlash')
+    }
+    // Detect if the player changed type
+    else if (this.tileThingReference.type !== this.lastType) {
       this.after(transformTime * 2, null, 'changedType')
     }
     this.lastType = this.tileThingReference.type
 
     // Sprite change
+    if (this.timers.changedTypeFlash?.time === transformTime) {
+      this.updateSprite()
+    }
+    else if (this.timers.changedTypeFlash?.time === transformTime*3) {
+      this.updateSprite(this.flashedType)
+    }
     if (this.timers.changedType?.time === transformTime) {
       this.updateSprite()
     }
 
     // Squish and morph animation
-    if (this.timers.changedType) {
+    if (this.timers.changedTypeFlash) {
+      const t = this.timers.changedTypeFlash.time
+      if (t < transformTime * 2) {
+        this.squish = 1.0 - (Math.abs(t - transformTime) / transformTime)
+      }
+      else {
+        this.squish = 1.0 - (Math.abs(t - transformTime*3) / transformTime)
+      }
+    }
+    else if (this.timers.changedType) {
       const t = this.timers.changedType.time
       this.squish = 1.0 - (Math.abs(t - transformTime) / transformTime)
     }
@@ -185,7 +208,7 @@ export default class Character extends Thing {
     const { ctx } = game
     const board = game.getThing('board')
 
-    if (this.sprite.includes('fire') && !this.tileThingReference.active && !this.tileThingReference.wasActive) {
+    if (this.sprite.includes('fire') && !this.tileThingReference.active && !this.tileThingReference.wasActiveBeforeDeath) {
       if (this.timers.death === undefined) {
         ctx.save()
         ctx.translate(...this.position)
@@ -305,12 +328,15 @@ export default class Character extends Thing {
     }
   }
 
-  updateSprite () {
+  updateSprite (type) {
+    // If a custom type was not passed in, use the thing's type
+    type = type || this.tileThingReference.type
+
     // Update this sprite
-    this.sprite = "player_" + this.tileThingReference.type
+    this.sprite = "player_" + type
 
     // Special logic for wind guy
-    if (['wind'].includes(this.tileThingReference.type)) {
+    if (['wind'].includes(type)) {
       if (vec2.directionToVector(this.tileThingReference.direction)[1] === -1) {
         this.sprite += '_back'
       }
@@ -320,7 +346,7 @@ export default class Character extends Thing {
     }
 
     // Special logic for blob guy
-    if (this.tileThingReference.type === 'blob') {
+    if (type === 'blob') {
       if (vec2.directionToVector(this.tileThingReference.blobDirection)[1] === -1) {
         this.sprite += '_back'
       }
@@ -328,9 +354,11 @@ export default class Character extends Thing {
         this.sprite += '_front'
       }
     }
-    if (this.tileThingReference.isBlob && this.tileThingReference.type !== 'blob') {
+    if (this.tileThingReference.isBlob && type !== 'blob') {
       this.sprite += '_blob'
     }
+
+    console.log(this.sprite)
   }
 
   npcAnimations (init = false) {

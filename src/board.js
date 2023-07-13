@@ -104,6 +104,12 @@ export default class Board extends Thing {
 
     this.time ++
 
+    // Blob logic
+    const blobPlayers = this.state.things.filter(x => x.name === 'player' && x.isBlob)
+    for (const player of blobPlayers) {
+      delete player.switchedFrom
+    }
+
     // Decide whether to show keyboard controls or gamepad controls based on which was used most recently
     if (Object.keys(game.buttonsPressed).length) {
       game.globals.usingGamepad = true
@@ -647,7 +653,7 @@ export default class Board extends Thing {
     for (const delta of deltas) {
       const pos = vec2.add(player.position, delta)
 
-      if (player === this.getActivePlayer()) {
+      if (player.active) {
         game.addThing(new Fire(pos))
       }
 
@@ -820,6 +826,7 @@ export default class Board extends Thing {
     // If our type changed, we need to requeue advancements
     if (previousType !== player.type) {
       this.requeueAdvancements()
+      player.switchedFrom = previousType
     }
   }
 
@@ -1133,6 +1140,7 @@ export default class Board extends Thing {
     // Reset active player
     if (player.active && player.type !== 'person') {
       player.active = false
+      player.wasActiveBeforeDeath = true
       const person = this.state.things.filter((x) => x.type === 'person')[0]
       if (person) {
         this.after(80, () => person.active = true, 'deathWait')
