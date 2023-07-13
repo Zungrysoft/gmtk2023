@@ -23,8 +23,8 @@ await game.loadAssets({
 
     // Blob guy
     player_blob: 'images/blobguy.png',
-    player_blob_front: 'images/blobguy.png',
-    player_blob_back: 'images/blobguy.png',
+    player_blob_front: 'images/blobguy2.png',
+    player_blob_back: 'images/blobguy3.png',
     player_fire_blob: 'images/blobguy_fireguy.png',
     player_golem_blob: 'images/blobguy_rockguy.png',
     player_wind_blob: 'images/blobguy_windguy2.png',
