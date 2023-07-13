@@ -21,6 +21,7 @@ export default class Character extends Thing {
   drawPosition = [0, 0]
   walkBob = 0
   depth = 10
+  squish = 0
   animations = {
     idle: { frames: [0, 1], speed: 0.035 },
     think: { frames: [2, 3], speed: 0.1 },
@@ -32,17 +33,14 @@ export default class Character extends Thing {
   constructor (tileThingReference) {
     super()
     this.tileThingReference = tileThingReference
-    this.sprite = "player_" + tileThingReference.type
-    if (tileThingReference.type === 'wind' && vec2.directionToVector(tileThingReference.direction)[1] === -1) {
-      this.sprite = 'player_wind_back'
-    }
-    if (tileThingReference.type === 'wind' && vec2.directionToVector(tileThingReference.direction)[1] === 1) {
-      this.sprite = 'player_wind_front'
-    }
+
+    this.updateSprite()
+
     this.position = this.getDestination()
     this.drawPosition = [...this.position]
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
+    this.lastType = this.tileThingReference.type
     this.npcAnimations(true)
     if (game.getThing('board').getActivePlayer() === this.tileThingReference) {
       game.getCamera2D().position = [...this.position]
@@ -55,6 +53,8 @@ export default class Character extends Thing {
     this.updateTimers()
     this.animate()
     const board = game.getThing('board')
+
+    this.scale = [1.0, 1.0]
 
     // Do a little animation when I become selected
     if (this.tileThingReference.active && !this.wasActive) {
@@ -76,18 +76,23 @@ export default class Character extends Thing {
       this.scale = [scalar, scalar]
     }
 
+    // Squishing
+    const squishFactor = 0.18
+    this.scale[0] *= u.map(this.squish, 0, 1, 1.0, squishFactor)
+    this.scale[1] /= u.map(this.squish, 0, 1, 1.0, squishFactor)
+
     // Move towards and face towards my destination
     const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
-    if (this.tileThingReference.type !== 'wind') {
+    if (['wind'].includes(this.tileThingReference.type) || this.tileThingReference.isBlob) {
+      if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
+        this.scale[0] = Math.abs(this.scale[0]) * -1
+      }
+    } else {
       if (destination[0] < this.position[0]) {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       } else {
         this.scale[0] = Math.abs(this.scale[0])
-      }
-    } else {
-      if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
-        this.scale[0] = Math.abs(this.scale[0]) * -1
       }
     }
 
@@ -142,6 +147,31 @@ export default class Character extends Thing {
     }
     this.isSelected = selected
     this.wasSelected = selected
+
+    // ============
+    // Transforming
+    // ============
+
+    // Detect if the player changed type
+    const transformTime = 10
+    if (this.tileThingReference.type !== this.lastType) {
+      this.after(transformTime * 2, null, 'changedType')
+    }
+    this.lastType = this.tileThingReference.type
+
+    // Sprite change
+    if (this.timers.changedType?.time === transformTime) {
+      this.updateSprite()
+    }
+
+    // Squish and morph animation
+    if (this.timers.changedType) {
+      const t = this.timers.changedType.time
+      this.squish = 1.0 - (Math.abs(t - transformTime) / transformTime)
+    }
+    else {
+      this.squish = 0
+    }
   }
 
   draw () {
@@ -206,7 +236,7 @@ export default class Character extends Thing {
         ctx.restore()
       }
 
-      if (this.checkIsActive() && tileThing.type !== 'person') {
+      if (this.checkIsActive() && !(tileThing.type === 'person' || tileThing.isBlob)) {
         ctx.save()
         ctx.translate(this.position[0], this.position[1])
         //ctx.rotate(this.time / 120)
@@ -220,7 +250,7 @@ export default class Character extends Thing {
     }
 
     // Draw the player's aim arrow
-    if (this.checkIsActive() && tileThing.type === 'person') {
+    if (this.checkIsActive() && (tileThing.type === 'person' || tileThing.isBlob)) {
       const position = vec2.add(this.position, vec2.scale(vec2.directionToVector(tileThing.direction), 64))
       ctx.save()
       ctx.globalAlpha = 0.5
@@ -257,6 +287,19 @@ export default class Character extends Thing {
         break
       }
       game.addThing(new Wind(pos, dir))
+    }
+  }
+
+  updateSprite () {
+    // Update this sprite
+    this.sprite = "player_" + this.tileThingReference.type
+    if (['wind', 'blob'].includes(this.tileThingReference.type)) {
+      if (vec2.directionToVector(this.tileThingReference.direction)[1] === -1) {
+        this.sprite += '_back'
+      }
+      if (vec2.directionToVector(this.tileThingReference.direction)[1] === 1) {
+        this.sprite += '_front'
+      }
     }
   }
 

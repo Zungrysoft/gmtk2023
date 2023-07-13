@@ -18,6 +18,9 @@ await game.loadAssets({
     player_wind: 'images/windguy2.png',
     player_wind_front: 'images/windguy3.png',
     player_wind_back: 'images/windguy4.png',
+    player_blob: 'images/blobguy.png',
+    player_blob_front: 'images/blobguy.png',
+    player_blob_back: 'images/blobguy.png',
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
     player_water: 'images/waterguy.png',
@@ -89,6 +92,7 @@ await game.loadAssets({
     dodging3: 'json/levels/dodging3.json',
     vinewall: 'json/levels/vinewall.json',
     icerace: 'json/levels/icerace.json',
+    blob: 'json/levels/blob.json',
   },
 
   sounds: {

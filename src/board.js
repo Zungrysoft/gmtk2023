@@ -76,6 +76,9 @@ export default class Board extends Thing {
         if (thing.type === 'vine') {
           this.executeExtendVines(thing, true)
         }
+        if (thing.type === 'blob') {
+          thing.isBlob = true
+        }
       }
     }
     this.requeueAdvancements()
@@ -240,6 +243,9 @@ export default class Board extends Thing {
         else if (adv === 'mine') {
           this.advanceMine()
         }
+        else if (adv === 'blob') {
+          this.advanceBlob()
+        }
 
         blocked = this.isAnimationBlocking()
       }
@@ -369,6 +375,25 @@ export default class Board extends Thing {
     return undefined
   }
 
+  getLookingAt(player) {
+    let curPos = player.position
+    for (let i = 0; i < 15; i ++) {
+      curPos = vec2.add(curPos, vec2.directionToVector(player.direction))
+      if (this.getTileHeight(curPos) > 1) {
+        return undefined
+      }
+      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+      if (blockingThing) {
+        return undefined
+      }
+      const hitPlayer = this.state.things.filter(x => vec2.equals(curPos, x.position) && (!x.dead) && ['player'].includes(x.name))[0]
+      if (hitPlayer) {
+        return hitPlayer
+      }
+    }
+    return undefined
+  }
+
   getSwitchPlayer() {
     let activePlayer = this.getActivePlayer()
     if (!activePlayer) {
@@ -385,21 +410,7 @@ export default class Board extends Thing {
 
     // If this is person guy, do LOS check
     if (activePlayer.type === 'person') {
-      let curPos = activePlayer.position
-      for (let i = 0; i < 15; i ++) {
-        curPos = vec2.add(curPos, vec2.directionToVector(activePlayer.direction))
-        if (this.getTileHeight(curPos) > 1) {
-          return undefined
-        }
-        const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
-        if (blockingThing) {
-          return undefined
-        }
-        const hitPlayer = this.state.things.filter(x => vec2.equals(curPos, x.position) && (!x.dead) && ['player'].includes(x.name))[0]
-        if (hitPlayer) {
-          return hitPlayer
-        }
-      }
+      return this.getLookingAt(activePlayer)
     }
     // Otherwise, go back to person guy
     else {
@@ -442,7 +453,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'wind', 'waterlog', 'mine', 'fire', 'vine']
+    const advancements = ['ice', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -623,31 +634,58 @@ export default class Board extends Thing {
     }
   }
 
-  advanceVine() {
-    // Iterate over vine guys
-    const vinePlayers = this.getThingsByName('player').filter((t) => t.type === 'vine')
-    for (const player of vinePlayers) {
-      if (!player.active) {
-        this.executeExtendVines(player)
+  executeFire(player) {
+    if (player.dead) {
+      return
+    }
+
+    const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
+
+    let destroyedSomething = false
+
+    // Check all adjacent tiles
+    for (const delta of deltas) {
+      const pos = vec2.add(player.position, delta)
+
+      if (player === this.getActivePlayer()) {
+        game.addThing(new Fire(pos))
+      }
+
+      // Loop over things and see if we have struck something
+      for (let j = 0; j < this.state.things.length; j ++) {
+        let thing = this.state.things[j]
+        if (vec2.equals(thing.position, pos)) {
+          // Player
+          if (thing.name === 'player' && !(['golem'].includes(thing.type))) {
+            this.executePlayerDeath(thing)
+            this.state.things.splice(j, 1)
+            j --
+            destroyedSomething = true
+          }
+          // Wood
+          if (thing.name === 'deco' && ['wood'].includes(thing.type)) {
+            this.state.things.splice(j, 1)
+            j --
+            destroyedSomething = true
+          }
+        }
       }
     }
+
+    // If something was destroyed, play the sound effect and requeue advancements
+    if (destroyedSomething) {
+      soundmanager.playSound('fire', 0.2)
+      this.requeueAdvancements()
+    }
   }
+
+
 
   advanceIce() {
     // Iterate over ice guys
     const icePlayers = this.getThingsByName('player').filter((t) => t.type === 'ice')
     for (const player of icePlayers) {
       this.executeIce(player)
-    }
-  }
-
-  advanceWind() {
-    // Iterate over wind guys
-    const windPlayers = this.getThingsByName('player').filter((t) => t.type === 'wind')
-    for (const player of windPlayers) {
-      if (!player.active) {
-        this.executeWind(player)
-      }
     }
   }
 
@@ -759,47 +797,26 @@ export default class Board extends Thing {
     }
   }
 
-  executeFire(player) {
-    if (player.dead) {
-      return
+  advanceBlob() {
+    // Iterate over blob guys
+    const blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob)
+    for (const player of blobPlayers) {
+      this.executeBlob(player)
+    }
+  }
+
+  executeBlob(player) {
+    let lookingAt = this.getLookingAt(player)
+    let previousType = player.type
+    if (lookingAt && lookingAt.type !== 'person') {
+      player.type = lookingAt.type
+    }
+    else {
+      player.type = 'blob'
     }
 
-    const deltas = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
-
-    let destroyedSomething = false
-
-    // Check all adjacent tiles
-    for (const delta of deltas) {
-      const pos = vec2.add(player.position, delta)
-
-      if (player === this.getActivePlayer()) {
-        game.addThing(new Fire(pos))
-      }
-
-      // Loop over things and see if we have struck something
-      for (let j = 0; j < this.state.things.length; j ++) {
-        let thing = this.state.things[j]
-        if (vec2.equals(thing.position, pos)) {
-          // Player
-          if (thing.name === 'player' && !(['golem'].includes(thing.type))) {
-            this.executePlayerDeath(thing)
-            this.state.things.splice(j, 1)
-            j --
-            destroyedSomething = true
-          }
-          // Wood
-          if (thing.name === 'deco' && ['wood'].includes(thing.type)) {
-            this.state.things.splice(j, 1)
-            j --
-            destroyedSomething = true
-          }
-        }
-      }
-    }
-
-    // If something was destroyed, play the sound effect and requeue advancements
-    if (destroyedSomething) {
-      soundmanager.playSound('fire', 0.2)
+    // If our type changed, we need to requeue advancements
+    if (previousType !== player.type) {
       this.requeueAdvancements()
     }
   }
@@ -823,6 +840,16 @@ export default class Board extends Thing {
     }
 
     return false
+  }
+
+  advanceWind() {
+    // Iterate over wind guys
+    const windPlayers = this.getThingsByName('player').filter((t) => t.type === 'wind')
+    for (const player of windPlayers) {
+      if (!player.active) {
+        this.executeWind(player)
+      }
+    }
   }
 
   isPushableByWind(thing) {
@@ -943,6 +970,16 @@ export default class Board extends Thing {
 
     if (didRemoveIce) {
       this.requeueAdvancements()
+    }
+  }
+
+  advanceVine() {
+    // Iterate over vine guys
+    const vinePlayers = this.getThingsByName('player').filter((t) => t.type === 'vine')
+    for (const player of vinePlayers) {
+      if (!player.active) {
+        this.executeExtendVines(player)
+      }
     }
   }
 
@@ -1078,7 +1115,6 @@ export default class Board extends Thing {
 
     // Reset active player
     if (player.active && player.type !== 'person') {
-      player.wasActive = true
       player.active = false
       const person = this.state.things.filter((x) => x.type === 'person')[0]
       if (person) {
@@ -1145,10 +1181,16 @@ export default class Board extends Thing {
       ctx.fillStyle = '#21235B'
       ctx.textAlign = 'right'
       let levelName = 'You are dead'
-      if (this.getActivePlayer()) {
-        const name = this.getActivePlayer().type
+      let activePlayer = this.getActivePlayer()
+      if (activePlayer) {
+        const name = activePlayer.type
         const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
         levelName = `You are ${capitalizedName} Guy`
+
+        // Question mark on blob guy clones
+        if (activePlayer.isBlob && activePlayer.type !== 'blob') {
+          levelName += '?'
+        }
       }
       ctx.fillText(levelName, 0, 0)
       ctx.translate(4, -4)
