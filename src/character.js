@@ -301,6 +301,9 @@ export default class Character extends Thing {
         this.sprite += '_front'
       }
     }
+    if (this.tileThingReference.isBlob && this.tileThingReference.type !== 'blob') {
+      this.sprite += '_blob'
+    }
   }
 
   npcAnimations (init = false) {

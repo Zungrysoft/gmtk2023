@@ -14,17 +14,25 @@ await game.loadAssets({
     player_person: 'images/guy.png',
     player_fire: 'images/fireguy.png',
     player_golem: 'images/rockguy.png',
-    player_rock: 'images/plantguy.png',
     player_wind: 'images/windguy2.png',
     player_wind_front: 'images/windguy3.png',
     player_wind_back: 'images/windguy4.png',
-    player_blob: 'images/blobguy.png',
-    player_blob_front: 'images/blobguy.png',
-    player_blob_back: 'images/blobguy.png',
     player_ice: 'images/iceguy.png',
     player_vine: 'images/plantguy.png',
     player_water: 'images/waterguy.png',
-    sign: 'images/sign.png',
+
+    // Blob guy
+    player_blob: 'images/blobguy.png',
+    player_blob_front: 'images/blobguy.png',
+    player_blob_back: 'images/blobguy.png',
+    player_fire_blob: 'images/blobguy_fireguy.png',
+    player_golem_blob: 'images/blobguy_rockguy.png',
+    player_wind_blob: 'images/blobguy_windguy2.png',
+    player_wind_front_blob: 'images/blobguy_windguy3.png',
+    player_wind_back_blob: 'images/blobguy_windguy4.png',
+    player_ice_blob: 'images/blobguy_iceguy.png',
+    player_vine_blob: 'images/blobguy_plantguy.png',
+    player_water_blob: 'images/blobguy_waterguy.png',
 
     // Deco Objects
     deco_rock: 'images/rock.png',
@@ -40,6 +48,7 @@ await game.loadAssets({
     deco_wind: 'images/wind.png',
     deco_wave: 'images/wave.png',
     deco_mine: 'images/mine.png',
+    sign: 'images/sign.png',
 
     // UI
     iconNearest: 'images/selection_arrows.png',
