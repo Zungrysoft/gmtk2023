@@ -89,13 +89,11 @@ export default class Character extends Thing {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       }
     }
-    else if (this.tileThingReference.type.isBlob && vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
+    else if (this.tileThingReference.isBlob && vec2.directionToVector(this.tileThingReference.blobDirection)[0] === -1) {
       this.scale[0] = Math.abs(this.scale[0]) * -1
     }
-    if (this.tileThingReference.isBlob) {
-      if (vec2.directionToVector(this.tileThingReference.blobDirection)[0] === -1) {
-        this.scale[0] = Math.abs(this.scale[0]) * -1
-      }
+    else if (this.tileThingReference.isBlob && vec2.directionToVector(this.tileThingReference.blobDirection)[0] === 1) {
+      this.scale[0] = Math.abs(this.scale[0])
     }
     else {
       if (destination[0] < this.position[0]) {
@@ -187,12 +185,10 @@ export default class Character extends Thing {
     const { ctx } = game
     const board = game.getThing('board')
 
-    if (this.tileThingReference.type === 'fire' && !this.tileThingReference.active && !this.tileThingReference.wasActive) {
+    if (this.sprite.includes('fire') && !this.tileThingReference.active && !this.tileThingReference.wasActive) {
       if (this.timers.death === undefined) {
         ctx.save()
         ctx.translate(...this.position)
-        //ctx.translate(game.config.width / 2, game.config.height / 2)
-        //ctx.translate(...game.getCamera2D().position.map(x => x * -1))
         for (let a = 0; a < 8; a += 1) {
           const angle = a * Math.PI / 4
           const delta = [Math.round(Math.cos(angle)), Math.round(Math.sin(angle))]
@@ -351,7 +347,7 @@ export default class Character extends Thing {
         this.animation = 'think'
       }
     }
-    if (this.tileThingReference.type === 'water' &&
+    if (this.sprite.includes('water') &&
         board.getTileHeight(this.tileThingReference.position) === 0 &&
         !(this.tileThingReference.position in board.state.waterlogged)) {
       this.animation = 'swim'
