@@ -244,15 +244,6 @@ export default class Board extends Thing {
         blocked = this.isAnimationBlocking()
       }
     }
-
-    //game.config.width = Math.round(window.innerWidth / 2) - 8
-    //game.config.height = Math.round(window.innerHeight / 2) - 8
-
-    // TODO: Check for win
-    // if (this.state.cratesDelivered >= this.state.cratesRequired && this.state.level > 0) {
-    //   game.globals.levelCompletions[this.state.level-1] = true
-    // }
-
   }
 
   resetAnimations() {

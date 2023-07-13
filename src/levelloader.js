@@ -28,7 +28,7 @@ export let levelList = [
   { name: 'Crossway', level: 'vine' },
   { name: 'Open and Shut', level: 'shutter' },
   { name: 'Icebox', level: 'icecrawl' },
-  { name: 'Boulder Delivery System', level: 'icerace' },
+  { name: 'Rocky River', level: 'icerace' },
   { name: 'Repotting', level: 'vineice' },
   { name: 'The Great Wall', level: 'vinewall' },
   { name: 'Carnivorous Cove', level: 'swamp' },
