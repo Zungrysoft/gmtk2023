@@ -375,10 +375,10 @@ export default class Board extends Thing {
     return undefined
   }
 
-  getLookingAt(player) {
+  getLookingAt(player, directionKey='direction') {
     let curPos = player.position
     for (let i = 0; i < 15; i ++) {
-      curPos = vec2.add(curPos, vec2.directionToVector(player.direction))
+      curPos = vec2.add(curPos, vec2.directionToVector(player[directionKey]))
       if (this.getTileHeight(curPos) > 1) {
         return undefined
       }
@@ -604,10 +604,10 @@ export default class Board extends Thing {
       */
 
       // Vine guy ability
-      if (player.type === 'vine') {
+      if (player.type === 'vine' || player.isBlob) {
         this.executeExtendVines(player)
       }
-      if (otherPlayer.type === 'vine') {
+      if (otherPlayer.type === 'vine' || otherPlayer.isBlob) {
         this.executeRetractVines(otherPlayer)
       }
 
@@ -683,7 +683,7 @@ export default class Board extends Thing {
 
   advanceIce() {
     // Iterate over ice guys
-    const icePlayers = this.getThingsByName('player').filter((t) => t.type === 'ice')
+    const icePlayers = this.getThingsByName('player').filter((t) => t.type === 'ice' || t.isBlob)
     for (const player of icePlayers) {
       this.executeIce(player)
     }
@@ -806,13 +806,15 @@ export default class Board extends Thing {
   }
 
   executeBlob(player) {
-    let lookingAt = this.getLookingAt(player)
+    let lookingAt = this.getLookingAt(player, 'blobDirection')
     let previousType = player.type
     if (lookingAt && lookingAt.type !== 'person') {
       player.type = lookingAt.type
+      player.direction = lookingAt.direction
     }
     else {
       player.type = 'blob'
+      player.direction = player.blobDirection
     }
 
     // If our type changed, we need to requeue advancements
@@ -941,32 +943,37 @@ export default class Board extends Thing {
     for (const key in this.state.waterlogged) {
       let thing = this.state.waterlogged[key]
       let distance = Math.max(Math.abs(thing.position[0] - player.position[0]), Math.abs(thing.position[1] - player.position[1]))
-      if (thing.type === 'ice' && thing.owner === player.id && distance > iceRadius) {
-        delete this.state.waterlogged[key]
-        didRemoveIce = true
+      if (thing.type === 'ice' && thing.owner === player.id) {
+        if (distance > iceRadius || player.type !== 'ice') {
+          delete this.state.waterlogged[key]
+          didRemoveIce = true
+        }
       }
     }
 
     // Build ice around this player
-    const [px, py] = player.position
-    for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
-      for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
-        const icePos = [x, y]
+    if (player.type === 'ice') {
+      const [px, py] = player.position
+      for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
+        for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
+          const icePos = [x, y]
 
-        // If this is a valid spot for ice...
-        if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
-          // Build the ice
-          this.state.waterlogged[icePos] = {
-            name: 'deco',
-            type: 'ice',
-            waterlogged: true,
-            owner: player.id,
-            id: this.nextId ++,
-            position: icePos,
+          // If this is a valid spot for ice...
+          if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
+            // Build the ice
+            this.state.waterlogged[icePos] = {
+              name: 'deco',
+              type: 'ice',
+              waterlogged: true,
+              owner: player.id,
+              id: this.nextId ++,
+              position: icePos,
+            }
           }
         }
       }
     }
+
 
     if (didRemoveIce) {
       this.requeueAdvancements()
@@ -975,7 +982,7 @@ export default class Board extends Thing {
 
   advanceVine() {
     // Iterate over vine guys
-    const vinePlayers = this.getThingsByName('player').filter((t) => t.type === 'vine')
+    const vinePlayers = this.getThingsByName('player').filter((t) => t.type === 'vine' || t.isBlob)
     for (const player of vinePlayers) {
       if (!player.active) {
         this.executeExtendVines(player)
@@ -990,8 +997,15 @@ export default class Board extends Thing {
     }
 
     // Retract any vines which are no longer aligned with this guy
-    this.executeRetractVines(player, true)
+    const onlyMisaligned = (player.type === 'vine')
+    this.executeRetractVines(player, onlyMisaligned)
 
+    // Early exit if this is not a vine guy since only vine guys create vines
+    if (player.type !== 'vine') {
+      return
+    }
+
+    // Track updates
     let createdVine = false
 
     // Do both directions
@@ -1094,7 +1108,7 @@ export default class Board extends Thing {
     player.dead = true
 
     // Vine guys must update their vines
-    if (player.type === 'vine') {
+    if (player.type === 'vine' || player.isBlob) {
       this.executeRetractVines(player)
     }
 

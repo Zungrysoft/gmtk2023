@@ -84,11 +84,20 @@ export default class Character extends Thing {
     // Move towards and face towards my destination
     const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
-    if (['wind'].includes(this.tileThingReference.type) || this.tileThingReference.isBlob) {
+    if (this.tileThingReference.type === 'wind') {
       if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       }
-    } else {
+    }
+    else if (this.tileThingReference.type.isBlob && vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
+      this.scale[0] = Math.abs(this.scale[0]) * -1
+    }
+    if (this.tileThingReference.isBlob) {
+      if (vec2.directionToVector(this.tileThingReference.blobDirection)[0] === -1) {
+        this.scale[0] = Math.abs(this.scale[0]) * -1
+      }
+    }
+    else {
       if (destination[0] < this.position[0]) {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       } else {
@@ -239,9 +248,6 @@ export default class Character extends Thing {
       if (this.checkIsActive() && !(tileThing.type === 'person' || tileThing.isBlob)) {
         ctx.save()
         ctx.translate(this.position[0], this.position[1])
-        //ctx.rotate(this.time / 120)
-        //const scale = this.timers.newlySelected !== undefined ? u.map(this.timer('newlySelected'), 0, 1, 4, 1) : 1
-        //ctx.scale(scale, scale)
         ctx.globalAlpha = 0.5
         ctx.translate(-32, -80 + Math.sin(this.time / 20) * 4)
         ctx.drawImage(game.assets.images.selectorArrow, 0, 0)
@@ -250,7 +256,7 @@ export default class Character extends Thing {
     }
 
     // Draw the player's aim arrow
-    if (this.checkIsActive() && (tileThing.type === 'person' || tileThing.isBlob)) {
+    if (this.checkIsActive() && tileThing.type === 'person') {
       const position = vec2.add(this.position, vec2.scale(vec2.directionToVector(tileThing.direction), 64))
       ctx.save()
       ctx.globalAlpha = 0.5
@@ -260,6 +266,19 @@ export default class Character extends Thing {
       ctx.drawImage(game.assets.images.aimArrow, 0, 0)
       ctx.restore()
     }
+
+    // Draw blob guy's aim arrow
+    if (tileThing.isBlob) {
+      const position = vec2.add(this.position, vec2.scale(vec2.directionToVector(tileThing.blobDirection), 64))
+      ctx.save()
+      ctx.globalAlpha = 0.9
+      ctx.translate(...position)
+      ctx.rotate(u.angleTowards(0, 0, ...vec2.directionToVector(tileThing.blobDirection)))
+      ctx.translate(-32, -32)
+      ctx.drawImage(game.assets.images.aimArrow, 0, 0)
+      ctx.restore()
+    }
+
     ctx.restore()
   }
 
@@ -293,11 +312,23 @@ export default class Character extends Thing {
   updateSprite () {
     // Update this sprite
     this.sprite = "player_" + this.tileThingReference.type
-    if (['wind', 'blob'].includes(this.tileThingReference.type)) {
+
+    // Special logic for wind guy
+    if (['wind'].includes(this.tileThingReference.type)) {
       if (vec2.directionToVector(this.tileThingReference.direction)[1] === -1) {
         this.sprite += '_back'
       }
       if (vec2.directionToVector(this.tileThingReference.direction)[1] === 1) {
+        this.sprite += '_front'
+      }
+    }
+
+    // Special logic for blob guy
+    if (this.tileThingReference.type === 'blob') {
+      if (vec2.directionToVector(this.tileThingReference.blobDirection)[1] === -1) {
+        this.sprite += '_back'
+      }
+      if (vec2.directionToVector(this.tileThingReference.blobDirection)[1] === 1) {
         this.sprite += '_front'
       }
     }
