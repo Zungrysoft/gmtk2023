@@ -34,10 +34,11 @@ export let levelList = [
   { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
   { name: 'An Eerie Resemblance', level: 'blob' },
-  { name: 'Staring Contest', level: 'twoblobs' },
   { name: 'Pusher Protector', level: 'shielding' },
+  { name: 'Candelabra', level: 'preplaced' },
   { name: 'Back to School', level: 'blobfish' },
   { name: 'The Horseshoe', level: 'blobchain' },
+  { name: 'Staring Contest', level: 'twoblobs' },
 ]
 
 export function getLevel(lvl) {

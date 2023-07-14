@@ -108,6 +108,7 @@ await game.loadAssets({
     shielding: 'json/levels/shielding.json',
     blobfish: 'json/levels/blobfish.json',
     blobchain: 'json/levels/blobchain.json',
+    preplaced: 'json/levels/preplaced.json',
   },
 
   sounds: {
