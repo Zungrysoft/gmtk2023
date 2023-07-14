@@ -102,6 +102,8 @@ await game.loadAssets({
     dodging3: 'json/levels/dodging3.json',
     vinewall: 'json/levels/vinewall.json',
     icerace: 'json/levels/icerace.json',
+    // blobtest: 'json/levels/blobtest.json',
+    twoblobs: 'json/levels/twoblobs.json',
     blob: 'json/levels/blob.json',
   },
 
