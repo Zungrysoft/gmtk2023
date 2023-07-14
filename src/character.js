@@ -416,7 +416,7 @@ export default class Character extends Thing {
     this.renderDirection = direction
 
     // Create wind
-    if (this.sprite.includes('wind')) {
+    if (this.sprite.includes('wind') && !this.tileThingReference.active) {
       this.createWind()
     }
   }
@@ -428,7 +428,7 @@ export default class Character extends Thing {
       if (this.sprite.includes('wind')) {
         if (!this.timer('wind')) {
           if (init) { this.createWind() }
-          this.after(50, () => this.createWind(), 'wind')
+          this.after(50, () => (this.active || this.createWind()), 'wind')
         }
       }
       if (this.tileThingReference.type === 'person') {
