@@ -813,7 +813,7 @@ export default class Board extends Thing {
 
   executeBlob(player) {
     let lookingAt = this.getLookingAt(player, 'blobDirection')
-    let previousType = player.type
+    let previousState = {...player}
     if (lookingAt && lookingAt.type !== 'person') {
       player.type = lookingAt.type
       player.direction = lookingAt.direction
@@ -823,9 +823,9 @@ export default class Board extends Thing {
     }
 
     // If our type changed, we need to requeue advancements
-    if (previousType !== player.type) {
+    if (previousState.type !== player.type) {
       this.requeueAdvancements()
-      player.switchedFrom = previousType
+      player.switchedFrom = previousState
     }
   }
 

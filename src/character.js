@@ -40,8 +40,7 @@ export default class Character extends Thing {
     this.drawPosition = [...this.position]
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
-    this.lastType = this.tileThingReference.type
-    this.lastSwitchedFrom = 'blob'
+    this.lastState = {...this.tileThingReference}
     this.npcAnimations(true)
     if (game.getThing('board').getActivePlayer() === this.tileThingReference) {
       game.getCamera2D().position = [...this.position]
@@ -163,28 +162,27 @@ export default class Character extends Thing {
     const transformTime = 10
 
     // Detect if player changed type twice in one turn
-    if (this.tileThingReference.switchedFrom && this.tileThingReference.switchedFrom !== this.lastType) {
-      this.flashedType = this.tileThingReference.switchedFrom
-      console.log(this.flashedType, this.tileThingReference.switchedFrom, this.lastType)
+    if (this.tileThingReference.switchedFrom?.type && this.tileThingReference.switchedFrom?.type !== this.lastState.type) {
+      this.flashedState = {...this.tileThingReference.switchedFrom}
       this.after(transformTime * 4, null, 'changedTypeFlash')
     }
     // Detect if the player changed type
-    else if (this.tileThingReference.type !== this.lastType) {
+    else if (this.tileThingReference.type !== this.lastState.type) {
       this.after(transformTime * 2, null, 'changedType')
     }
-    this.lastType = this.tileThingReference.type
+    this.lastState = {...this.tileThingReference}
 
     // Sprite change
     if (this.timers.changedTypeFlash?.time === transformTime) {
       this.updateSprite()
 
       // Play vine retract sound if we flashed vine guy
-      if (this.flashedType === 'vine') {
+      if (this.flashedState.type === 'vine') {
         soundmanager.playSound('vine', 0.2, [1.1, 1.1])
       }
     }
     else if (this.timers.changedTypeFlash?.time === transformTime*3) {
-      this.updateSprite(this.flashedType)
+      this.updateSprite(this.flashedState.type, this.flashedState.direction)
     }
     if (this.timers.changedType?.time === transformTime) {
       this.updateSprite()
@@ -248,7 +246,7 @@ export default class Character extends Thing {
 
         let player = this.tileThingReference
         const vineLength = 15
-        for (const direction of [player.direction, vec2.oppositeDirection(player.direction)]) {
+        for (const direction of [this.renderDirection, vec2.oppositeDirection(this.renderDirection)]) {
           // Get delta
           const delta = vec2.directionToVector(direction)
 
@@ -269,12 +267,12 @@ export default class Character extends Thing {
             }
 
             // Render vine
-            render(curPos, player.direction)
+            render(curPos, direction)
           }
         }
 
         // Below the player sprite
-        render(player.position, player.direction)
+        render(player.position, this.renderDirection)
       }
     }
 
@@ -367,10 +365,14 @@ export default class Character extends Thing {
   }
 
   createWind () {
+    if (!(this.sprite.includes('wind'))) {
+      return
+    }
+
     const board = game.getThing('board')
     if (!board) return
     for (let i = 0; i < 12; i += 1) {
-      const dir = vec2.directionToVector(this.tileThingReference.direction)
+      const dir = vec2.directionToVector(this.renderDirection)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
       if (board.isBlockingAt(pos, true)) {
         break
@@ -379,9 +381,10 @@ export default class Character extends Thing {
     }
   }
 
-  updateSprite (type) {
+  updateSprite (type, direction) {
     // If a custom type was not passed in, use the thing's type
     type = type || this.tileThingReference.type
+    direction = direction || this.tileThingReference.direction
 
     // Update this sprite
     this.sprite = "player_" + type
@@ -408,13 +411,21 @@ export default class Character extends Thing {
     if (this.tileThingReference.isBlob && type !== 'blob') {
       this.sprite += '_blob'
     }
+
+    // Render direction
+    this.renderDirection = direction
+
+    // Create wind
+    if (this.sprite.includes('wind')) {
+      this.createWind()
+    }
   }
 
   npcAnimations (init = false) {
     this.animation = 'idle'
     const board = game.getThing('board')
     if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead) {
-      if (this.tileThingReference.type === 'wind') {
+      if (this.sprite.includes('wind')) {
         if (!this.timer('wind')) {
           if (init) { this.createWind() }
           this.after(50, () => this.createWind(), 'wind')
