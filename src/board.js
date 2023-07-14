@@ -805,7 +805,8 @@ export default class Board extends Thing {
 
   advanceBlob() {
     // Iterate over blob guys
-    const blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob)
+    // Sort them so that the active blob guy is first; resolves certain index conditions
+    let blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob).sort((a, b) => Number(a.active) - Number(b.active))
     for (const player of blobPlayers) {
       this.executeBlob(player)
     }
