@@ -7,6 +7,7 @@ export let levelList = [
   { name: 'Fountain of Flame', level: 'fountain' },
   { name: 'Riverway', level: 'cove' },
   { name: 'Box Bridge', level: 'distance' },
+  { name: 'Sewers', level: 'sewers' },
   { name: 'Air Ride', level: 'bird' },
   { name: 'Island Access', level: 'islets' },
   { name: 'Dodge and Burn', level: 'dodging' },
