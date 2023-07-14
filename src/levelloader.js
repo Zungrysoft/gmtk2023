@@ -35,6 +35,7 @@ export let levelList = [
   { name: 'Roundabout', level: 'big' },
   { name: 'An Eerie Resemblance', level: 'blob' },
   { name: 'Staring Contest', level: 'twoblobs' },
+  { name: 'Pusher Protector', level: 'shielding' },
 ]
 
 export function getLevel(lvl) {

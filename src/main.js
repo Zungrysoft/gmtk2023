@@ -105,6 +105,7 @@ await game.loadAssets({
     // blobtest: 'json/levels/blobtest.json',
     twoblobs: 'json/levels/twoblobs.json',
     blob: 'json/levels/blob.json',
+    shielding: 'json/levels/shielding.json',
   },
 
   sounds: {
