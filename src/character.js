@@ -118,7 +118,7 @@ export default class Character extends Thing {
     // Blob Transforming
     // =================
 
-    const transformTime = 10
+    const transformTime = 8
 
     // Detect if player changed type twice in one turn
     if (this.tileThingReference.switchedFrom?.type && this.tileThingReference.switchedFrom?.type !== this.lastState.type && !(this.timers.changedTypeDeath)) {
@@ -127,7 +127,7 @@ export default class Character extends Thing {
     }
     // Detect if the player died because of changing type
     else if (this.tileThingReference.dead && this.tileThingReference.type !== this.lastState.type) {
-      this.after(transformTime, null, 'changedTypeDeath')
+      this.after(transformTime * 1.5, null, 'changedTypeDeath')
     }
     // Detect if the player changed type
     else if (this.tileThingReference.type !== this.lastState.type) {
@@ -163,7 +163,7 @@ export default class Character extends Thing {
     }
     else if (this.timers.changedTypeDeath !== undefined) {
       const t = this.timers.changedTypeDeath.time
-      this.squish = (1.0 - (Math.abs(t) / transformTime))
+      this.squish = (1.0 - (Math.abs(t) / (transformTime * 1.5)))
     }
     else if (this.timers.changedType) {
       const t = this.timers.changedType.time
