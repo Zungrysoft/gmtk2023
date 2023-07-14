@@ -114,47 +114,6 @@ export default class Character extends Thing {
     this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
     this.rotation = Math.sin(this.walkBob / 30) * 0.12
 
-    if (this.tileThingReference.dead && u.distance(this.position, destination) < 2 && this.timers.death === undefined && !this.dead) {
-      this.after(120, () => this.dead = true, 'death')
-      soundmanager.playSound('death', 0.2)
-    }
-
-    // Camera should follow me when I'm the active player
-    if (board) {
-      if (!board.movementDisabled) {
-        if (this.timers.focusCamera) {
-          game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
-        } else {
-          if (this.tileThingReference === board.lastActivePlayer) {
-            game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
-          } else {
-            this.rotation = 0
-          }
-        }
-      }
-
-      if (this.tileThingReference.type === 'person') {
-        const goal = board.state.things.filter(x => vec2.equals(this.tileThingReference.position, x.position) && x.name === 'goal')[0]
-        if (goal && !game.getThing('winscreen')) {
-          board.movementDisabled = true
-          soundmanager.playSound('win', 0.45, [1, 1])
-          game.addThing(new WinScreen())
-        }
-      }
-    }
-
-    this.npcAnimations()
-
-    this.wasActive = this.tileThingReference.active
-    this.lastPosition = [...this.position]
-    const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
-    if (selected && !this.wasSelected && this.tileThingReference.type !== 'person') {
-      this.after(10, null, 'newlySelected')
-      soundmanager.playSound('select', 0.2)
-    }
-    this.isSelected = selected
-    this.wasSelected = selected
-
     // =================
     // Blob Transforming
     // =================
@@ -162,9 +121,13 @@ export default class Character extends Thing {
     const transformTime = 10
 
     // Detect if player changed type twice in one turn
-    if (this.tileThingReference.switchedFrom?.type && this.tileThingReference.switchedFrom?.type !== this.lastState.type) {
+    if (this.tileThingReference.switchedFrom?.type && this.tileThingReference.switchedFrom?.type !== this.lastState.type && !(this.timers.changedTypeDeath)) {
       this.flashedState = {...this.tileThingReference.switchedFrom}
       this.after(transformTime * 4, null, 'changedTypeFlash')
+    }
+    // Detect if the player died because of changing type
+    else if (this.tileThingReference.dead && this.tileThingReference.type !== this.lastState.type) {
+      this.after(transformTime, null, 'changedTypeDeath')
     }
     // Detect if the player changed type
     else if (this.tileThingReference.type !== this.lastState.type) {
@@ -198,6 +161,10 @@ export default class Character extends Thing {
         this.squish = 1.0 - (Math.abs(t - transformTime*3) / transformTime)
       }
     }
+    else if (this.timers.changedTypeDeath !== undefined) {
+      const t = this.timers.changedTypeDeath.time
+      this.squish = (1.0 - (Math.abs(t) / transformTime))
+    }
     else if (this.timers.changedType) {
       const t = this.timers.changedType.time
       this.squish = 1.0 - (Math.abs(t - transformTime) / transformTime)
@@ -205,6 +172,67 @@ export default class Character extends Thing {
     else {
       this.squish = 0
     }
+
+    // =====
+    // Death
+    // =====
+    if (
+      this.tileThingReference.dead &&
+      u.distance(this.position, destination) < 2 &&
+      this.timers.death === undefined &&
+      this.timers.changedTypeDeath === undefined &&
+      !this.dead
+    ) {
+      this.after(120, () => this.dead = true, 'death')
+      soundmanager.playSound('death', 0.2)
+    }
+
+    // ======
+    // Camera
+    // ======
+    if (board) {
+      if (!board.movementDisabled) {
+        if (this.timers.focusCamera) {
+          game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.25)
+        } else {
+          if (this.tileThingReference === board.lastActivePlayer) {
+            game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
+          } else {
+            this.rotation = 0
+          }
+        }
+      }
+    }
+
+    // =============
+    // Win Condition
+    // =============
+    if (board) {
+      if (this.tileThingReference.type === 'person') {
+        const goal = board.state.things.filter(x => vec2.equals(this.tileThingReference.position, x.position) && x.name === 'goal')[0]
+        if (goal && !game.getThing('winscreen')) {
+          board.movementDisabled = true
+          soundmanager.playSound('win', 0.45, [1, 1])
+          game.addThing(new WinScreen())
+        }
+      }
+    }
+
+    // Npc animations
+    this.npcAnimations()
+
+    // =========
+    // Selection
+    // =========
+    this.wasActive = this.tileThingReference.active
+    this.lastPosition = [...this.position]
+    const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
+    if (selected && !this.wasSelected && this.tileThingReference.type !== 'person') {
+      this.after(10, null, 'newlySelected')
+      soundmanager.playSound('select', 0.2)
+    }
+    this.isSelected = selected
+    this.wasSelected = selected
   }
 
   draw () {
