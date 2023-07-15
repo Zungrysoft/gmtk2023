@@ -27,6 +27,7 @@ export let levelList = [
   { name: 'Alongside the Maze', level: 'maze' },
   { name: 'Wall of Thorns', level: 'blocking' },
   { name: 'Special Delivery', level: 'snowblower' },
+  { name: 'Snow Maze', level: 'snowmaze' },
   { name: 'Crossway', level: 'vine' },
   { name: 'Open and Shut', level: 'shutter' },
   { name: 'Icebox', level: 'icecrawl' },
