@@ -8,6 +8,7 @@ export let levelList = [
   { name: 'Riverway', level: 'cove' },
   { name: 'Box Bridge', level: 'distance' },
   { name: 'Sewers', level: 'sewers' },
+  { name: 'Blazing Trails', level: 'dodging3' },
   { name: 'Air Ride', level: 'bird' },
   { name: 'Island Access', level: 'islets' },
   { name: 'Dodge and Burn', level: 'dodging' },
@@ -40,6 +41,7 @@ export let levelList = [
   { name: 'Back to School', level: 'blobfish' },
   { name: 'The Horseshoe', level: 'blobchain' },
   { name: 'Staring Contest', level: 'twoblobs' },
+  { name: 'Blob Vine', level: 'blobvine' },
 ]
 
 export function getLevel(lvl) {
