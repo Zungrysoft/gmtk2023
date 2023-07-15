@@ -32,7 +32,7 @@ export let levelList = [
   { name: 'Icebox', level: 'icecrawl' },
   { name: 'Rocky River', level: 'icerace' },
   { name: 'Repotting', level: 'vineice' },
-  { name: 'The Great Wall', level: 'vinewall' },
+  { name: 'Weed Control', level: 'vinewall' },
   { name: 'Carnivorous Cove', level: 'swamp' },
   { name: 'Roundabout', level: 'big' },
   { name: 'An Eerie Resemblance', level: 'blob' },
@@ -40,8 +40,9 @@ export let levelList = [
   { name: 'Candelabra', level: 'preplaced' },
   { name: 'Back to School', level: 'blobfish' },
   { name: 'The Horseshoe', level: 'blobchain' },
+  { name: 'Baths of Enigma', level: 'blobvine' },
+  { name: 'The Divider', level: 'blobice' },
   { name: 'Staring Contest', level: 'twoblobs' },
-  { name: 'Blob Vine', level: 'blobvine' },
 ]
 
 export function getLevel(lvl) {

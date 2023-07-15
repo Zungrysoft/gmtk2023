@@ -111,6 +111,7 @@ await game.loadAssets({
     preplaced: 'json/levels/preplaced.json',
     sewers: 'json/levels/sewers.json',
     blobvine: 'json/levels/blobvine.json',
+    blobice: 'json/levels/blobice.json',
   },
 
   sounds: {
