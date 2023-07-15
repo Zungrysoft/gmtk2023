@@ -115,6 +115,7 @@ await game.loadAssets({
     firemaze: 'json/levels/firemaze.json',
     snowmaze: 'json/levels/snowmaze.json',
     doublestack: 'json/levels/doublestack.json',
+    sorting: 'json/levels/sorting.json',
   },
 
   sounds: {
