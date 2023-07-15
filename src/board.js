@@ -1021,7 +1021,7 @@ export default class Board extends Thing {
     let createdVine = false
 
     // Do both directions
-    const vineLength = 15
+    const vineLength = 20
     for (const direction of [player.direction, vec2.oppositeDirection(player.direction)]) {
       // Get delta
       const delta = vec2.directionToVector(direction)

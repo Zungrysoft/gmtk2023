@@ -273,7 +273,7 @@ export default class Character extends Thing {
         }
 
         let player = this.tileThingReference
-        const vineLength = 15
+        const vineLength = 20
         for (const direction of [this.renderDirection, vec2.oppositeDirection(this.renderDirection)]) {
           // Get delta
           const delta = vec2.directionToVector(direction)
