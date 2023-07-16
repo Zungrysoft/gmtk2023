@@ -462,7 +462,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine', 'magnet']
+    const advancements = ['ice', 'magnet', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -854,13 +854,9 @@ export default class Board extends Thing {
     // Iterate over metal deco objects
     const metalThings = this.getThingsByName('deco').filter((t) => t.type === 'metal')
 
-    // Attach magnetic things
-    for (const thing of metalThings) {
-      this.executeMagnetAttach(thing)
-    }
-
     // Iteratively get magnetic things to follow
     // We have to do this in a while loop so we don't get index conditions
+    let everMoved = false
     while (true) {
       let anyMoved = false
       for (const thing of metalThings) {
@@ -868,9 +864,18 @@ export default class Board extends Thing {
         anyMoved = anyMoved || thisMoved
       }
 
+      everMoved = everMoved || anyMoved
+
       if (!anyMoved) {
         break
       }
+    }
+    // Attach magnetic things
+    for (const thing of metalThings) {
+      this.executeMagnetAttach(thing)
+    }
+    if (everMoved) {
+      this.requeueAdvancements()
     }
   }
 

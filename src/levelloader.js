@@ -50,6 +50,8 @@ export let levelList = [
   { name: 'Catwalks', level: 'blobsight' },
   { name: 'Staring Contest', level: 'twoblobs' },
   { name: 'My Hobby', level: 'magnetintro' },
+  { name: 'Metal Vacuum', level: 'vacuum' },
+  { name: 'Long or Short', level: 'longshort' },
 ]
 
 export function getLevel(lvl) {

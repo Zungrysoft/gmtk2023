@@ -125,6 +125,8 @@ await game.loadAssets({
     snowmaze2: 'json/levels/snowmaze2.json',
     magnettest: 'json/levels/magnettest.json',
     magnetintro: 'json/levels/magnetintro.json',
+    vacuum: 'json/levels/vacuum.json',
+    longshort: 'json/levels/longshort.json',
   },
 
   sounds: {
