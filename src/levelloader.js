@@ -42,10 +42,11 @@ export let levelList = [
   { name: 'An Eerie Resemblance', level: 'blob' },
   { name: 'Pusher Protector', level: 'shielding' },
   { name: 'Candelabra', level: 'preplaced' },
-  { name: 'One of the School', level: 'blobfish' },
   { name: 'The Horseshoe', level: 'blobchain' },
+  { name: 'One of the School', level: 'blobfish' },
   { name: 'Baths of Enigma', level: 'blobvine' },
   { name: 'The Divider', level: 'blobice' },
+  { name: 'Catwalks', level: 'blobsight' },
   { name: 'Staring Contest', level: 'twoblobs' },
 ]
 
