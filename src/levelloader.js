@@ -53,6 +53,7 @@ export let levelList = [
   { name: 'Metal Vacuum', level: 'vacuum' },
   { name: 'Long or Short', level: 'longshort' },
   { name: 'Metal Maze', level: 'metalmaze' },
+  // { name: 'Frozen Metal', level: 'icemagnet' },
 ]
 
 export function getLevel(lvl) {
@@ -100,7 +101,7 @@ export function getLevel(lvl) {
   ret.things = ret.things.map((x) => {return {
     ...x.data,
     name: x.name,
-    id: curId ++,
+    id: ++ curId,
     position: [Math.floor(x.position[0]), Math.floor(x.position[1])],
   }})
 

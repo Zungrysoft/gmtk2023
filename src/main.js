@@ -128,6 +128,7 @@ await game.loadAssets({
     vacuum: 'json/levels/vacuum.json',
     longshort: 'json/levels/longshort.json',
     metalmaze: 'json/levels/metalmaze.json',
+    icemagnet: 'json/levels/icemagnet.json',
   },
 
   sounds: {
