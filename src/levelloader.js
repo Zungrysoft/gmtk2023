@@ -35,6 +35,7 @@ export let levelList = [
   { name: 'Icebox', level: 'icecrawl' },
   { name: 'Rocky River', level: 'icerace' },
   { name: 'Repotting', level: 'vineice' },
+  { name: 'Snow Maze II', level: 'snowmaze2' },
   { name: 'Weed Control', level: 'vinewall' },
   { name: 'Sorting Stack', level: 'sorting' },
   { name: 'Carnivorous Cove', level: 'swamp' },
