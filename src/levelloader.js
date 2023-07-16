@@ -13,6 +13,7 @@ export let levelList = [
   { name: 'Island Access', level: 'islets' },
   { name: 'Dodge and Burn', level: 'dodging' },
   { name: 'Going For a Swim', level: 'swim' },
+  { name: 'Coming Your Way!', level: 'warehouse' },
   { name: 'Far Out', level: 'safety' },
   { name: 'Hop Across', level: 'islands' },
   { name: 'Wind Blocker', level: 'doublestack' },
