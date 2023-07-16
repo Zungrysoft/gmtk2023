@@ -252,6 +252,9 @@ export default class Board extends Thing {
         else if (adv === 'blob') {
           this.advanceBlob()
         }
+        else if (adv === 'magnet') {
+          this.advanceMagnet()
+        }
 
         blocked = this.isAnimationBlocking()
       }
@@ -459,7 +462,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine']
+    const advancements = ['ice', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine', 'magnet']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -470,6 +473,25 @@ export default class Board extends Thing {
 
     // Reinstate movement items in queue
     this.advancementData.queue.push(...advancements)
+  }
+
+  canBeMovedByAny(thing) {
+    if (thing.name === 'deco' && thing.type === 'box') {
+      return true
+    }
+    return false
+  }
+
+  canBeMovedByGolem(thing) {
+    if (thing.name === 'player') {
+      return true
+    }
+    if (thing.name === 'deco') {
+      if (thing.type === 'rock' || thing.type === 'metal') {
+        return true
+      }
+    }
+    return false
   }
 
   advanceMove(control) {
@@ -515,9 +537,7 @@ export default class Board extends Thing {
     // Check if there is an thing blocking us
     const blockingThing = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
     if (blockingThing) {
-      const canBeMovedByGolem = blockingThing.name === 'player' || (blockingThing.name === 'deco' && blockingThing.type === 'rock')
-      const canBeMovedByAny = blockingThing.name === 'deco' && blockingThing.type === 'box'
-      if (canBeMovedByAny || (player.type === 'golem' && canBeMovedByGolem)) {
+      if (this.canBeMovedByAny(blockingThing) || (player.type === 'golem' && this.canBeMovedByGolem(blockingThing))) {
         // Check if the space behind this is free
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
@@ -830,7 +850,130 @@ export default class Board extends Thing {
     }
   }
 
-  isBlockingAt (curPos, players = false) {
+  advanceMagnet() {
+    // Iterate over metal deco objects
+    const metalThings = this.getThingsByName('deco').filter((t) => t.type === 'metal')
+
+    // Attach magnetic things
+    for (const thing of metalThings) {
+      this.executeMagnetAttach(thing)
+    }
+
+    // Iteratively get magnetic things to follow
+    // We have to do this in a while loop so we don't get index conditions
+    while (true) {
+      let anyMoved = false
+      for (const thing of metalThings) {
+        const thisMoved = this.executeMagnetFollow(thing)
+        anyMoved = anyMoved || thisMoved
+      }
+
+      if (!anyMoved) {
+        break
+      }
+    }
+  }
+
+  isMagnetic(thing) {
+    if (thing.name === 'player' && thing.type === 'magnet') {
+      return true
+    }
+    if (thing.name === 'deco' && thing.type === 'metal' && thing.attached) {
+      return true
+    }
+    return false
+  }
+
+  executeMagnetAttach(thing) {
+    // If this metal is not attached to anything, look for things to attach to
+    if (!thing.attached) {
+      for (const delta of [[1, 0], [0, 1], [-1, 0], [0, -1]]) {
+        // TODO: Sort things by position to remove index conditions
+        const adjacent = this.state.things.filter(x => vec2.equals(x.position, vec2.add(thing.position, delta)))[0]
+        if (adjacent && this.isMagnetic(adjacent)) {
+          // Make sure something else isn't already attached. Only one thing can be attached at each link in the chain
+          const alreadyAttached = this.state.things.filter(x => x.attached === adjacent.id)[0]
+          if (!alreadyAttached) {
+            thing.attached = adjacent.id
+            thing.attachPosition = [...adjacent.position]
+            console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
+            // TODO: Sound effect and animation
+          }
+        }
+      }
+    }
+  }
+
+  executeMagnetFollow(thing) {
+    // Follow thing it's attached to
+    if (thing.attached) {
+      const attached = this.state.things.filter(x => x.id === thing.attached)[0]
+      // Follow attached thing
+      if (attached) {
+        // Determine if we should break the connection
+
+        // Make sure the attached thing is still adjacent to the attachment point
+        let isAttachedStillNearby = false
+        for (const delta of [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1]]) {
+          if (vec2.equals(attached.position, vec2.add(thing.attachPosition, delta))) {
+            isAttachedStillNearby = true
+            break
+          }
+        }
+
+        // Make sure we're still adjacent to the attachment point
+        let isStillNearbyAttachmentPoint = false
+        for (const delta of [[1, 0], [0, 1], [-1, 0], [0, -1]]) {
+          if (vec2.equals(thing.position, vec2.add(thing.attachPosition, delta))) {
+            isStillNearbyAttachmentPoint = true
+            break
+          }
+        }
+
+        if (isAttachedStillNearby && isStillNearbyAttachmentPoint && this.isMagnetic(attached)) {
+          // If adjacent thing has moved...
+          if (!vec2.equals(thing.attachPosition, attached.position)) {
+            // Move into this position if the attachment is still valid
+            if (!this.isBlockingAt(thing.attachPosition)) {
+              thing.position = thing.attachPosition
+              thing.attachPosition = [...attached.position]
+              return true
+            }
+            // Can't move into this position; break attachment
+            else {
+              this.breakAttachment(thing)
+              // TODO: Sound effect and animation
+              return false
+            }
+          }
+        }
+        else {
+          this.breakAttachment(thing)
+          // TODO: Sound effect and animation
+          return false
+        }
+      }
+      // If attached thing doesn't exist anymore, remove attachment
+      else {
+        this.breakAttachment(thing)
+        // TODO: Sound effect and animation
+        return false
+      }
+    }
+    return false
+  }
+
+  breakAttachment(thing) {
+    const attachedToThis = this.state.things.filter(x => x.attached === thing.id)
+    for (const t of attachedToThis) {
+      this.breakAttachment(t)
+    }
+    delete thing.attached
+    delete thing.attachPosition
+    console.log(`Broke attachment of ${thing.name}-${thing.type}-${thing.id}`)
+  }
+
+  isBlockingAt (curPos, players=true) {
     // Blocked by walls
     const tileHeight = this.getTileHeight(curPos)
     if (tileHeight > 1) {
@@ -1309,20 +1452,16 @@ export default class Board extends Thing {
 
         // Deco Objects
         if (thing.name === 'deco') {
-          if (thing.waterlogged) {
-            const image = thing.type ? ('deco_waterlogged_' + thing.type) : 'undefined'
-            if (image) {
-              ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
-            }
-          } else {
             let image = thing.type ? ('deco_' + thing.type) : 'undefined'
             if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
               image = 'deco_vine_v'
             }
+            if (thing.waterlogged) {
+              image += '_waterlogged'
+            }
             if (image && assets.images[image]) {
               ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
             }
-          }
         }
 
         // Vine guy vine

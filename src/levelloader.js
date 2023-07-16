@@ -49,6 +49,7 @@ export let levelList = [
   { name: 'The Divider', level: 'blobice' },
   { name: 'Catwalks', level: 'blobsight' },
   { name: 'Staring Contest', level: 'twoblobs' },
+  { name: 'Magnet Guy Test', level: 'magnettest' },
 ]
 
 export function getLevel(lvl) {

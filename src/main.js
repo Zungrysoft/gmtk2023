@@ -20,6 +20,7 @@ await game.loadAssets({
     player_ice: 'images/iceguy.png',
     player_vine: 'images/vineguy.png',
     player_water: 'images/waterguy.png',
+    player_magnet: 'images/magnetguy.png',
 
     // Blob guy
     player_blob: 'images/blobguy.png',
@@ -33,21 +34,24 @@ await game.loadAssets({
     player_ice_blob: 'images/blobguy_iceguy.png',
     player_vine_blob: 'images/blobguy_vineguy.png',
     player_water_blob: 'images/blobguy_waterguy.png',
+    player_magnet_blob: 'images/blobguy_magnetguy.png',
 
     // Deco Objects
     deco_rock: 'images/rock.png',
-    deco_waterlogged_rock: 'images/waterlogged_rock.png',
+    deco_rock_waterlogged: 'images/rock_waterlogged.png',
     deco_wood: 'images/plant1.png',
     deco_ice: 'images/ice.png',
-    deco_waterlogged_ice: 'images/ice.png',
+    deco_ice_waterlogged: 'images/ice.png',
     deco_vine: 'images/vine_h.png',
     deco_vine_v: 'images/vine_v.png',
     deco_box: 'images/box.png',
-    deco_waterlogged_box: 'images/waterlogged_box.png',
+    deco_box_waterlogged: 'images/box_waterlogged.png',
     deco_fire: 'images/fire1.png',
     deco_wind: 'images/wind.png',
     deco_wave: 'images/wave.png',
     deco_mine: 'images/mine.png',
+    deco_metal: 'images/metal.png',
+    deco_metal_waterlogged: 'images/metal_waterlogged.png',
     sign: 'images/sign.png',
 
     // UI
@@ -119,6 +123,7 @@ await game.loadAssets({
     blobsight: 'json/levels/blobsight.json',
     warehouse: 'json/levels/warehouse.json',
     snowmaze2: 'json/levels/snowmaze2.json',
+    magnettest: 'json/levels/magnettest.json',
   },
 
   sounds: {
