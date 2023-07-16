@@ -860,10 +860,8 @@ export default class Board extends Thing {
     while (true) {
       let anyMoved = false
       for (const thing of metalThings) {
-        const thisMoved = this.executeMagnetFollow(thing)
-        anyMoved = anyMoved || thisMoved
+        anyMoved = anyMoved || this.executeMagnetFollow(thing)
       }
-
       everMoved = everMoved || anyMoved
 
       if (!anyMoved) {
@@ -871,8 +869,14 @@ export default class Board extends Thing {
       }
     }
     // Attach magnetic things
-    for (const thing of metalThings) {
-      this.executeMagnetAttach(thing)
+    while (true) {
+      let anyAttached = false
+      for (const thing of metalThings) {
+        anyAttached = anyAttached || this.executeMagnetAttach(thing)
+      }
+      if (!anyAttached) {
+        break
+      }
     }
     if (everMoved) {
       this.requeueAdvancements()
@@ -903,10 +907,12 @@ export default class Board extends Thing {
             thing.attachPosition = [...adjacent.position]
             // console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
             // TODO: Sound effect and animation
+            return true
           }
         }
       }
     }
+    return false
   }
 
   executeMagnetFollow(thing) {

@@ -52,6 +52,7 @@ export let levelList = [
   { name: 'My Hobby', level: 'magnetintro' },
   { name: 'Metal Vacuum', level: 'vacuum' },
   { name: 'Long or Short', level: 'longshort' },
+  { name: 'Metal Maze', level: 'metalmaze' },
 ]
 
 export function getLevel(lvl) {
