@@ -896,7 +896,7 @@ export default class Board extends Thing {
           if (!alreadyAttached) {
             thing.attached = adjacent.id
             thing.attachPosition = [...adjacent.position]
-            console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
+            // console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
             // TODO: Sound effect and animation
           }
         }
@@ -970,7 +970,7 @@ export default class Board extends Thing {
     }
     delete thing.attached
     delete thing.attachPosition
-    console.log(`Broke attachment of ${thing.name}-${thing.type}-${thing.id}`)
+    // console.log(`Broke attachment of ${thing.name}-${thing.type}-${thing.id}`)
   }
 
   isBlockingAt (curPos, players=true) {

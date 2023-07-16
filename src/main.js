@@ -124,6 +124,7 @@ await game.loadAssets({
     warehouse: 'json/levels/warehouse.json',
     snowmaze2: 'json/levels/snowmaze2.json',
     magnettest: 'json/levels/magnettest.json',
+    magnetintro: 'json/levels/magnetintro.json',
   },
 
   sounds: {
