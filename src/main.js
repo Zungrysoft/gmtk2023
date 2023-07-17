@@ -66,7 +66,7 @@ await game.loadAssets({
     title: 'images/title.png',
     checkbox_unchecked: 'images/checkbox_unchecked.png',
     checkbox_checked: 'images/checkbox_checked.png',
-    undefined: 'images/mystery.png',
+    undefined_sprite: 'images/mystery.png',
   },
 
   json: {

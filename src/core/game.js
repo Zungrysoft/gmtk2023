@@ -476,6 +476,10 @@ export function getThing (name) {
   return scene.namedThings[name]
 }
 
+export function getDepthMemory() {
+  return scene.depthMemory
+}
+
 export function getNameOfThing (thing) {
   for (const [name, check] of Object.entries(scene.namedThings)) {
     if (thing === check) {

@@ -10,7 +10,7 @@ import Fire from './fire.js'
 import Wind from './wind.js'
 import WinScreen from './winscreen.js'
 
-export default class Character extends Thing {
+export default class Player extends Thing {
   sprite = 'player_fire'
   time = 0
   wasActive = true

@@ -9,6 +9,7 @@ import Thing from './core/thing.js'
 import { assets } from './core/game.js'
 import { getLevel, levelList } from './levelloader.js'
 import Character from './character.js'
+import Deco from './deco.js'
 import Fire from './fire.js'
 import Sign from './sign.js'
 import Wave from './wave.js'
@@ -116,6 +117,10 @@ export default class Board extends Thing {
     }
     if (Object.keys(game.keysPressed).length) {
       game.globals.usingGamepad = false
+    }
+
+    if (game.keysPressed.KeyJ) {
+      console.log(game.getDepthMemory())
     }
 
     // Camera controls
@@ -266,7 +271,14 @@ export default class Board extends Thing {
       game.getThing('deathscreen').dead = true
     }
 
+    // Kill all existing visual representations
     for (const thing of game.getThings()) {
+      if (thing instanceof Sign) {
+        thing.dead = true
+      }
+      if (thing instanceof Deco) {
+        thing.dead = true
+      }
       if (thing instanceof Character) {
         thing.dead = true
       }
@@ -274,11 +286,20 @@ export default class Board extends Thing {
 
     // Create visual representations for each thing
     this.state.things.forEach(thing => {
+      if (thing.name === 'sign') {
+        game.addThing(new Sign(thing))
+      }
+      if (thing.name === 'deco') {
+        game.addThing(new Deco(thing))
+      }
       if (thing.name === 'player') {
         game.addThing(new Character(thing))
       }
-      if (thing.name === 'sign') {
-        game.addThing(new Sign(thing))
+    })
+
+    Object.values(this.state.waterlogged).forEach(thing => {
+      if (thing.name === 'deco') {
+        game.addThing(new Deco(thing))
       }
     })
   }
@@ -617,18 +638,6 @@ export default class Board extends Thing {
 
       player.lastActive = this.state.turns - 1
 
-      // Clear out all current fire animation things
-      /*
-      for (const thing of game.getThings()) {
-        if (thing instanceof Fire) {
-          thing.dead = true
-        }
-        if (thing instanceof Character) {
-          thing.cancelTimer('fire')
-        }
-      }
-      */
-
       // Vine guy ability
       if (player.type === 'vine' || player.isBlob) {
         this.executeExtendVines(player)
@@ -690,6 +699,7 @@ export default class Board extends Thing {
           }
           // Wood
           if (thing.name === 'deco' && ['wood'].includes(thing.type)) {
+            thing.dead = true
             this.state.things.splice(j, 1)
             j --
             destroyedSomething = true
@@ -705,13 +715,57 @@ export default class Board extends Thing {
     }
   }
 
-
-
   advanceIce() {
     // Iterate over ice guys
     const icePlayers = this.getThingsByName('player').filter((t) => t.type === 'ice' || t.isBlob)
     for (const player of icePlayers) {
       this.executeIce(player)
+    }
+  }
+
+  executeIce(player) {
+    const iceRadius = 1
+
+    let didRemoveIce = false
+
+    // Delete all ice owned by this player that is now too far away
+    for (const key in this.state.waterlogged) {
+      let thing = this.state.waterlogged[key]
+      let distance = Math.max(Math.abs(thing.position[0] - player.position[0]), Math.abs(thing.position[1] - player.position[1]))
+      if (thing.type === 'ice' && thing.owner === player.id) {
+        if (distance > iceRadius || player.type !== 'ice') {
+          thing.dead = true
+          delete this.state.waterlogged[key]
+          didRemoveIce = true
+        }
+      }
+    }
+
+    // Build ice around this player
+    if (player.type === 'ice') {
+      const [px, py] = player.position
+      for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
+        for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
+          const icePos = [x, y]
+
+          // If this is a valid spot for ice...
+          if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
+            // Build the ice
+            this.addThing({
+              name: 'deco',
+              type: 'ice',
+              waterlogged: true,
+              owner: player.id,
+              position: icePos,
+            })
+          }
+        }
+      }
+    }
+
+
+    if (didRemoveIce) {
+      this.requeueAdvancements()
     }
   }
 
@@ -738,7 +792,10 @@ export default class Board extends Thing {
         if (!(thing.position in this.state.waterlogged)) {
           // Add this thing to the waterlogged list
           // But kill players
-          if (thing.name !== 'player') {
+          if (thing.name === 'player') {
+            soundmanager.playSound('sploosh', 0.4)
+          }
+          else {
             thing.waterlogged = true
             this.state.waterlogged[thing.position] = thing
           }
@@ -752,9 +809,8 @@ export default class Board extends Thing {
       }
     }
 
-    // If something was put into the water, play the sound effect and requeue advancements
+    // If something was put into the water, requeue advancements
     if (waterloggedSomething) {
-      soundmanager.playSound('sploosh', 0.4)
       this.requeueAdvancements()
     }
   }
@@ -816,7 +872,7 @@ export default class Board extends Thing {
       }
     }
 
-    // If something was put into the water, play the sound effect and requeue advancements
+    // If something was killed by the mind, play the sound effect and requeue advancements
     if (mineIds.length > 0) {
       soundmanager.playSound('sploosh', 0.4)
       this.requeueAdvancements()
@@ -1095,52 +1151,6 @@ export default class Board extends Thing {
     }
   }
 
-  executeIce(player) {
-    const iceRadius = 1
-
-    let didRemoveIce = false
-
-    // Delete all ice owned by this player that is now too far away
-    for (const key in this.state.waterlogged) {
-      let thing = this.state.waterlogged[key]
-      let distance = Math.max(Math.abs(thing.position[0] - player.position[0]), Math.abs(thing.position[1] - player.position[1]))
-      if (thing.type === 'ice' && thing.owner === player.id) {
-        if (distance > iceRadius || player.type !== 'ice') {
-          delete this.state.waterlogged[key]
-          didRemoveIce = true
-        }
-      }
-    }
-
-    // Build ice around this player
-    if (player.type === 'ice') {
-      const [px, py] = player.position
-      for (let x = px-iceRadius; x <= px+iceRadius; x ++) {
-        for (let y = py-iceRadius; y <= py+iceRadius; y ++) {
-          const icePos = [x, y]
-
-          // If this is a valid spot for ice...
-          if (this.getTileHeight(icePos) === 0 && !(icePos in this.state.waterlogged)) {
-            // Build the ice
-            this.state.waterlogged[icePos] = {
-              name: 'deco',
-              type: 'ice',
-              waterlogged: true,
-              owner: player.id,
-              id: this.nextId ++,
-              position: icePos,
-            }
-          }
-        }
-      }
-    }
-
-
-    if (didRemoveIce) {
-      this.requeueAdvancements()
-    }
-  }
-
   advanceVine() {
     // Iterate over vine guys
     const vinePlayers = this.getThingsByName('player').filter((t) => t.type === 'vine' || t.isBlob)
@@ -1207,19 +1217,20 @@ export default class Board extends Thing {
           const thing = this.state.things[i]
           if (vec2.equals(thing.position, curPos) && thing.name === 'player') {
             this.executePlayerDeath(thing)
+            thing.dead = true
             this.state.things.splice(i, 1)
           }
         }
 
         // Create vine object
-        this.state.things.push({
+        this.addThing({
           name: 'deco',
           type: 'vine',
           owner: player.id,
-          id: this.nextId ++,
           position: curPos,
           direction
         })
+
         createdVine = true
       }
     }
@@ -1238,6 +1249,7 @@ export default class Board extends Thing {
         const axis = ['right', 'left', 'east', 'west'].includes(player.direction) ? 1 : 0
         const misaligned = player.position[axis] !== thing.position[axis]
         if (!onlyMisaligned || misaligned) {
+          thing.dead = true
           this.state.things.splice(i, 1)
           destroyedVine = true
         }
@@ -1246,6 +1258,31 @@ export default class Board extends Thing {
     if (destroyedVine) {
       soundmanager.playSound('vine', 0.2, [1.1, 1.1])
       this.requeueAdvancements()
+    }
+  }
+
+  addThing(thing) {
+    // Add unique id to this thing
+    thing.id = this.nextId
+    this.nextId ++
+
+    // Add it to state
+    if (thing.waterlogged) {
+      this.state.waterlogged[thing.position] = thing
+    }
+    else {
+      this.state.things.push(thing)
+    }
+
+    // Add render object
+    if (thing.name === 'sign') {
+      game.addThing(new Sign(thing))
+    }
+    else if (thing.name === 'deco') {
+      game.addThing(new Deco(thing))
+    }
+    else if (thing.name === 'player') {
+      game.addThing(new Character(thing))
     }
   }
 
@@ -1461,25 +1498,25 @@ export default class Board extends Thing {
           screenY -= 2
         }
 
-        // Deco Objects
-        if (thing.name === 'deco') {
-            let image = thing.type ? ('deco_' + thing.type) : 'undefined'
-            if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
-              image = 'deco_vine_v'
-            }
-            if (thing.waterlogged) {
-              image += '_waterlogged'
-            }
-            if (image && assets.images[image]) {
-              ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
-            }
-        }
+        // // Deco Objects
+        // if (thing.name === 'deco') {
+        //     let image = thing.type ? ('deco_' + thing.type) : 'undefined_sprite'
+        //     if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
+        //       image = 'deco_vine_v'
+        //     }
+        //     if (thing.waterlogged) {
+        //       image += '_waterlogged'
+        //     }
+        //     if (image && assets.images[image]) {
+        //       ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
+        //     }
+        // }
 
-        // Vine guy vine
-        if (thing.name === 'player' && thing.type === 'vine' && !(thing.active)) {
-          const image = vec2.directionToVector(thing.direction)[1] !== 0 ? 'deco_vine_v' : 'deco_vine'
-          ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
-        }
+        // // Vine guy vine
+        // if (thing.name === 'player' && thing.type === 'vine' && !(thing.active)) {
+        //   const image = vec2.directionToVector(thing.direction)[1] !== 0 ? 'deco_vine_v' : 'deco_vine'
+        //   ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
+        // }
 
         // Mine
         if (thing.name === 'mine') {
