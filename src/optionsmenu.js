@@ -43,9 +43,9 @@ export default class OptionsMenu extends Thing {
     this.scroll = u.lerp(this.scroll, this.scrollTarget, 0.25)
 
     if (game.keysPressed.Escape || game.keysPressed.Backspace || game.buttonsPressed[8] || game.buttonsPressed[9]) {
-      this.selection = 0
+      this.selection = this.menu.length-1
       this.offsets = this.menu.map(_ => 0)
-      this.offsets[0] = 1
+      this.offsets[this.menu.length-1] = 1
     }
 
     if (this.time > 10) {
