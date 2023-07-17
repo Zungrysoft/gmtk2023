@@ -962,7 +962,6 @@ export default class Board extends Thing {
             thing.attached = adjacent.id
             thing.attachPosition = [...adjacent.position]
             // console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
-            // TODO: Sound effect and animation
             return true
           }
         }
@@ -1009,21 +1008,18 @@ export default class Board extends Thing {
             // Can't move into this position; break attachment
             else {
               this.breakAttachment(thing)
-              // TODO: Sound effect and animation
               return false
             }
           }
         }
         else {
           this.breakAttachment(thing)
-          // TODO: Sound effect and animation
           return false
         }
       }
       // If attached thing doesn't exist anymore, remove attachment
       else {
         this.breakAttachment(thing)
-        // TODO: Sound effect and animation
         return false
       }
     }

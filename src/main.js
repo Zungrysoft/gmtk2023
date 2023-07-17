@@ -52,6 +52,7 @@ await game.loadAssets({
     deco_mine: 'images/mine.png',
     deco_metal: 'images/metal.png',
     deco_metal_waterlogged: 'images/metal_waterlogged.png',
+    deco_electricity: 'images/electricity.png',
     sign: 'images/sign.png',
 
     // UI

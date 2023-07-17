@@ -1,4 +1,5 @@
 import * as game from './core/game.js'
+import { assets } from './core/game.js'
 import * as u from './core/utils.js'
 import * as soundmanager from './core/soundmanager.js'
 import * as gfx from './core/webgl.js'
@@ -13,6 +14,7 @@ export default class Deco extends Thing {
   lastPosition = [0, 0]
   drawPosition = [0, 0]
   depth = 5
+  wasAttached = false
   wasWaterlogged = false
   lastDestination = [0, 0]
 
@@ -27,7 +29,7 @@ export default class Deco extends Thing {
     this.lastPosition = [...this.position]
     this.lastDestination = [...this.position]
     this.wasWaterlogged = tileThingReference.waterlogged
-    this.depth = tileThingReference.waterlogged ? 3 : 5
+    this.wasAttached = tileThingReference.attached
   }
 
   update () {
@@ -36,10 +38,21 @@ export default class Deco extends Thing {
     this.animate()
     const board = game.getThing('board')
 
+    // Attachment animation
+    if (this.tileThingReference.attached && !this.wasAttached) {
+      this.announce()
+      // TODO: Sound effect
+    }
+    if (!this.tileThingReference.attached && this.wasAttached) {
+      this.announce()
+      // TODO: Sound effect
+    }
+    this.wasAttached = this.tileThingReference.attached
+
     // Calculate scale
     this.scale = [1.0, 1.0]
     if (this.timer('announce')) {
-      const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.5, 1)
+      const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.3, 1)
       this.scale = [scalar, scalar]
     }
 
@@ -80,6 +93,14 @@ export default class Deco extends Thing {
     const prevScale = this.scale
     super.draw(...this.drawPosition)
     this.scale = prevScale
+
+    if (this.tileThingReference.attached) {
+      ctx.save()
+      const frame = Math.floor(board.time / 6) % 4
+      ctx.drawImage(assets.images.deco_electricity, frame * 64, 0, 64, 64, this.drawPosition[0]-32, this.drawPosition[1]-32, 64, 64)
+      ctx.restore()
+    }
+
     ctx.restore()
 
   }
@@ -91,7 +112,7 @@ export default class Deco extends Thing {
   }
 
   announce () {
-    this.after(15, null, 'announce')
+    this.after(12, null, 'announce')
   }
 
   updateSprite (type, direction) {
@@ -113,5 +134,8 @@ export default class Deco extends Thing {
 
     // Render direction
     this.renderDirection = direction
+
+    // Render depth
+    this.depth = thing.waterlogged ? 3 : 5
   }
 }
