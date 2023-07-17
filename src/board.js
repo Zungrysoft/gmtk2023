@@ -506,7 +506,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'wind', 'magnet', 'blob', 'waterlog', 'mine', 'fire', 'vine']
+    const advancements = ['ice', 'magnet', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {

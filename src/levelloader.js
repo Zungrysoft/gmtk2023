@@ -53,8 +53,9 @@ export let levelList = [
   { name: 'Firesnake Island', level: 'magnetfire' },
   { name: 'Metal Maze', level: 'metalmaze' },
   { name: 'Ring of Fire', level: 'magnetwind2' },
-  { name: 'Carry-On Luggage', level: 'magnetwind' },
+  { name: 'The Shelf', level: 'magnetwind' },
   { name: 'Cul-de-sacs', level: 'hallways' },
+  { name: 'Magnet Fishing', level: 'shape' },
 ]
 
 export function getLevel(lvl) {
