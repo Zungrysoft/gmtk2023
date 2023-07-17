@@ -138,6 +138,7 @@ export default class Player extends Thing {
     // Sprite change
     if (this.timers.changedTypeFlash?.time === transformTime) {
       this.updateSprite()
+      soundmanager.playSound('squish', 0.4)
 
       // Play vine retract sound if we flashed vine guy
       if (this.flashedState.type === 'vine') {
@@ -146,9 +147,11 @@ export default class Player extends Thing {
     }
     else if (this.timers.changedTypeFlash?.time === transformTime*3) {
       this.updateSprite(this.flashedState.type, this.flashedState.direction)
+      soundmanager.playSound('squish', 0.4)
     }
     if (this.timers.changedType?.time === transformTime) {
       this.updateSprite()
+      soundmanager.playSound('squish', 0.4)
     }
 
     // Squish and morph animation
