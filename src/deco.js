@@ -94,7 +94,7 @@ export default class Deco extends Thing {
     super.draw(...this.drawPosition)
     this.scale = prevScale
 
-    if (this.tileThingReference.attached) {
+    if (this.tileThingReference.attached && !this.tileThingReference.waterlogged) {
       ctx.save()
       const frame = Math.floor(board.time / 6) % 4
       const sprite = this.tileThingReference.altAttachment ? 'deco_electricity_alt' : 'deco_electricity'

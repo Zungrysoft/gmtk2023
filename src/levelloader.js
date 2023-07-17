@@ -49,10 +49,10 @@ export let levelList = [
   { name: 'The Divider', level: 'blobice' },
   { name: 'Staring Contest', level: 'twoblobs' },
   { name: 'My Hobby', level: 'magnetintro' },
-  { name: 'Metal Vacuum', level: 'vacuum' },
+  { name: 'Magnetic Vacuum', level: 'vacuum' },
   { name: 'Long or Short', level: 'longshort' },
   { name: 'Metal Maze', level: 'metalmaze' },
-  // { name: 'Frozen Metal', level: 'icemagnet' },
+  { name: 'Thin Hallways', level: 'hallways' },
 ]
 
 export function getLevel(lvl) {
