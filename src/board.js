@@ -962,6 +962,7 @@ export default class Board extends Thing {
             thing.attached = adjacent.id
             thing.attachPosition = [...adjacent.position]
             thing.altAttachment = adjacent.type === 'magnet' ? adjacent.alt : adjacent.altAttachment
+            thing.attachmentCount = (thing.attachmentCount + 1) || 0
             // console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
             return true
           }

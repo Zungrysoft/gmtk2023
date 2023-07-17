@@ -15,6 +15,7 @@ export default class Deco extends Thing {
   drawPosition = [0, 0]
   depth = 5
   wasAttached = false
+  lastAttachmentCount = 0
   wasWaterlogged = false
   lastDestination = [0, 0]
 
@@ -30,6 +31,7 @@ export default class Deco extends Thing {
     this.lastDestination = [...this.position]
     this.wasWaterlogged = tileThingReference.waterlogged
     this.wasAttached = tileThingReference.attached
+    this.lastAttachmentCount = tileThingReference.attachmentCount
   }
 
   update () {
@@ -39,7 +41,7 @@ export default class Deco extends Thing {
     const board = game.getThing('board')
 
     // Attachment animation
-    if (this.tileThingReference.attached && !this.wasAttached) {
+    if (this.tileThingReference.attached && (!this.wasAttached || (this.tileThingReference.attachmentCount > this.lastAttachmentCount))) {
       this.announce()
       soundmanager.playSound('attach', 0.4)
     }
@@ -48,6 +50,7 @@ export default class Deco extends Thing {
       soundmanager.playSound('detach', 0.4)
     }
     this.wasAttached = this.tileThingReference.attached
+    this.lastAttachmentCount = this.tileThingReference.attachmentCount
 
     // Calculate scale
     this.scale = [1.0, 1.0]
