@@ -97,7 +97,8 @@ export default class Deco extends Thing {
     if (this.tileThingReference.attached) {
       ctx.save()
       const frame = Math.floor(board.time / 6) % 4
-      ctx.drawImage(assets.images.deco_electricity, frame * 64, 0, 64, 64, this.drawPosition[0]-32, this.drawPosition[1]-32, 64, 64)
+      const sprite = this.tileThingReference.altAttachment ? 'deco_electricity_alt' : 'deco_electricity'
+      ctx.drawImage(assets.images[sprite], frame * 64, 0, 64, 64, this.drawPosition[0]-32, this.drawPosition[1]-32, 64, 64)
       ctx.restore()
     }
 

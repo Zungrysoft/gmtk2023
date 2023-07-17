@@ -21,6 +21,7 @@ await game.loadAssets({
     player_vine: 'images/vineguy.png',
     player_water: 'images/waterguy.png',
     player_magnet: 'images/magnetguy.png',
+    player_magnet_alt: 'images/magnetguy_alt.png',
 
     // Blob guy
     player_blob: 'images/blobguy.png',
@@ -53,6 +54,7 @@ await game.loadAssets({
     deco_metal: 'images/metal.png',
     deco_metal_waterlogged: 'images/metal_waterlogged.png',
     deco_electricity: 'images/electricity.png',
+    deco_electricity_alt: 'images/electricity_alt.png',
     sign: 'images/sign.png',
 
     // UI
@@ -130,6 +132,7 @@ await game.loadAssets({
     longshort: 'json/levels/longshort.json',
     metalmaze: 'json/levels/metalmaze.json',
     icemagnet: 'json/levels/icemagnet.json',
+    twomagnets: 'json/levels/twomagnets.json',
   },
 
   sounds: {

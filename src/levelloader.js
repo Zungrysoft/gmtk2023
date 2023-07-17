@@ -47,7 +47,6 @@ export let levelList = [
   { name: 'One of the School', level: 'blobfish' },
   { name: 'Baths of Enigma', level: 'blobvine' },
   { name: 'The Divider', level: 'blobice' },
-  { name: 'Catwalks', level: 'blobsight' },
   { name: 'Staring Contest', level: 'twoblobs' },
   { name: 'My Hobby', level: 'magnetintro' },
   { name: 'Metal Vacuum', level: 'vacuum' },

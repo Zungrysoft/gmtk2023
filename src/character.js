@@ -418,7 +418,12 @@ export default class Player extends Thing {
     direction = direction || this.tileThingReference.direction
 
     // Update this sprite
-    this.sprite = "player_" + type
+    this.sprite = 'player_' + type
+
+    // Alternate sprite
+    if (this.tileThingReference.alt && !this.tileThingReference.isBlob) {
+      this.sprite += '_alt'
+    }
 
     // Special logic for wind guy
     if (['wind'].includes(type)) {

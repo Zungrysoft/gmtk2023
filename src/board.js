@@ -961,6 +961,7 @@ export default class Board extends Thing {
           if (!alreadyAttached) {
             thing.attached = adjacent.id
             thing.attachPosition = [...adjacent.position]
+            thing.altAttachment = adjacent.type === 'magnet' ? adjacent.alt : adjacent.altAttachment
             // console.log(`Attaching ${thing.name}-${thing.type}-${thing.id} to ${adjacent.name}-${adjacent.type}-${adjacent.id}`)
             return true
           }
@@ -1033,6 +1034,7 @@ export default class Board extends Thing {
     }
     delete thing.attached
     delete thing.attachPosition
+    delete thing.altAttachment
     // console.log(`Broke attachment of ${thing.name}-${thing.type}-${thing.id}`)
   }
 
