@@ -1498,20 +1498,6 @@ export default class Board extends Thing {
           screenY -= 2
         }
 
-        // // Deco Objects
-        // if (thing.name === 'deco') {
-        //     let image = thing.type ? ('deco_' + thing.type) : 'undefined_sprite'
-        //     if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
-        //       image = 'deco_vine_v'
-        //     }
-        //     if (thing.waterlogged) {
-        //       image += '_waterlogged'
-        //     }
-        //     if (image && assets.images[image]) {
-        //       ctx.drawImage(assets.images[image], screenX, screenY - 2, tileWidth, tileDepth)
-        //     }
-        // }
-
         // // Vine guy vine
         // if (thing.name === 'player' && thing.type === 'vine' && !(thing.active)) {
         //   const image = vec2.directionToVector(thing.direction)[1] !== 0 ? 'deco_vine_v' : 'deco_vine'

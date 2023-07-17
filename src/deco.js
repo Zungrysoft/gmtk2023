@@ -95,14 +95,19 @@ export default class Deco extends Thing {
   }
 
   updateSprite (type, direction) {
+    let thing = this.tileThingReference
+
     // If a custom type was not passed in, use the thing's type
-    type = type || this.tileThingReference.type
-    direction = direction || this.tileThingReference.direction
+    type = type || thing.type
+    direction = direction || thing.direction
 
     // Update this sprite
     this.sprite = "deco_" + type
 
-    if (this.tileThingReference.waterlogged) {
+    if (thing.type === 'vine' && vec2.directionToVector(thing.direction)[1] !== 0) {
+      this.sprite = 'deco_vine_v'
+    }
+    if (thing.waterlogged) {
       this.sprite += '_waterlogged'
     }
 
