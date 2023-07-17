@@ -54,6 +54,7 @@ export let levelList = [
   { name: 'Metal Maze', level: 'metalmaze' },
   { name: 'Ring of Fire', level: 'magnetwind2' },
   { name: 'The Shelf', level: 'magnetwind' },
+  { name: 'Safety Transport', level: 'transport' },
   { name: 'Cul-De-Sacs', level: 'hallways' },
   { name: 'Magnet Fishing', level: 'shape' },
 ]
