@@ -133,6 +133,7 @@ await game.loadAssets({
     metalmaze: 'json/levels/metalmaze.json',
     twomagnets: 'json/levels/twomagnets.json',
     hallways: 'json/levels/hallways.json',
+    magnetfire: 'json/levels/magnetfire.json',
   },
 
   sounds: {

@@ -52,7 +52,8 @@ export let levelList = [
   { name: 'Magnetic Vacuum', level: 'vacuum' },
   { name: 'Long or Short', level: 'longshort' },
   { name: 'Metal Maze', level: 'metalmaze' },
-  { name: 'Thin Hallways', level: 'hallways' },
+  { name: 'Cul-de-sacs', level: 'hallways' },
+  { name: 'Firesnake Island', level: 'magnetfire' },
 ]
 
 export function getLevel(lvl) {
