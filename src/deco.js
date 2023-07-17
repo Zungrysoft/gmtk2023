@@ -41,11 +41,11 @@ export default class Deco extends Thing {
     // Attachment animation
     if (this.tileThingReference.attached && !this.wasAttached) {
       this.announce()
-      // TODO: Sound effect
+      soundmanager.playSound('attach', 0.4)
     }
     if (!this.tileThingReference.attached && this.wasAttached) {
       this.announce()
-      // TODO: Sound effect
+      soundmanager.playSound('detach', 0.4)
     }
     this.wasAttached = this.tileThingReference.attached
 

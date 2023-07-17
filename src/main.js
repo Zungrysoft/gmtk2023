@@ -149,6 +149,9 @@ await game.loadAssets({
     menu_move: 'sounds/menu_move.wav',
     menu_ok: 'sounds/menu_ok.wav',
     menu_back: 'sounds/menu_back.wav',
+    attach: 'sounds/attach.wav',
+    detach: 'sounds/detach.wav',
+
     puzzle_music: 'sounds/personguy_puzzle1.mp3',
     title_music: 'sounds/personguy_title.mp3',
   },
