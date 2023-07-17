@@ -65,10 +65,10 @@ export default class PauseMenu extends Thing {
 
     const lastSelection = this.selection
     if (game.keysPressed.ArrowUp || game.keysPressed.KeyW || game.buttonsPressed[12]) {
-      this.selection = Math.max(0, this.selection - 1)
+      this.selection = u.mod((this.selection - 1), this.menu.length)
     }
     if (game.keysPressed.ArrowDown || game.keysPressed.KeyS || game.buttonsPressed[13]) {
-      this.selection = Math.min(this.menu.length - 1, this.selection + 1)
+      this.selection = u.mod((this.selection + 1), this.menu.length)
     }
     if (this.selection !== lastSelection) {
       soundmanager.playSound('menu_move', 0.2)
