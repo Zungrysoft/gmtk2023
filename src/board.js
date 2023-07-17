@@ -119,10 +119,6 @@ export default class Board extends Thing {
       game.globals.usingGamepad = false
     }
 
-    if (game.keysPressed.KeyJ) {
-      console.log(game.getDepthMemory())
-    }
-
     // Camera controls
     let setControl = ''
     if (!this.movementDisabled) {
@@ -328,10 +324,37 @@ export default class Board extends Thing {
     // Get the tile index
     const tileIndex = (coords[0] % 64) + (coords[1] % 64) * 64
 
-    // Calculate height
+    // Retrieve height
     let height = chunkData[tileIndex]
 
     return height
+  }
+
+  getTileFoliage(coords) {
+    // Only draw foliage if height is 1
+    const tileHeight = this.getTileHeight(coords)
+    if (tileHeight !== 1) {
+      return false
+    }
+
+    // Determine which chunk this coordinate should be in
+    const chunkCoord = [Math.floor(coords[0]/64), Math.floor(coords[1]/64)]
+
+    // Get that chunk's data
+    const chunkData = this.state.foliage[chunkCoord]
+
+    // If this chunk isn't defined, foliage defaults to false
+    if (!chunkData) {
+      return false
+    }
+
+    // Get the tile index
+    const tileIndex = (coords[0] % 64) + (coords[1] % 64) * 64
+
+    // Retrieve foliage
+    let foliage = chunkData[tileIndex]
+
+    return foliage ? true : false
   }
 
   setTileHeight(coords, newHeight) {
@@ -483,7 +506,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'magnet', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine']
+    const advancements = ['ice', 'wind', 'magnet', 'blob', 'waterlog', 'mine', 'fire', 'vine']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -1460,6 +1483,7 @@ export default class Board extends Thing {
       for (let x = minX; x <= maxX; x ++) {
         // Determine terrain height at this coordinate
         const tileHeight = this.getTileHeight([x, y])
+        const tileFoliage = this.getTileFoliage([x, y])
 
         // Determine where this tile will be rendered on screen
         let screenX, screenY
@@ -1482,6 +1506,14 @@ export default class Board extends Thing {
             ctx.fillStyle = (x%2 !== y%2) ? '#F7FFDB' : '#D4FFAA'
             ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
           }
+        }
+
+        // Foliage
+        if (tileFoliage) {
+          let foliageTypes = 5
+          let spriteIndex = u.mod((x*7)+(y*13), foliageTypes) + 1
+          let sprite = 'deco_foliage_' + spriteIndex
+          ctx.drawImage(assets.images[sprite], screenX, screenY)
         }
       }
 

@@ -50,41 +50,23 @@ export let levelList = [
   { name: 'Staring Contest', level: 'twoblobs' },
   { name: 'My Hobby', level: 'magnetintro' },
   { name: 'Magnetic Vacuum', level: 'vacuum' },
-  { name: 'Long or Short', level: 'longshort' },
-  { name: 'Metal Maze', level: 'metalmaze' },
-  { name: 'Cul-de-sacs', level: 'hallways' },
   { name: 'Firesnake Island', level: 'magnetfire' },
+  { name: 'Metal Maze', level: 'metalmaze' },
+  { name: 'Ring of Fire', level: 'magnetwind2' },
+  { name: 'Carry-On Luggage', level: 'magnetwind' },
+  { name: 'Cul-de-sacs', level: 'hallways' },
 ]
 
 export function getLevel(lvl) {
   // Retrieve level data
   let json = JSON.parse(assets.json[levelList[lvl-1].level || "intro"])
 
-  // Merge layers together
+  // Convert from layered format
   let ret = {
     version: 1,
-    grid: {},
-    things: [],
-  }
-  for (const layer of json.layers) {
-    // Append things
-    ret.things.push(...(layer.things))
-
-    // Merge grid
-    for (const coords in layer.grid) {
-      // If this chunk has already been copied over from a previous layer, merge this one over that one
-      if (coords in ret.grid) {
-        for (let i = 0; i < 64*64; i ++) {
-          if (layer.grid[coords][i] > 0) {
-            ret.grid[coords][i] = layer.grid[coords][i]
-          }
-        }
-      }
-      // If this chunk doesn't already exist, just copy it over
-      else {
-        ret.grid[coords] = layer.grid[coords]
-      }
-    }
+    grid: json.layers[0].grid,
+    foliage: json.layers[1].grid,
+    things: json.layers[0].things,
   }
 
   // To make things easier in the editor, convert unknown entities to deco

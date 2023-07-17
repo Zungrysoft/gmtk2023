@@ -55,6 +55,11 @@ await game.loadAssets({
     deco_metal_waterlogged: 'images/metal_waterlogged.png',
     deco_electricity: 'images/electricity.png',
     deco_electricity_alt: 'images/electricity_alt.png',
+    deco_foliage_1: 'images/foliage1.png',
+    deco_foliage_2: 'images/foliage2.png',
+    deco_foliage_3: 'images/foliage3.png',
+    deco_foliage_4: 'images/foliage4.png',
+    deco_foliage_5: 'images/foliage5.png',
     sign: 'images/sign.png',
 
     // UI
@@ -134,6 +139,8 @@ await game.loadAssets({
     twomagnets: 'json/levels/twomagnets.json',
     hallways: 'json/levels/hallways.json',
     magnetfire: 'json/levels/magnetfire.json',
+    magnetwind: 'json/levels/magnetwind.json',
+    magnetwind2: 'json/levels/magnetwind2.json',
   },
 
   sounds: {
