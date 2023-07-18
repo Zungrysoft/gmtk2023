@@ -59,6 +59,7 @@ export let levelList = [
   { name: 'Cul-De-Sacs', level: 'hallways' },
   { name: 'Hold the Line', level: 'hold' },
   { name: 'Magnet Fishing', level: 'shape' },
+  { name: 'Pinwheel', level: 'magnettrip' },
 ]
 
 export function getLevel(lvl) {
