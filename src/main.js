@@ -143,6 +143,7 @@ await game.loadAssets({
     magnetwind2: 'json/levels/magnetwind2.json',
     shape: 'json/levels/shape.json',
     transport: 'json/levels/transport.json',
+    compact: 'json/levels/compact.json',
   },
 
   sounds: {

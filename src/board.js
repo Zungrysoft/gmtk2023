@@ -929,9 +929,16 @@ export default class Board extends Thing {
     }
   }
 
+  sortByPosition(a, b) {
+    if (a.position[1] === b.position[1]) {
+      return a.position[0] - b.position[0]
+    }
+    return a.position[1] - b.position[1]
+  }
+
   advanceMagnet() {
     // Iterate over metal deco objects
-    const metalThings = this.getThingsByName('deco').filter((t) => t.type === 'metal')
+    const metalThings = this.getThingsByName('deco').filter((t) => t.type === 'metal').sort(this.sortByPosition)
 
     // Iteratively get magnetic things to follow
     // We have to do this in a while loop so we don't get index conditions
