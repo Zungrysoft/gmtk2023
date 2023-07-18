@@ -982,8 +982,7 @@ export default class Board extends Thing {
   executeMagnetAttach(thing) {
     // If this metal is not attached to anything, look for things to attach to
     if (!thing.attached) {
-      for (const delta of [[1, 0], [0, 1], [-1, 0], [0, -1]]) {
-        // TODO: Sort things by position to remove index conditions
+      for (const delta of [[0, -1], [-1, 0], [0, 1], [1, 0]]) {
         const adjacent = this.state.things.filter(x => vec2.equals(x.position, vec2.add(thing.position, delta)))[0]
         if (adjacent && this.isMagnetic(adjacent)) {
           // Make sure something else isn't already attached. Only one thing can be attached at each link in the chain
