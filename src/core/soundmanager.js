@@ -40,7 +40,7 @@ export function playMusic (musicName, volume = 1) {
   music.currentTime = 0
   music.loop = true
   currentMusic.push(music)
-  music.play()
+  music.play().catch(()=>{});
   return music
 }
 

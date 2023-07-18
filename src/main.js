@@ -136,7 +136,6 @@ await game.loadAssets({
     vacuum: 'json/levels/vacuum.json',
     longshort: 'json/levels/longshort.json',
     metalmaze: 'json/levels/metalmaze.json',
-    twomagnets: 'json/levels/twomagnets.json',
     hallways: 'json/levels/hallways.json',
     magnetfire: 'json/levels/magnetfire.json',
     magnetwind: 'json/levels/magnetwind.json',
@@ -146,6 +145,8 @@ await game.loadAssets({
     compact: 'json/levels/compact.json',
     hold: 'json/levels/hold.json',
     magnettrip: 'json/levels/magnettrip.json',
+    delaychain: 'json/levels/delaychain.json',
+    twomagnets: 'json/levels/twomagnets.json',
   },
 
   sounds: {
