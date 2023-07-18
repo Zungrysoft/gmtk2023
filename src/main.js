@@ -147,6 +147,7 @@ await game.loadAssets({
     magnettrip: 'json/levels/magnettrip.json',
     delaychain: 'json/levels/delaychain.json',
     twomagnets: 'json/levels/twomagnets.json',
+    magnetvine: 'json/levels/magnetvine.json',
   },
 
   sounds: {

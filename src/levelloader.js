@@ -61,6 +61,7 @@ export let levelList = [
   { name: 'Magnet Fishing', level: 'shape' },
   { name: 'Pinwheel', level: 'magnettrip' },
   { name: 'Alternate Polarity', level: 'twomagnets' },
+  { name: 'Beanstalks', level: 'magnetvine' },
 ]
 
 export function getLevel(lvl) {
