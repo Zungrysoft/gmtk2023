@@ -609,7 +609,7 @@ export default class Board extends Thing {
     // Move into this new position
     player.position = newPosition
 
-    // Queue advancements
+    // Requeue advancements
     this.requeueAdvancements()
   }
 
