@@ -57,6 +57,7 @@ export let levelList = [
   { name: 'Compact Storage', level: 'compact' },
   { name: 'Safety Transport', level: 'transport' },
   { name: 'Cul-De-Sacs', level: 'hallways' },
+  { name: 'Hold the Line', level: 'hold' },
   { name: 'Magnet Fishing', level: 'shape' },
 ]
 

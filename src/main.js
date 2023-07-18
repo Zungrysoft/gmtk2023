@@ -144,6 +144,7 @@ await game.loadAssets({
     shape: 'json/levels/shape.json',
     transport: 'json/levels/transport.json',
     compact: 'json/levels/compact.json',
+    hold: 'json/levels/hold.json',
   },
 
   sounds: {
