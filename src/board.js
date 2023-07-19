@@ -1462,7 +1462,7 @@ export default class Board extends Thing {
         }
       }
       ctx.fillText(levelName, 0, 0)
-      ctx.translate(4, -4)
+      ctx.translate(3, -3)
       ctx.fillStyle = 'white'
       ctx.fillText(levelName, 0, 0)
       ctx.restore()
