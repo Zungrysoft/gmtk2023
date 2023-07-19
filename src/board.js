@@ -484,7 +484,7 @@ export default class Board extends Thing {
     // If this is person guy, do LOS check
     if (activePlayer.type === 'person') {
       const lookingAt = this.getLookingAt(activePlayer)
-      return lookingAt.name === 'player' ? lookingAt : undefined
+      return lookingAt?.name === 'player' ? lookingAt : undefined
     }
     // Otherwise, go back to person guy
     else {
