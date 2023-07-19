@@ -250,5 +250,9 @@
   {
     "name": "Secret Spy Tech",
     "level": "xray"
+  },
+  {
+    "name": "X-Press X-Ray Delivery",
+    "level": "xraymagnet"
   }
 ]

@@ -236,9 +236,9 @@ export default class Player extends Thing {
 
         // Announce xray that assisted this selection
         if (!this.wasActive) {
-          const xray = board.getLookingAt(board.getActivePlayer(), {ignoreXray: true})?.id
-          if (xray) {
-            const xrayObject = game.getThings().filter(x => x.tileThingReference?.id === xray)?.[0]
+          const xray = board.getLookingAt(board.getActivePlayer(), {ignoreXray: true})
+          if (xray && xray.type === 'xray') {
+            const xrayObject = game.getThings().filter(x => x.tileThingReference?.id === xray.id)?.[0]
             if (xrayObject) {
               xrayObject.announce()
               soundmanager.playSound('xray', 0.2, [1.1, 1.2])

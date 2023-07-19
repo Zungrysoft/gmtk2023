@@ -958,7 +958,7 @@ export default class Board extends Thing {
 
   advanceMagnet() {
     // Iterate over metal deco objects
-    const metalThings = this.getThingsByName('deco').filter((t) => t.type === 'metal').sort(this.sortByPosition)
+    const metalThings = this.getThingsByName('deco').filter((t) => this.canMagnetize(t)).sort(this.sortByPosition)
 
     // Iteratively get magnetic things to follow
     // We have to do this in a while loop so we don't get index conditions
@@ -989,11 +989,18 @@ export default class Board extends Thing {
     }
   }
 
+  canMagnetize(thing) {
+    if (thing.name === 'deco' && ['metal', 'xray'].includes(thing.type)) {
+      return true
+    }
+    return false
+  }
+
   isMagnetic(thing) {
     if (thing.name === 'player' && thing.type === 'magnet') {
       return true
     }
-    if (thing.name === 'deco' && thing.type === 'metal' && thing.attached) {
+    if (this.canMagnetize(thing) && thing.attached) {
       return true
     }
     return false
