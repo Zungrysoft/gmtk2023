@@ -1,19 +1,16 @@
 import * as game from './core/game.js'
 import * as u from './core/utils.js'
 import * as soundmanager from './core/soundmanager.js'
-import * as gfx from './core/webgl.js'
-import * as mat from './core/matrices.js'
 import * as vec2 from './core/vector2.js'
-import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
-import { levelList, getLevel } from './levelloader.js'
+import { getLevelList } from './levelloader.js'
 import Board from './board.js'
 import TitleScreen from './titlescreen.js'
 
 export default class LevelSelect extends Thing {
   time = -10
   selection = game.globals.level - 1
-  menu = levelList
+  menu = getLevelList()
   offsets = this.menu.map(_ => 0)
   selected = false
   fadeout = 0

@@ -78,6 +78,10 @@ await game.loadAssets({
   },
 
   json: {
+    // Level definition file
+    levelList: 'json/levellist.json',
+
+    // Level files
     swim: 'json/levels/swim.json',
     shutter: 'json/levels/shutter.json',
     maze: 'json/levels/maze.json',
@@ -148,6 +152,7 @@ await game.loadAssets({
     delaychain: 'json/levels/delaychain.json',
     twomagnets: 'json/levels/twomagnets.json',
     magnetvine: 'json/levels/magnetvine.json',
+    magnetvinewind: 'json/levels/magnetvinewind.json',
   },
 
   sounds: {

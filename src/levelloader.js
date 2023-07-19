@@ -1,72 +1,8 @@
 import { assets } from './core/game.js'
 
-export let levelList = [
-  { name: 'Baby\'s First Mind Control', level: 'intro' },
-  { name: 'Four Square', level: 'four' },
-  { name: 'Double Trouble', level: 'fire' },
-  { name: 'Fountain of Flame', level: 'fountain' },
-  { name: 'Riverway', level: 'cove' },
-  { name: 'Box Bridge', level: 'distance' },
-  { name: 'Sewers', level: 'sewers' },
-  { name: 'Blazing Trails', level: 'dodging3' },
-  { name: 'Air Ride', level: 'bird' },
-  { name: 'Island Access', level: 'islets' },
-  { name: 'Dodge and Burn', level: 'dodging' },
-  { name: 'Going For a Swim', level: 'swim' },
-  { name: 'Coming Your Way!', level: 'warehouse' },
-  { name: 'Far Out', level: 'safety' },
-  { name: 'Hop Across', level: 'islands' },
-  { name: 'Wind Blocker', level: 'doublestack' },
-  { name: 'Rockoban', level: 'sokoban' },
-  { name: 'Over the Seas', level: 'boat' },
-  { name: 'Tight Squeeze', level: 'corridors2' },
-  { name: 'Cavern Lake', level: 'lake' },
-  { name: 'Windy Day', level: 'windy' },
-  { name: 'Take the Ferry', level: 'ferry' },
-  { name: 'The Frosty Shuffle', level: 'iceshuffle2' },
-  { name: 'Mineral Transport', level: 'windwall' },
-  { name: 'Corners', level: 'corners' },
-  { name: 'Alongside the Maze', level: 'maze' },
-  { name: 'Wall of Thorns', level: 'blocking' },
-  { name: 'Special Delivery', level: 'snowblower' },
-  { name: 'Snow Maze', level: 'snowmaze' },
-  { name: 'Crossway', level: 'vine' },
-  { name: 'Open and Shut', level: 'shutter' },
-  { name: 'Icebox', level: 'icecrawl' },
-  { name: 'Rocky River', level: 'icerace' },
-  { name: 'Repotting', level: 'vineice' },
-  { name: 'Snow Maze II', level: 'snowmaze2' },
-  { name: 'Weed Control', level: 'vinewall' },
-  { name: 'Sorting Stack', level: 'sorting' },
-  { name: 'Carnivorous Cove', level: 'swamp' },
-  { name: 'Roundabout', level: 'big' },
-  { name: 'An Eerie Resemblance', level: 'blob' },
-  { name: 'Pusher Protector', level: 'shielding' },
-  { name: 'Candelabra', level: 'preplaced' },
-  { name: 'The Horseshoe', level: 'blobchain' },
-  { name: 'One of the School', level: 'blobfish' },
-  { name: 'Baths of Enigma', level: 'blobvine' },
-  { name: 'The Divider', level: 'blobice' },
-  { name: 'Staring Contest', level: 'twoblobs' },
-  { name: 'My Hobby', level: 'magnetintro' },
-  { name: 'Magnetic Vacuum', level: 'vacuum' },
-  { name: 'Firesnake Island', level: 'magnetfire' },
-  { name: 'Metal Maze', level: 'metalmaze' },
-  { name: 'Ring of Fire', level: 'magnetwind2' },
-  { name: 'The Shelf', level: 'magnetwind' },
-  { name: 'Compact Storage', level: 'compact' },
-  { name: 'Safety Transport', level: 'transport' },
-  { name: 'Cul-De-Sacs', level: 'hallways' },
-  { name: 'Hold the Line', level: 'hold' },
-  { name: 'Magnet Fishing', level: 'shape' },
-  { name: 'Pinwheel', level: 'magnettrip' },
-  { name: 'Alternate Polarity', level: 'twomagnets' },
-  { name: 'Beanstalks', level: 'magnetvine' },
-]
-
 export function getLevel(lvl) {
   // Retrieve level data
-  let json = JSON.parse(assets.json[levelList[lvl-1].level || "intro"])
+  let json = JSON.parse(assets.json[getLevelList()[lvl-1].level || "intro"])
 
   // Convert from layered format
   let ret = {
@@ -97,3 +33,10 @@ export function getLevel(lvl) {
   return ret
 }
 
+let levelList = undefined
+export function getLevelList() {
+  if (!levelList) {
+    levelList = JSON.parse(assets.json.levelList)
+  }
+  return levelList
+}

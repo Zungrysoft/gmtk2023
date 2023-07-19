@@ -7,7 +7,7 @@ import * as vec2 from './core/vector2.js'
 import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
 import { assets } from './core/game.js'
-import { getLevel, levelList } from './levelloader.js'
+import { getLevel, getLevelList } from './levelloader.js'
 import Character from './character.js'
 import Deco from './deco.js'
 import Fire from './fire.js'
@@ -1415,7 +1415,7 @@ export default class Board extends Thing {
       ctx.translate(32, game.config.height - 32)
       ctx.font = 'italic bold 20px Arial'
       ctx.fillStyle = '#21235B'
-      const levelName = `Level ${game.globals.level}: ${levelList[game.globals.level - 1].name}`
+      const levelName = `Level ${game.globals.level}: ${getLevelList()[game.globals.level - 1].name}`
       ctx.fillText(levelName, 0, 0)
       ctx.translate(4, -4)
       ctx.fillStyle = 'white'

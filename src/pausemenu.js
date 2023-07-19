@@ -1,12 +1,7 @@
 import * as game from './core/game.js'
 import * as u from './core/utils.js'
 import * as soundmanager from './core/soundmanager.js'
-import * as gfx from './core/webgl.js'
-import * as mat from './core/matrices.js'
-import * as vec2 from './core/vector2.js'
-import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
-import { levelList, getLevel } from './levelloader.js'
 import LevelSelect from './levelselect.js'
 import OptionsMenu from './optionsmenu.js'
 
