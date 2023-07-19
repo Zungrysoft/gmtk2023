@@ -36,7 +36,7 @@ export default class Wind extends Thing {
   draw () {
     const { ctx } = game
     ctx.save()
-    ctx.globalAlpha = u.squareMap(this.time, 0, this.liveTime, 1, 0.2)
+    ctx.globalAlpha = u.squareMap(this.time, 0, this.liveTime, 1, 0.0)
     super.draw()
     ctx.restore()
   }

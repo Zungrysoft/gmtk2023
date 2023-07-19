@@ -153,6 +153,7 @@ await game.loadAssets({
     twomagnets: 'json/levels/twomagnets.json',
     magnetvine: 'json/levels/magnetvine.json',
     magnetvinewind: 'json/levels/magnetvinewind.json',
+    split: 'json/levels/split.json',
   },
 
   sounds: {
