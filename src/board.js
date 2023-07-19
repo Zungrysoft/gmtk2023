@@ -1406,6 +1406,7 @@ export default class Board extends Thing {
   }
 
   postDraw () {
+    // Hide the HUD when a UI menu is open
     if (game.getThing('winscreen')) { return }
     if (game.getThing('titlescreen')) { return }
     if (game.getThing('levelselect')) { return }
@@ -1413,6 +1414,7 @@ export default class Board extends Thing {
     if (game.getThing('optionsmenu')) { return }
     const { ctx } = game
 
+    // Level name
     {
       ctx.save()
       ctx.translate(32, game.config.height - 32)
@@ -1420,12 +1422,27 @@ export default class Board extends Thing {
       ctx.fillStyle = '#21235B'
       const levelName = `Level ${game.globals.level}: ${getLevelList()[game.globals.level - 1].name}`
       ctx.fillText(levelName, 0, 0)
-      ctx.translate(4, -4)
+      ctx.translate(2, -2)
       ctx.fillStyle = 'white'
       ctx.fillText(levelName, 0, 0)
       ctx.restore()
     }
 
+    // Move counter
+    // {
+    //   ctx.save()
+    //   ctx.translate(32, game.config.height - 24)
+    //   ctx.font = 'italic bold 16px Arial'
+    //   ctx.fillStyle = '#21235B'
+    //   const levelName = `Steps: ${this.stateStack.length}`
+    //   ctx.fillText(levelName, 0, 0)
+    //   ctx.translate(2, -2)
+    //   ctx.fillStyle = 'white'
+    //   ctx.fillText(levelName, 0, 0)
+    //   ctx.restore()
+    // }
+
+    // "You are Person Guy" flavor text
     {
       ctx.save()
       ctx.translate(game.config.width - 32, game.config.height - 32)
@@ -1451,6 +1468,7 @@ export default class Board extends Thing {
       ctx.restore()
     }
 
+    // Ability instruction
     {
       ctx.save()
       ctx.translate(game.config.width - 32, game.config.height - 32 - 48)
