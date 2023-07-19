@@ -114,7 +114,7 @@ export default class PauseMenu extends Thing {
       ctx.fillStyle = '#21235B'
       ctx.fillText(levelName, 0, 0)
       ctx.fillStyle = 'white'
-      ctx.fillText(levelName, 4, -4)
+      ctx.fillText(levelName, 3, -3)
       ctx.restore()
 
       ctx.restore()
