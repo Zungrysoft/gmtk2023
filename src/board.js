@@ -889,7 +889,6 @@ export default class Board extends Thing {
     for (let i = this.state.things.length-1; i >= 0; i --) {
       let thing = this.state.things[i]
       if (thingIds.includes(thing.id)) {
-        thing.dead = true
         this.executePlayerDeath(thing)
         this.state.things.splice(i, 1)
       }
@@ -1249,7 +1248,6 @@ export default class Board extends Thing {
           const thing = this.state.things[i]
           if (vec2.equals(thing.position, curPos) && thing.name === 'player') {
             this.executePlayerDeath(thing)
-            thing.dead = true
             this.state.things.splice(i, 1)
           }
         }
@@ -1355,6 +1353,7 @@ export default class Board extends Thing {
       for (const key in this.state.waterlogged) {
         let thing = this.state.waterlogged[key]
         if (thing.type === 'ice' && thing.owner === player.id) {
+          this.state.waterlogged[key].dead = true
           delete this.state.waterlogged[key]
         }
       }
