@@ -18,6 +18,10 @@ export default class Deco extends Thing {
   lastAttachmentCount = 0
   wasWaterlogged = false
   lastDestination = [0, 0]
+  animations = {
+    idle: { frames: [0], speed: 0.1 },
+    computer: { frames: [0, 1], speed: 0.035 },
+  }
 
   constructor (tileThingReference) {
     super()
@@ -141,5 +145,8 @@ export default class Deco extends Thing {
 
     // Render depth
     this.depth = thing.waterlogged ? -5 : 5
+
+    // Animation
+    this.animation = (type === 'xray' && !thing.waterlogged) ? 'computer' : 'idle'
   }
 }

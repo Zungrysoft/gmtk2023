@@ -432,17 +432,33 @@ export default class Board extends Thing {
     return undefined
   }
 
-  getLookingAt(player, directionKey='direction') {
+  getLookingAt(player, { directionKey='direction', ignoreXray=false }={}) {
     let curPos = player.position
+    let hasXray = false
     for (let i = 0; i < 15; i ++) {
       curPos = vec2.add(curPos, vec2.directionToVector(player[directionKey]))
-      if (this.getTileHeight(curPos) > 1) {
-        return undefined
+
+      // If the player does not have xray vision...
+      if (!hasXray) {
+        // Check for terrain walls
+        if (this.getTileHeight(curPos) > 1) {
+          return undefined
+        }
+
+        // Check for blocking deco objects
+        const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
+        if (blockingThing) {
+          // If this deco object is an xray, give the player xray vision so they see through things from here on
+          if (blockingThing.type === 'xray' && !ignoreXray) {
+            hasXray = true
+          }
+          else {
+            return blockingThing
+          }
+        }
       }
-      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco'].includes(x.name))[0]
-      if (blockingThing) {
-        return undefined
-      }
+
+      // Check for if we hit a player
       const hitPlayer = this.state.things.filter(x => vec2.equals(curPos, x.position) && (!x.dead) && ['player'].includes(x.name))[0]
       if (hitPlayer) {
         return hitPlayer
@@ -467,7 +483,8 @@ export default class Board extends Thing {
 
     // If this is person guy, do LOS check
     if (activePlayer.type === 'person') {
-      return this.getLookingAt(activePlayer)
+      const lookingAt = this.getLookingAt(activePlayer)
+      return lookingAt.name === 'player' ? lookingAt : undefined
     }
     // Otherwise, go back to person guy
     else {
@@ -523,19 +540,19 @@ export default class Board extends Thing {
     this.advancementData.queue.push(...advancements)
   }
 
-  canBeMovedByAny(thing) {
+  isPushableByAny(thing) {
     if (thing.name === 'deco' && thing.type === 'box') {
       return true
     }
     return false
   }
 
-  canBeMovedByGolem(thing) {
+  isPushableByGolem(thing) {
     if (thing.name === 'player') {
       return true
     }
     if (thing.name === 'deco') {
-      if (thing.type === 'rock' || thing.type === 'metal') {
+      if (thing.type === 'rock' || thing.type === 'metal' || thing.type === 'xray') {
         return true
       }
     }
@@ -585,7 +602,7 @@ export default class Board extends Thing {
     // Check if there is an thing blocking us
     const blockingThing = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
     if (blockingThing) {
-      if (this.canBeMovedByAny(blockingThing) || (player.type === 'golem' && this.canBeMovedByGolem(blockingThing))) {
+      if (this.isPushableByAny(blockingThing) || (player.type === 'golem' && this.isPushableByGolem(blockingThing))) {
         // Check if the space behind this is free
         const newPosition2 = vec2.add(newPosition, vec2.directionToVector(control))
 
@@ -915,9 +932,9 @@ export default class Board extends Thing {
   }
 
   executeBlob(player) {
-    let lookingAt = this.getLookingAt(player, 'blobDirection')
+    let lookingAt = this.getLookingAt(player, {directionKey:'blobDirection'})
     let previousState = {...player}
-    if (lookingAt && lookingAt.type !== 'person') {
+    if (lookingAt && lookingAt.name === 'player' && lookingAt.type !== 'person') {
       player.type = lookingAt.type
       player.direction = lookingAt.direction
     }

@@ -22,13 +22,13 @@ export default class Player extends Thing {
   walkBob = 0
   depth = 10
   squish = 0
+  lastDestination = [0, 0]
   animations = {
     idle: { frames: [0, 1], speed: 0.035 },
     think: { frames: [2, 3], speed: 0.1 },
     swim: { frames: [2, 3], speed: 0.075 },
     none: { frames: [0] }
   }
-  lastDestination = [0, 0]
 
   constructor (tileThingReference) {
     super()
@@ -227,15 +227,29 @@ export default class Player extends Thing {
     // =========
     // Selection
     // =========
-    this.wasActive = this.tileThingReference.active
     this.lastPosition = [...this.position]
-    const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
-    if (selected && !this.wasSelected && this.tileThingReference.type !== 'person') {
-      this.after(10, null, 'newlySelected')
-      soundmanager.playSound('select', 0.2)
+    if (this.tileThingReference.type !== 'person') {
+      const selected = this.tileThingReference.id === board.getLookingAt(board.getActivePlayer())?.id
+      if (selected && !this.wasSelected) {
+        this.after(10, null, 'newlySelected')
+        soundmanager.playSound('select', 0.2)
+
+        // Announce xray that assisted this selection
+        if (!this.wasActive) {
+          const xray = board.getLookingAt(board.getActivePlayer(), {ignoreXray: true})?.id
+          if (xray) {
+            const xrayObject = game.getThings().filter(x => x.tileThingReference?.id === xray)?.[0]
+            if (xrayObject) {
+              xrayObject.announce()
+              soundmanager.playSound('xray', 0.2, [1.1, 1.2])
+            }
+          }
+        }
+      }
+      this.isSelected = selected
+      this.wasSelected = selected
     }
-    this.isSelected = selected
-    this.wasSelected = selected
+    this.wasActive = this.tileThingReference.active
   }
 
   draw () {

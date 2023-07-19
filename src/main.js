@@ -60,6 +60,8 @@ await game.loadAssets({
     deco_foliage_3: 'images/foliage3.png',
     deco_foliage_4: 'images/foliage4.png',
     deco_foliage_5: 'images/foliage5.png',
+    deco_xray: 'images/xray.png',
+    deco_xray_waterlogged: 'images/xray_waterlogged.png',
     sign: 'images/sign.png',
 
     // UI
@@ -154,6 +156,7 @@ await game.loadAssets({
     magnetvine: 'json/levels/magnetvine.json',
     magnetvinewind: 'json/levels/magnetvinewind.json',
     split: 'json/levels/split.json',
+    xray: 'json/levels/xray.json',
   },
 
   sounds: {
@@ -176,6 +179,7 @@ await game.loadAssets({
     attach: 'sounds/attach.wav',
     detach: 'sounds/detach.wav',
     squish: 'sounds/squish.wav',
+    xray: 'sounds/xray2.wav',
 
     // Music
     puzzle_music: 'sounds/personguy_puzzle1.mp3',
