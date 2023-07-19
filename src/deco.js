@@ -140,6 +140,6 @@ export default class Deco extends Thing {
     this.renderDirection = direction
 
     // Render depth
-    this.depth = thing.waterlogged ? 3 : 5
+    this.depth = thing.waterlogged ? -5 : 5
   }
 }

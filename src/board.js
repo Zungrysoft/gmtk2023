@@ -119,6 +119,10 @@ export default class Board extends Thing {
       game.globals.usingGamepad = false
     }
 
+    // if (game.keysPressed.KeyJ) {
+    //   console.log(game.getDepthMemory())
+    // }
+
     // Camera controls
     let setControl = ''
     if (!this.movementDisabled) {

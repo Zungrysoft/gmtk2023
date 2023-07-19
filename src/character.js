@@ -413,38 +413,40 @@ export default class Player extends Thing {
   }
 
   updateSprite (type, direction) {
+    let thing = this.tileThingReference
+
     // If a custom type was not passed in, use the thing's type
-    type = type || this.tileThingReference.type
-    direction = direction || this.tileThingReference.direction
+    type = type || thing.type
+    direction = direction || thing.direction
 
     // Update this sprite
     this.sprite = 'player_' + type
 
     // Alternate sprite
-    if (this.tileThingReference.alt && !this.tileThingReference.isBlob) {
+    if (thing.alt && !thing.isBlob) {
       this.sprite += '_alt'
     }
 
     // Special logic for wind guy
     if (['wind'].includes(type)) {
-      if (vec2.directionToVector(this.tileThingReference.direction)[1] === -1) {
+      if (vec2.directionToVector(thing.direction)[1] === -1) {
         this.sprite += '_back'
       }
-      if (vec2.directionToVector(this.tileThingReference.direction)[1] === 1) {
+      if (vec2.directionToVector(thing.direction)[1] === 1) {
         this.sprite += '_front'
       }
     }
 
     // Special logic for blob guy
     if (type === 'blob') {
-      if (vec2.directionToVector(this.tileThingReference.blobDirection)[1] === -1) {
+      if (vec2.directionToVector(thing.blobDirection)[1] === -1) {
         this.sprite += '_back'
       }
-      if (vec2.directionToVector(this.tileThingReference.blobDirection)[1] === 1) {
+      if (vec2.directionToVector(thing.blobDirection)[1] === 1) {
         this.sprite += '_front'
       }
     }
-    if (this.tileThingReference.isBlob && type !== 'blob') {
+    if (thing.isBlob && type !== 'blob') {
       this.sprite += '_blob'
     }
 
@@ -452,9 +454,13 @@ export default class Player extends Thing {
     this.renderDirection = direction
 
     // Create wind
-    if (this.sprite.includes('wind') && !this.tileThingReference.active) {
+    if (this.sprite.includes('wind') && !thing.active) {
       this.createWind()
     }
+
+    // Render order
+    // Fire guy is slightly above other guys so there is consistent render order when golem guy stands in his flame
+    this.depth = this.sprite.includes('fire') ? 11 : 10
   }
 
   npcAnimations (init = false) {
