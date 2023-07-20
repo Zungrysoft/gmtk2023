@@ -13,6 +13,7 @@ import Deco from './deco.js'
 import Fire from './fire.js'
 import Sign from './sign.js'
 import Wave from './wave.js'
+import Leaf from './leaf.js'
 import DeathScreen from './deathscreen.js'
 import PauseMenu from './pausemenu.js'
 
@@ -531,7 +532,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement"
-    const advancements = ['ice', 'magnet', 'wind', 'blob', 'waterlog', 'mine', 'fire', 'vine']
+    const advancements = ['ice', 'magnet', 'vine', 'wind', 'blob', 'waterlog', 'mine', 'fire']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -1307,6 +1308,7 @@ export default class Board extends Thing {
         const axis = ['right', 'left', 'east', 'west'].includes(player.direction) ? 1 : 0
         const misaligned = player.position[axis] !== thing.position[axis]
         if (!onlyMisaligned || misaligned) {
+          game.addThing(new Leaf(thing.position))
           thing.dead = true
           this.state.things.splice(i, 1)
           destroyedVine = true

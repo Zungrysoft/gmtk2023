@@ -3,29 +3,27 @@ import * as u from './core/utils.js'
 import * as vec2 from './core/vector2.js'
 import Thing from './core/thing.js'
 
-export default class Wind extends Thing {
-  sprite = 'deco_wind'
+export default class Leaf extends Thing {
+  sprite = 'deco_leaf'
   time = 0
-  liveTime = 30
-  direction = [1, 0]
+  liveTime = 20
+  scale = 0.8
 
-  constructor (position, direction) {
+  constructor (position) {
     super()
     this.position = position.map(x => x * 64 + 32)
-    this.position[1] -= 10
-    this.position[0] -= direction[0] * 16
-    this.position[1] -= direction[1] * 16
-    this.direction = direction
+    this.position[0] += (Math.random() - 0.5) * 32
+    this.position[1] += (Math.random() - 0.5) * 32
+    this.direction = vec2.angleToVector(Math.random() * Math.PI*2)
+    this.rotation = Math.random() * Math.PI*2
   }
 
   update () {
     this.time += 1
-    this.position = vec2.add(this.position, vec2.scale(this.direction, 1))
+    this.position = vec2.add(this.position, vec2.scale(this.direction, 3))
+    this.rotation += 0.16
     if (this.time > this.liveTime) {
       this.dead = true
-    }
-    if (this.direction[0] === 0) {
-      this.rotation = Math.PI / 2
     }
   }
 

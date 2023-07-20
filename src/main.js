@@ -62,6 +62,7 @@ await game.loadAssets({
     deco_foliage_5: 'images/foliage5.png',
     deco_xray: 'images/xray.png',
     deco_xray_waterlogged: 'images/xray_waterlogged.png',
+    deco_leaf: 'images/leaf.png',
     sign: 'images/sign.png',
 
     // UI
@@ -160,6 +161,7 @@ await game.loadAssets({
     xraymagnet: 'json/levels/xraymagnet.json',
     magnetfire2: 'json/levels/magnetfire2.json',
     blobdodge: 'json/levels/blobdodge.json',
+    shape2: 'json/levels/shape2.json',
   },
 
   sounds: {
