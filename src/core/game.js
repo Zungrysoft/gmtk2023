@@ -12,7 +12,8 @@ export const config = {
   isWebglEnabled: true,
   catchupFrames: 5,
   preventLeave: false,
-  isFramerateUncapped: false
+  isFramerateUncapped: false,
+  keyRepeat: true
 }
 
 // inputs
@@ -151,7 +152,6 @@ function update () {
   }
 
   // update keys pressed
-  for (const key in keysPressed) delete keysPressed[key]
   for (const key in keysDown) {
     if (!lastKeysDown[key]) keysPressed[key] = true
   }
@@ -191,6 +191,7 @@ function update () {
   // update the last keys down
   for (const key in lastKeysDown) delete lastKeysDown[key]
   for (const key in keysDown) lastKeysDown[key] = true
+  for (const key in keysPressed) delete keysPressed[key]
   mouse.leftClick = false
   mouse.rightClick = false
 
@@ -278,6 +279,9 @@ function handleCanvasResize () {
 
 document.onkeydown = (event) => {
   keysDown[event.code] = true
+  if (config.keyRepeat) {
+    keysPressed[event.code] = true
+  }
   if (config.preventLeave) {
     event.preventDefault()
     return false
