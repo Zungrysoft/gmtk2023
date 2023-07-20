@@ -229,19 +229,22 @@ export default class Player extends Thing {
     // =========
     this.lastPosition = [...this.position]
     if (this.tileThingReference.type !== 'person') {
-      const selected = this.tileThingReference.id === board.getLookingAt(board.getActivePlayer())?.id
+      const selected = this.tileThingReference.id === board.getSwitchPlayer()?.id
       if (selected && !this.wasSelected) {
         this.after(10, null, 'newlySelected')
         soundmanager.playSound('select', 0.2)
 
         // Announce xray that assisted this selection
         if (!this.wasActive) {
-          const xray = board.getLookingAt(board.getActivePlayer(), {ignoreXray: true})
-          if (xray && xray.type === 'xray') {
-            const xrayObject = game.getThings().filter(x => x.tileThingReference?.id === xray.id)?.[0]
-            if (xrayObject) {
-              xrayObject.announce()
-              soundmanager.playSound('xray', 0.2, [1.1, 1.2])
+          const activePlayer = board.getActivePlayer()
+          if (activePlayer && activePlayer.type === 'person') {
+            const xray = board.getLookingAt(activePlayer, {ignoreXray: true})
+            if (xray && xray.type === 'xray') {
+              const xrayObject = game.getThings().filter(x => x.tileThingReference?.id === xray.id)?.[0]
+              if (xrayObject) {
+                xrayObject.announce()
+                soundmanager.playSound('xray', 0.2, [1.1, 1.2])
+              }
             }
           }
         }

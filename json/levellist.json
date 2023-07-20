@@ -200,20 +200,20 @@
     "level": "vacuum"
   },
   {
-    "name": "Firesnake Island",
-    "level": "magnetfire"
-  },
-  {
-    "name": "Metal Maze",
-    "level": "metalmaze"
-  },
-  {
     "name": "Ring of Fire",
     "level": "magnetwind2"
   },
   {
     "name": "The Shelf",
     "level": "magnetwind"
+  },
+  {
+    "name": "Metal Maze",
+    "level": "metalmaze"
+  },
+  {
+    "name": "Firesnake Island",
+    "level": "magnetfire2"
   },
   {
     "name": "Compact Storage",

@@ -433,6 +433,10 @@ export default class Board extends Thing {
   }
 
   getLookingAt(player, { directionKey='direction', ignoreXray=false }={}) {
+    if (!player) {
+      return undefined
+    }
+
     let curPos = player.position
     let hasXray = false
     for (let i = 0; i < 15; i ++) {
