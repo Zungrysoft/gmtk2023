@@ -162,6 +162,7 @@ await game.loadAssets({
     magnetfire2: 'json/levels/magnetfire2.json',
     blobdodge: 'json/levels/blobdodge.json',
     shape2: 'json/levels/shape2.json',
+    blobmagnet: 'json/levels/blobmagnet.json',
   },
 
   sounds: {
