@@ -159,6 +159,7 @@ await game.loadAssets({
     xray: 'json/levels/xray.json',
     xraymagnet: 'json/levels/xraymagnet.json',
     magnetfire2: 'json/levels/magnetfire2.json',
+    blobdodge: 'json/levels/blobdodge.json',
   },
 
   sounds: {
