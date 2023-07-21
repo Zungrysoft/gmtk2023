@@ -163,6 +163,7 @@ await game.loadAssets({
     blobdodge: 'json/levels/blobdodge.json',
     shape2: 'json/levels/shape2.json',
     blobmagnet: 'json/levels/blobmagnet.json',
+    headwind: 'json/levels/headwind.json',
   },
 
   sounds: {

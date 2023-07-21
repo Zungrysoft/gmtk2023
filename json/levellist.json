@@ -96,9 +96,15 @@
     "category": "wind"
   },
   {
+    "name": "Headwind",
+    "level": "headwind",
+    "prerequisites": ["islets"],
+    "category": "wind"
+  },
+  {
     "name": "Hop Across",
     "level": "islands",
-    "prerequisites": ["islets", "dodging3"],
+    "prerequisites": ["headwind", "dodging3"],
     "category": "wind"
   },
   {
@@ -224,7 +230,7 @@
   {
     "name": "Sorting Stack",
     "level": "sorting",
-    "prerequisites": ["vine", "vinewall"],
+    "prerequisites": ["vine", "vinewall", "headwind"],
     "category": "vine"
   },
   {
