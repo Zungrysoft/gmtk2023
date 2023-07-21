@@ -115,9 +115,9 @@ export default class Board extends Thing {
       game.globals.usingGamepad = false
     }
 
-    // if (game.keysPressed.KeyJ) {
-    //   console.log(game.getDepthMemory())
-    // }
+    if (game.keysPressed.KeyJ && game.keysDown.ShiftLeft) {
+      this.getActivePlayer().position = this.state.things.filter(x => x.name === 'goal')[0].position
+    }
 
     // Camera controls
     let setControl = ''

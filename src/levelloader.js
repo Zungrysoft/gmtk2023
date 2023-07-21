@@ -61,7 +61,7 @@ export function getUnlockedLevels() {
   let ret = []
   let categoryCounts = {}
   for (const level of levels) {
-    // Early exit if the level has been completed; It should obviously be unlocked
+    // Early exit if the level has been completed; it should obviously be unlocked in that case
     if (game.globals.levelCompletions[level.level]) {
       ret.push(level)
       continue
@@ -71,6 +71,7 @@ export function getUnlockedLevels() {
     if (categoryCounts[level.category] >= 2) {
       continue
     }
+    categoryCounts[level.category] = (categoryCounts[level.category] || 0) + 1
 
     // Check level prerequisites
     if (!checkPrerequisites(level)) {
@@ -79,7 +80,6 @@ export function getUnlockedLevels() {
 
     // Passed checks; add it to the list
     ret.push(level)
-    categoryCounts[level.category] = (categoryCounts[level.category] || 0) + 1
   }
 
   return ret
