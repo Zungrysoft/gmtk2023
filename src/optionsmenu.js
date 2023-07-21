@@ -58,17 +58,6 @@ export default class OptionsMenu extends Thing {
               this.menu[1] = globals.soundOn ? 'Sound: ON' : 'Sound: OFF'
             }
           }
-          /*
-          if (this.selection === 2) {
-            callback = () => {
-              globals.levelCompletions = []
-              for (let i = 0; i < game.globals.levelCount; i++) {
-                game.globals.levelCompletions.push(false)
-              }
-            }
-            localStorage.levelCompletions = JSON.stringify(game.globals.levelCompletions)
-          }
-          */
           if (this.selection === 2) {
             this.dead = true
             game.addThing(new PauseMenu())

@@ -1,15 +1,19 @@
 import { assets } from './core/game.js'
+import * as game from './core/game.js'
 
 export function getLevel(lvl) {
   // Retrieve level data
-  let json = JSON.parse(assets.json[getLevelList()[lvl-1].level || "intro"])
+  let json = JSON.parse(assets.json[lvl] || assets.json["intro"])
+  const entry = getLevelList().filter(x => x.level === lvl)[0]
 
   // Convert from layered format
   let ret = {
-    version: 1,
+    version: 2,
     grid: json.layers[0].grid,
     foliage: json.layers[1].grid,
     things: json.layers[0].things,
+    name: entry.name,
+    level: entry.level,
   }
 
   // To make things easier in the editor, convert unknown entities to deco
@@ -39,4 +43,87 @@ export function getLevelList() {
     levelList = JSON.parse(assets.json.levelList)
   }
   return levelList
+}
+
+export function checkPrerequisites(level) {
+  for (const prerequisite of level.prerequisites) {
+    if (!(game.globals.levelCompletions[prerequisite])) {
+      return false
+    }
+  }
+  return true
+}
+
+export function getUnlockedLevels() {
+  const levels = getLevelList()
+
+  // Iterate over levels to check whether they should be unlocked
+  let ret = []
+  let categoryCounts = {}
+  for (const level of levels) {
+    // Early exit if the level has been completed; It should obviously be unlocked
+    if (game.globals.levelCompletions[level.level]) {
+      ret.push(level)
+      continue
+    }
+
+    // Check category counts
+    if (categoryCounts[level.category] >= 2) {
+      continue
+    }
+
+    // Check level prerequisites
+    if (!checkPrerequisites(level)) {
+      continue
+    }
+
+    // Passed checks; add it to the list
+    ret.push(level)
+    categoryCounts[level.category] = (categoryCounts[level.category] || 0) + 1
+  }
+
+  return ret
+}
+
+export function getNextLevel(currentLevel) {
+  // Get all levels which are unlocked but not yet completed
+  // Also includes the current level so we can reference its index against the candidates
+  const candidates = getUnlockedLevels().filter(x => x.level === currentLevel || !(game.globals.levelCompletions[x.level]))
+
+  // Get index of the current level
+  const selection = candidates.map(x => x.level).indexOf(currentLevel)
+
+  // First, try to switch to the next unlocked, uncompleted level
+  if (selection + 1 < candidates.length) {
+    return candidates[selection + 1].level
+  }
+
+  // Next, try to switch to the previous unlocked, uncompleted level
+  if (selection - 1 >= 0) {
+    return candidates[selection - 1].level
+  }
+
+  // Return undefined if there are no more levels to complete
+  return undefined
+}
+
+export function getLevelNumber(level) {
+  const categoryMap = {
+    'intro': 'A',
+    'wind': 'B',
+    'ice': 'C',
+    'vine': 'D',
+    'magnet': 'E',
+    'blob': 'J',
+    'xray': 'X',
+  }
+
+  const category = getLevelList().filter(x => x.level === level)[0]?.category
+  if (category) {
+    const levelNumber = getLevelList().filter(x => x.category === category).map(x => x.level).indexOf(level)
+    return `${categoryMap[category]}${levelNumber+1}`
+  }
+  else {
+    return ""
+  }
 }

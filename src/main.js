@@ -199,25 +199,22 @@ const { assets } = game
 // console.log(assets)
 
 game.globals.levelCount = 50
-game.globals.levelCompletions = []
+game.globals.levelCompletions = {}
 game.globals.usingGamepad = false
 game.globals.musicOn = true
 game.globals.soundOn = true
 
-for (let i = 0; i < game.globals.levelCount; i++) {
-  game.globals.levelCompletions.push(false)
-}
-game.globals.level = 1
+game.globals.level = 'intro'
 game.globals.showTitle = true
 
-if (localStorage.levelCompletions && localStorage.personGuyVersion === '1') {
+if (localStorage.levelCompletions && localStorage.personGuyVersion === '2') {
   try {
     game.globals.levelCompletions = JSON.parse(localStorage.levelCompletions)
   } catch (e) {
-    game.globals.levelCompletions = []
+    game.globals.levelCompletions = {}
   }
 }
-localStorage.personGuyVersion = '1'
+localStorage.personGuyVersion = '2'
 
 game.setScene(() => {
   game.addThing(new Board())
