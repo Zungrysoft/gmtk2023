@@ -246,60 +246,6 @@
     "category": "vine"
   },
   {
-    "name": "An Eerie Resemblance",
-    "level": "blob",
-    "prerequisites": ["corners"],
-    "category": "blob"
-  },
-  {
-    "name": "Pusher Protector",
-    "level": "shielding",
-    "prerequisites": ["blob"],
-    "category": "blob"
-  },
-  {
-    "name": "Candelabra",
-    "level": "preplaced",
-    "prerequisites": ["blob"],
-    "category": "blob"
-  },
-  {
-    "name": "The Horseshoe",
-    "level": "blobchain",
-    "prerequisites": ["preplaced"],
-    "category": "blob"
-  },
-  {
-    "name": "Shared Space",
-    "level": "blobdodge",
-    "prerequisites": ["shielding"],
-    "category": "blob"
-  },
-  {
-    "name": "One of the School",
-    "level": "blobfish",
-    "prerequisites": ["preplaced"],
-    "category": "blob"
-  },
-  {
-    "name": "Baths of Enigma",
-    "level": "blobvine",
-    "prerequisites": ["shielding", "vine"],
-    "category": "blob"
-  },
-  {
-    "name": "The Divider",
-    "level": "blobice",
-    "prerequisites": ["blobfish", "windwall"],
-    "category": "blob"
-  },
-  {
-    "name": "Staring Contest",
-    "level": "twoblobs",
-    "prerequisites": ["blobchain", "iceshuffle2"],
-    "category": "blob"
-  },
-  {
     "name": "My Hobby",
     "level": "magnetintro",
     "prerequisites": ["shutter"],
@@ -382,6 +328,60 @@
     "level": "magnetvine",
     "prerequisites": ["metalmaze", "vinewall"],
     "category": "magnet"
+  },
+  {
+    "name": "An Eerie Resemblance",
+    "level": "blob",
+    "prerequisites": ["corners"],
+    "category": "blob"
+  },
+  {
+    "name": "Pusher Protector",
+    "level": "shielding",
+    "prerequisites": ["blob"],
+    "category": "blob"
+  },
+  {
+    "name": "Candelabra",
+    "level": "preplaced",
+    "prerequisites": ["blob"],
+    "category": "blob"
+  },
+  {
+    "name": "The Horseshoe",
+    "level": "blobchain",
+    "prerequisites": ["preplaced"],
+    "category": "blob"
+  },
+  {
+    "name": "Shared Space",
+    "level": "blobdodge",
+    "prerequisites": ["shielding"],
+    "category": "blob"
+  },
+  {
+    "name": "One of the School",
+    "level": "blobfish",
+    "prerequisites": ["preplaced"],
+    "category": "blob"
+  },
+  {
+    "name": "Baths of Enigma",
+    "level": "blobvine",
+    "prerequisites": ["shielding", "vine"],
+    "category": "blob"
+  },
+  {
+    "name": "The Divider",
+    "level": "blobice",
+    "prerequisites": ["blobfish", "windwall"],
+    "category": "blob"
+  },
+  {
+    "name": "Staring Contest",
+    "level": "twoblobs",
+    "prerequisites": ["blobchain", "iceshuffle2"],
+    "category": "blob"
   },
   {
     "name": "Secret Spy Tech",

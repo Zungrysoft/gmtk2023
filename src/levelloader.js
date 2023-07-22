@@ -114,7 +114,7 @@ export function getLevelNumber(level) {
     'ice': 'C',
     'vine': 'D',
     'magnet': 'E',
-    'blob': 'J',
+    'blob': 'F',
     'xray': 'X',
   }
 
