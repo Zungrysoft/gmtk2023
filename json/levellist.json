@@ -168,6 +168,12 @@
     "category": "ice"
   },
   {
+    "name": "Snow Maze",
+    "level": "snowmaze",
+    "prerequisites": ["lake", "boat"],
+    "category": "ice"
+  },
+  {
     "name": "Mineral Transport",
     "level": "windwall",
     "prerequisites": ["ferry", "corridors2"],
@@ -177,12 +183,6 @@
     "name": "Icebox",
     "level": "icecrawl",
     "prerequisites": ["iceshuffle2"],
-    "category": "ice"
-  },
-  {
-    "name": "Snow Maze",
-    "level": "snowmaze",
-    "prerequisites": ["lake", "boat"],
     "category": "ice"
   },
   {
@@ -216,15 +216,15 @@
     "category": "vine"
   },
   {
-    "name": "Repotting",
-    "level": "vineice",
-    "prerequisites": ["vine", "boat"],
-    "category": "vine"
-  },
-  {
     "name": "Weed Control",
     "level": "vinewall",
     "prerequisites": ["snowblower", "doublestack"],
+    "category": "vine"
+  },
+  {
+    "name": "Repotting",
+    "level": "vineice",
+    "prerequisites": ["vine", "boat"],
     "category": "vine"
   },
   {
@@ -318,15 +318,21 @@
     "category": "magnet"
   },
   {
+    "name": "Metal Maze",
+    "level": "metalmaze",
+    "prerequisites": ["vacuum"],
+    "category": "magnet"
+  },
+  {
     "name": "The Shelf",
     "level": "magnetwind",
     "prerequisites": ["magnetwind2"],
     "category": "magnet"
   },
   {
-    "name": "Metal Maze",
-    "level": "metalmaze",
-    "prerequisites": ["vacuum"],
+    "name": "Safety Transport",
+    "level": "transport",
+    "prerequisites": ["magnetwind2"],
     "category": "magnet"
   },
   {
@@ -339,12 +345,6 @@
     "name": "Compact Storage",
     "level": "compact",
     "prerequisites": ["metalmaze"],
-    "category": "magnet"
-  },
-  {
-    "name": "Safety Transport",
-    "level": "transport",
-    "prerequisites": ["magnetwind2"],
     "category": "magnet"
   },
   {
