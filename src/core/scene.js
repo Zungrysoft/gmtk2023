@@ -81,6 +81,7 @@ export default class Scene {
         const layer = this.layers[Math.round(this.depthMemory.get(thing)) || 0]
         if (layer) layer.splice(layer.indexOf(thing), 1)
         this.spatialHash.remove(thing)
+        this.depthMemory.delete(thing)
 
         // we don't have to increment the index, as the other things "fall into"
         // this thing's current slot
