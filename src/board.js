@@ -1541,6 +1541,16 @@ export default class Board extends Thing {
         let screenX, screenY
         ;[screenX, screenY] = this.getPositionOnScreen([x, y])
 
+        if (tileHeight > 1) {
+          for (let i = 0; i < tileHeight; i ++) {
+            if (i >= this.getTileHeight([x, y+1])) {
+              ctx.fillStyle = '#21235B'
+              ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
+            }
+            screenY -= wallDepth
+          }
+        }
+
         // Otherwise, render it as terrain
         if (tileHeight === 1) {
           // Create rock wall pattern
@@ -1635,7 +1645,7 @@ class Walls extends Thing {
           for (let i = 0; i < tileHeight; i ++) {
             if (i >= board.getTileHeight([x, y+1])) {
               ctx.fillStyle = '#21235B'
-              ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
+              //ctx.fillRect(screenX, screenY, tileWidth, tileDepth)
             }
             screenY -= wallDepth
           }
