@@ -1,4 +1,5 @@
 import * as game from './core/game.js'
+import * as soundmanager from './core/soundmanager.js'
 import * as gfx from './core/webgl.js'
 import Board from './board.js'
 import TitleScreen from './titlescreen.js'
@@ -199,23 +200,32 @@ const { assets } = game
 
 // console.log(assets)
 
-game.globals.levelCount = 50
-game.globals.levelCompletions = {}
 game.globals.usingGamepad = false
-game.globals.musicOn = true
-game.globals.soundOn = true
 
 game.globals.level = 'intro'
 game.globals.showTitle = true
 
-if (localStorage.levelCompletions && localStorage.personGuyVersion === '2') {
+// Load localstorage data
+if (localStorage.personGuyVersion === '2') {
   try {
     game.globals.levelCompletions = JSON.parse(localStorage.levelCompletions)
   } catch (e) {
     game.globals.levelCompletions = {}
   }
+  try {
+    game.globals.settings = JSON.parse(localStorage.settings)
+  } catch (e) {
+    game.globals.settings = {
+      musicOn: true,
+      soundOn: true,
+    }
+  }
 }
 localStorage.personGuyVersion = '2'
+
+// Apply initial settings
+soundmanager.setMusicVolume(game.globals.settings.musicOn ? 1 : 0)
+soundmanager.setSoundVolume(game.globals.settings.soundOn ? 1 : 0)
 
 game.setScene(() => {
   game.addThing(new Board())

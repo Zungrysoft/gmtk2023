@@ -10,8 +10,8 @@ export default class OptionsMenu extends Thing {
   time = 0
   selection = 0
   menu = [
-    globals.musicOn ? 'Music: ON' : 'Music OFF',
-    globals.soundOn ? 'Sound: ON' : 'Music OFF',
+    globals.settings.musicOn ? 'Music: ON' : 'Music OFF',
+    globals.settings.soundOn ? 'Sound: ON' : 'Music OFF',
     //'Delete Save Data',
     'Back'
   ]
@@ -47,15 +47,17 @@ export default class OptionsMenu extends Thing {
       if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0] || game.keysPressed.Escape || game.keysPressed.Backspace || game.buttonsPressed[8] || game.buttonsPressed[9]) {
         if (!this.selected) {
           let callback = () => {
-            globals.musicOn = !globals.musicOn
-            soundmanager.setMusicVolume(globals.musicOn ? 1 : 0)
-            this.menu[0] = globals.musicOn ? 'Music: ON' : 'Music: OFF'
+            globals.settings.musicOn = !globals.settings.musicOn
+            soundmanager.setMusicVolume(globals.settings.musicOn ? 1 : 0)
+            this.menu[0] = globals.settings.musicOn ? 'Music: ON' : 'Music: OFF'
+            localStorage.settings = JSON.stringify(globals.settings)
           }
           if (this.selection === 1) {
             callback = () => {
-              globals.soundOn = !globals.soundOn
-              soundmanager.setSoundVolume(globals.soundOn ? 1 : 0)
-              this.menu[1] = globals.soundOn ? 'Sound: ON' : 'Sound: OFF'
+              globals.settings.soundOn = !globals.settings.soundOn
+              soundmanager.setSoundVolume(globals.settings.soundOn ? 1 : 0)
+              this.menu[1] = globals.settings.soundOn ? 'Sound: ON' : 'Sound: OFF'
+              localStorage.settings = JSON.stringify(globals.settings)
             }
           }
           if (this.selection === 2) {
