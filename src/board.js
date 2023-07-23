@@ -1573,7 +1573,7 @@ export default class Board extends Thing {
         // Foliage
         if (tileFoliage) {
           let foliageTypes = 5
-          let spriteIndex = u.mod((x*7)+(y*13), foliageTypes) + 1
+          let spriteIndex = u.mod((x*7)+(y*x*13), foliageTypes) + 1
           let sprite = 'deco_foliage_' + spriteIndex
           ctx.drawImage(assets.images[sprite], screenX, screenY)
         }
