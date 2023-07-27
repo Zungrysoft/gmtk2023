@@ -80,7 +80,7 @@
   {
     "name": "Dodge and Burn",
     "level": "dodging",
-    "prerequisites": ["bird", "dodging3"],
+    "prerequisites": ["bird", "dodging3", "distance"],
     "category": "wind"
   },
   {
