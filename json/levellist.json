@@ -132,6 +132,12 @@
     "category": "wind"
   },
   {
+    "name": "Hot to the Touch",
+    "level": "windstop",
+    "prerequisites": ["warehouse"],
+    "category": "wind"
+  },
+  {
     "name": "Alongside the Maze",
     "level": "maze",
     "prerequisites": ["doublestack"],

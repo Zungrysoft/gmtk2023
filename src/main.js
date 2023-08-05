@@ -165,6 +165,7 @@ await game.loadAssets({
     shape2: 'json/levels/shape2.json',
     blobmagnet: 'json/levels/blobmagnet.json',
     headwind: 'json/levels/headwind.json',
+    windstop: 'json/levels/windstop.json',
   },
 
   sounds: {
