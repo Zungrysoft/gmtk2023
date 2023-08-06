@@ -402,6 +402,12 @@
     "category": "blob"
   },
   {
+    "name": "Stealing the Wind II",
+    "level": "blobchain3",
+    "prerequisites": ["blobchain2", "twoblobs"],
+    "category": "blob"
+  },
+  {
     "name": "Secret Spy Tech",
     "level": "xray",
     "prerequisites": ["big"],
