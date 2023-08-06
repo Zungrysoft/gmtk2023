@@ -62,6 +62,7 @@ export default class Board extends Thing {
     this.state.waterlogged = {}
     this.state.turns = 0
     this.state.thingMoveTimestampCounter = 0
+    this.state.moveCount = 0
 
     // Update all players with additional initial state information
     let didActive = false
@@ -632,6 +633,7 @@ export default class Board extends Thing {
     // Move into this new position
     player.position = newPosition
     this.playerMoved(player)
+    this.state.moveCount ++
 
     // Requeue advancements
     this.requeueAdvancements()
@@ -1434,17 +1436,6 @@ export default class Board extends Thing {
     return false
   }
 
-  getMoveCount() {
-    let ss = this.stateStack
-    let count = ss.length
-    if (ss.length > 0) {
-      if (ss[ss.length-1] === JSON.stringify(this.state)) {
-        count -= 1
-      }
-    }
-    return count
-  }
-
   preDraw () {
     // Draw blue for ocean
     const { ctx } = game
@@ -1481,7 +1472,7 @@ export default class Board extends Thing {
       ctx.translate(32, 32+20)
       ctx.font = 'italic bold 20px Arial'
       ctx.fillStyle = '#21235B'
-      const levelName = `Steps: ${this.getMoveCount()}`
+      const levelName = `Steps: ${this.state.moveCount}`
       ctx.fillText(levelName, 0, 0)
       ctx.translate(2, -2)
       ctx.fillStyle = 'white'
