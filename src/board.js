@@ -1359,7 +1359,7 @@ export default class Board extends Thing {
     player.thingMoveTimestamp = this.state.thingMoveTimestampCounter ++
 
     // Wind guy should reset his wind visual
-    if (player.type === 'wind') {
+    if (player.type === 'wind' && !player.active) {
       for (const thing of game.getThings()) {
         if (thing.tileThingReference === player) {
           thing.createWind()

@@ -169,6 +169,7 @@ await game.loadAssets({
     windwall2: 'json/levels/windwall2.json',
     blobchain2: 'json/levels/blobchain2.json',
     blobchain3: 'json/levels/blobchain3.json',
+    windoban: 'json/levels/windoban.json',
   },
 
   sounds: {

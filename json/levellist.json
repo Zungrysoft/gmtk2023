@@ -108,6 +108,12 @@
     "category": "wind"
   },
   {
+    "name": "Throw it Over",
+    "level": "windoban",
+    "prerequisites": ["warehouse", "sewers"],
+    "category": "wind"
+  },
+  {
     "name": "Wind Blocker",
     "level": "doublestack",
     "prerequisites": ["bird"],
