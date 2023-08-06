@@ -1434,6 +1434,17 @@ export default class Board extends Thing {
     return false
   }
 
+  getMoveCount() {
+    let ss = this.stateStack
+    let count = ss.length
+    if (ss.length > 0) {
+      if (ss[ss.length-1] === JSON.stringify(this.state)) {
+        count -= 1
+      }
+    }
+    return count
+  }
+
   preDraw () {
     // Draw blue for ocean
     const { ctx } = game
@@ -1465,18 +1476,18 @@ export default class Board extends Thing {
     }
 
     // Move counter
-    // {
-    //   ctx.save()
-    //   ctx.translate(32, game.config.height - 24)
-    //   ctx.font = 'italic bold 16px Arial'
-    //   ctx.fillStyle = '#21235B'
-    //   const levelName = `Steps: ${this.stateStack.length}`
-    //   ctx.fillText(levelName, 0, 0)
-    //   ctx.translate(2, -2)
-    //   ctx.fillStyle = 'white'
-    //   ctx.fillText(levelName, 0, 0)
-    //   ctx.restore()
-    // }
+    {
+      ctx.save()
+      ctx.translate(32, 32+20)
+      ctx.font = 'italic bold 20px Arial'
+      ctx.fillStyle = '#21235B'
+      const levelName = `Steps: ${this.getMoveCount()}`
+      ctx.fillText(levelName, 0, 0)
+      ctx.translate(2, -2)
+      ctx.fillStyle = 'white'
+      ctx.fillText(levelName, 0, 0)
+      ctx.restore()
+    }
 
     // "You are Person Guy" flavor text
     {
