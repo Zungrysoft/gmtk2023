@@ -84,7 +84,7 @@ export default class Player extends Thing {
     // Move towards and face towards my destination
     const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
-    if (this.tileThingReference.type === 'wind') {
+    if (this.sprite.includes('wind')) {
       if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       }

@@ -366,6 +366,12 @@
     "category": "blob"
   },
   {
+    "name": "Stealing the Wind",
+    "level": "blobchain2",
+    "prerequisites": ["blobchain"],
+    "category": "blob"
+  },
+  {
     "name": "Swimming Lesson",
     "level": "blobfish",
     "prerequisites": ["preplaced"],

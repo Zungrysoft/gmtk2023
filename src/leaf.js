@@ -7,7 +7,7 @@ export default class Leaf extends Thing {
   sprite = 'deco_leaf'
   time = 0
   liveTime = 20
-  scale = 0.8
+  scale = 1.0
 
   constructor (position) {
     super()

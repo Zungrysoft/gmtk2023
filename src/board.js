@@ -922,10 +922,22 @@ export default class Board extends Thing {
     }
   }
 
+  sortBlobs(a, b) {
+    // First prioritize the one that is transformed
+    const aIsBlob = Number(Boolean(a.type === 'blob'))
+    const bIsBlob = Number(Boolean(b.type === 'blob'))
+    if (aIsBlob !== bIsBlob) {
+      return bIsBlob - aIsBlob
+    }
+
+    // Second prioritize the one that is active
+    return Number(a.active) - Number(b.active)
+  }
+
   advanceBlob() {
     // Iterate over blob guys
     // Sort them so that the active blob guy is first; resolves certain index conditions
-    let blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob).sort((a, b) => Number(a.active) - Number(b.active))
+    let blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob).sort(this.sortBlobs)
     for (const player of blobPlayers) {
       this.executeBlob(player)
     }

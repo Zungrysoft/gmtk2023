@@ -166,6 +166,8 @@ await game.loadAssets({
     blobmagnet: 'json/levels/blobmagnet.json',
     headwind: 'json/levels/headwind.json',
     windstop: 'json/levels/windstop.json',
+    windwall2: 'json/levels/windwall2.json',
+    blobchain2: 'json/levels/blobchain2.json',
   },
 
   sounds: {
