@@ -61,11 +61,13 @@ export default class Board extends Thing {
     this.state.actionQueue = []
     this.state.waterlogged = {}
     this.state.turns = 0
+    this.state.thingMoveTimestampCounter = 0
 
-    // Update all players
+    // Update all players with additional initial state information
     let didActive = false
     for (const thing of this.state.things) {
       if (thing.name === 'player') {
+        thing.thingMoveTimestamp = -1
         if (thing.type === 'person' && !didActive) {
           didActive = true
           thing.active = true
@@ -526,7 +528,7 @@ export default class Board extends Thing {
   }
 
   requeueAdvancements() {
-    // Define what counts as a "movement advancement"
+    // Define what counts as a "movement advancement" and their priority order
     const advancements = ['ice', 'magnet', 'vine', 'wind', 'blob', 'waterlog', 'mine', 'fire']
 
     // Remove all pre-existing movement items from the queue
@@ -629,6 +631,7 @@ export default class Board extends Thing {
 
     // Move into this new position
     player.position = newPosition
+    this.playerMoved(player)
 
     // Requeue advancements
     this.requeueAdvancements()
@@ -923,15 +926,8 @@ export default class Board extends Thing {
   }
 
   sortBlobs(a, b) {
-    // First prioritize the one that is transformed
-    const aIsBlob = Number(Boolean(a.type === 'blob'))
-    const bIsBlob = Number(Boolean(b.type === 'blob'))
-    if (aIsBlob !== bIsBlob) {
-      return bIsBlob - aIsBlob
-    }
-
-    // Second prioritize the one that is active
-    return Number(a.active) - Number(b.active)
+    // Prioritize blob that most recently moved
+    return b.thingMoveTimestamp - a.thingMoveTimestamp
   }
 
   advanceBlob() {
@@ -1358,6 +1354,9 @@ export default class Board extends Thing {
     if (player.name !== 'player') {
       return
     }
+
+    // Update thingMoveTimestamp
+    player.thingMoveTimestamp = this.state.thingMoveTimestampCounter ++
 
     // Wind guy should reset his wind visual
     if (player.type === 'wind') {
