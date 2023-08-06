@@ -818,6 +818,18 @@ export default class Board extends Thing {
     }
   }
 
+  isInWater(thing) {
+    // If this position is water...
+    if (this.getTileHeight(thing.position) === 0) {
+      // If there is not already a waterlogged thing at this position...
+      if (!(thing.position in this.state.waterlogged)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   advanceWaterlog() {
     let waterloggedSomething = false
 
@@ -835,26 +847,22 @@ export default class Board extends Thing {
         continue
       }
 
-      // If this position is water...
-      if (this.getTileHeight(thing.position) === 0) {
-        // If there is not already a waterlogged thing at this position...
-        if (!(thing.position in this.state.waterlogged)) {
-          // Add this thing to the waterlogged list
-          // But kill players
-          if (thing.name === 'player') {
-            soundmanager.playSound('sploosh', 0.4)
-          }
-          else {
-            thing.waterlogged = true
-            this.state.waterlogged[thing.position] = thing
-          }
-
-          // And remove it from the main thing list
-          this.executePlayerDeath(thing)
-          this.state.things.splice(i, 1)
-
-          waterloggedSomething = true
+      if (this.isInWater(thing)) {
+        // Add this thing to the waterlogged list
+        // But kill players
+        if (thing.name === 'player') {
+          soundmanager.playSound('sploosh', 0.4)
         }
+        else {
+          thing.waterlogged = true
+          this.state.waterlogged[thing.position] = thing
+        }
+
+        // And remove it from the main thing list
+        this.executePlayerDeath(thing)
+        this.state.things.splice(i, 1)
+
+        waterloggedSomething = true
       }
     }
 
@@ -1227,6 +1235,10 @@ export default class Board extends Thing {
   }
 
   executeExtendVines(player, noSound=false) {
+    // Retract any vines which are no longer aligned with this guy
+    const onlyMisaligned = (player.type === 'vine')
+    this.executeRetractVines(player, onlyMisaligned)
+
     // Do not extend vines if this is the active player
     if (player.active) {
       return
@@ -1237,9 +1249,10 @@ export default class Board extends Thing {
       return
     }
 
-    // Retract any vines which are no longer aligned with this guy
-    const onlyMisaligned = (player.type === 'vine')
-    this.executeRetractVines(player, onlyMisaligned)
+    // Do not extend vines if about to be waterlogged (and are thus about to die)
+    if (this.isInWater(player)) {
+      return
+    }
 
     // Early exit if this is not a vine guy since only vine guys create vines
     if (player.type !== 'vine') {
