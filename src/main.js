@@ -170,6 +170,7 @@ await game.loadAssets({
     blobchain2: 'json/levels/blobchain2.json',
     blobchain3: 'json/levels/blobchain3.json',
     windoban: 'json/levels/windoban.json',
+    vineoban: 'json/levels/vineoban.json',
   },
 
   sounds: {

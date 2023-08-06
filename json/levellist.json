@@ -228,15 +228,21 @@
     "category": "vine"
   },
   {
-    "name": "Weed Control",
-    "level": "vinewall",
-    "prerequisites": ["snowblower", "doublestack"],
+    "name": "Boxed In",
+    "level": "vineoban",
+    "prerequisites": ["snowblower"],
     "category": "vine"
   },
   {
     "name": "Repotting",
     "level": "vineice",
     "prerequisites": ["vine", "boat"],
+    "category": "vine"
+  },
+  {
+    "name": "Weed Control",
+    "level": "vinewall",
+    "prerequisites": ["vineoban", "doublestack"],
     "category": "vine"
   },
   {
