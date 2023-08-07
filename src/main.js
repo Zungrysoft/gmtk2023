@@ -86,6 +86,7 @@ await game.loadAssets({
     levelList: 'json/levellist.json',
 
     // Level files
+    test: 'json/levels/test.json',
     swim: 'json/levels/swim.json',
     shutter: 'json/levels/shutter.json',
     maze: 'json/levels/maze.json',
@@ -171,6 +172,8 @@ await game.loadAssets({
     blobchain3: 'json/levels/blobchain3.json',
     windoban: 'json/levels/windoban.json',
     vineoban: 'json/levels/vineoban.json',
+    vineoban2: 'json/levels/vineoban2.json',
+    snowboxes: 'json/levels/snowboxes.json',
   },
 
   sounds: {

@@ -186,6 +186,12 @@
     "category": "ice"
   },
   {
+    "name": "Spelunking",
+    "level": "snowboxes",
+    "prerequisites": ["ferry"],
+    "category": "ice"
+  },
+  {
     "name": "Mineral Transport",
     "level": "windwall",
     "prerequisites": ["ferry", "corridors2"],
