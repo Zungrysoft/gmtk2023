@@ -110,7 +110,7 @@
   {
     "name": "Throw it Over",
     "level": "windoban",
-    "prerequisites": ["warehouse", "sewers"],
+    "prerequisites": ["islets", "sewers"],
     "category": "wind"
   },
   {
