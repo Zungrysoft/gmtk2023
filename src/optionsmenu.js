@@ -10,8 +10,8 @@ export default class OptionsMenu extends Thing {
   time = 0
   selection = 0
   menu = [
-    globals.settings.musicOn ? 'Music: ON' : 'Music OFF',
-    globals.settings.soundOn ? 'Sound: ON' : 'Music OFF',
+    globals.settings.musicOn ? 'Music: ON' : 'Music: OFF',
+    globals.settings.soundOn ? 'Sound: ON' : 'Sound: OFF',
     //'Delete Save Data',
     'Back'
   ]
