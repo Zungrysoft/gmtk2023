@@ -174,6 +174,7 @@ await game.loadAssets({
     vineoban: 'json/levels/vineoban.json',
     vineoban2: 'json/levels/vineoban2.json',
     snowboxes: 'json/levels/snowboxes.json',
+    windoban2: 'json/levels/windoban2.json',
   },
 
   sounds: {

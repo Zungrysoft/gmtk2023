@@ -150,6 +150,12 @@
     "category": "wind"
   },
   {
+    "name": "Downforce",
+    "level": "windoban2",
+    "prerequisites": ["windy"],
+    "category": "wind"
+  },
+  {
     "name": "Open and Shut",
     "level": "shutter",
     "prerequisites": ["doublestack"],
@@ -224,7 +230,7 @@
   {
     "name": "Special Delivery",
     "level": "snowblower",
-    "prerequisites": ["blocking", "lake"],
+    "prerequisites": ["blocking"],
     "category": "vine"
   },
   {

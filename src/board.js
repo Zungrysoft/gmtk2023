@@ -514,7 +514,7 @@ export default class Board extends Thing {
         !(x.active)
       )[0]
       if (foundWind) {
-        return true
+        return i+1
       }
 
       // Wind is blocked by walls
@@ -529,7 +529,7 @@ export default class Board extends Thing {
         break
       }
     }
-    return false
+    return 0
   }
 
   requeueAdvancements() {
@@ -599,7 +599,7 @@ export default class Board extends Thing {
     }
 
     // Player can't move towards a headwind
-    if (this.tileIsInWindTunnel(player.position, vec2.oppositeDirection(control))) {
+    if (this.tileIsInWindTunnel(player.position, vec2.oppositeDirection(control)) > 1) {
       // Play wind sound
       soundmanager.playSound('wind', 0.2)
 
@@ -1159,7 +1159,13 @@ export default class Board extends Thing {
   }
 
   executeWind(player) {
+    // Do not blow if dead
     if (player.dead) {
+      return
+    }
+
+    // Do not blow if about to be waterlogged (and are thus about to die)
+    if (this.isInWater(player)) {
       return
     }
 
@@ -1378,7 +1384,7 @@ export default class Board extends Thing {
     player.thingMoveTimestamp = this.state.thingMoveTimestampCounter ++
 
     // Wind guy should reset his wind visual
-    if (player.type === 'wind' && !player.active) {
+    if (player.type === 'wind' && !player.active && !this.isInWater(player)) {
       for (const thing of game.getThings()) {
         if (thing.tileThingReference === player) {
           thing.createWind()
