@@ -119,7 +119,11 @@ export default class Board extends Thing {
     }
 
     if (game.keysPressed.KeyJ && game.keysDown.ShiftLeft) {
-      this.getActivePlayer().position = this.state.things.filter(x => x.name === 'goal')[0].position
+      let active = this.getActivePlayer()
+      let goalPos = this.state.things.filter(x => x.name === 'goal')?.[0]?.position
+      if (active && goalPos) {
+        active.position = goalPos
+      }
     }
 
     // Camera controls
