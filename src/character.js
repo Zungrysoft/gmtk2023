@@ -418,8 +418,9 @@ export default class Player extends Thing {
     }
 
     const board = game.getThing('board')
+    const blowDistance = 15
     if (!board) return
-    for (let i = 0; i < 12; i += 1) {
+    for (let i = 0; i < blowDistance; i += 1) {
       const dir = vec2.directionToVector(this.renderDirection)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
       if (board.isBlockingAt(pos, true)) {

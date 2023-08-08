@@ -1171,7 +1171,7 @@ export default class Board extends Thing {
 
     let curPos = player.position
     let delta = vec2.directionToVector(player.direction)
-    const blowDistance = 12
+    const blowDistance = 15
     let foundThing = undefined
     let i = 0
 

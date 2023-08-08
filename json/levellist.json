@@ -156,6 +156,12 @@
     "category": "wind"
   },
   {
+    "name": "Forward Progress",
+    "level": "windsquad",
+    "prerequisites": ["doublestack", "headwind"],
+    "category": "wind"
+  },
+  {
     "name": "Open and Shut",
     "level": "shutter",
     "prerequisites": ["doublestack"],
