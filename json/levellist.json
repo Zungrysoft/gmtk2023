@@ -342,6 +342,12 @@
     "category": "magnet"
   },
   {
+    "name": "Steel Transport",
+    "level": "metaltransport",
+    "prerequisites": ["hallways", "snowboxes"],
+    "category": "magnet"
+  },
+  {
     "name": "Magnet Fishing",
     "level": "shape",
     "prerequisites": ["transport"],
