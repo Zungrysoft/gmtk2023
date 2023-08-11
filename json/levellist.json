@@ -198,8 +198,8 @@
     "category": "ice"
   },
   {
-    "name": "Spelunking",
-    "level": "snowboxes",
+    "name": "Double Slit Experiment",
+    "level": "snowboxes2",
     "prerequisites": ["ferry"],
     "category": "ice"
   },
@@ -207,6 +207,12 @@
     "name": "Mineral Transport",
     "level": "windwall",
     "prerequisites": ["ferry", "corridors2"],
+    "category": "ice"
+  },
+  {
+    "name": "Spelunking",
+    "level": "snowboxes",
+    "prerequisites": ["snowboxes2"],
     "category": "ice"
   },
   {
