@@ -54,6 +54,12 @@
     "category": "intro"
   },
   {
+    "name": "Bridge Engineers",
+    "level": "bridge2",
+    "prerequisites": ["sokoban", "sewers"],
+    "category": "intro"
+  },
+  {
     "name": "Rockoban",
     "level": "sokoban",
     "prerequisites": ["sewers"],
@@ -66,9 +72,9 @@
     "category": "intro"
   },
   {
-    "name": "Bridge Engineers",
+    "name": "Bridge Engineers II",
     "level": "bridge",
-    "prerequisites": ["sokoban", "sewers"],
+    "prerequisites": ["bridge2"],
     "category": "intro"
   },
   {
