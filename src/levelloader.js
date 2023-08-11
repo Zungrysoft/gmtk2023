@@ -56,6 +56,7 @@ export function checkPrerequisites(level) {
 
 export function getUnlockedLevels() {
   const levels = getLevelList()
+  const levelsPerCategory = 3
 
   // Iterate over levels to check whether they should be unlocked
   let ret = []
@@ -68,7 +69,7 @@ export function getUnlockedLevels() {
     }
 
     // Check category counts
-    if (categoryCounts[level.category] >= 2) {
+    if (categoryCounts[level.category] >= levelsPerCategory) {
       continue
     }
     categoryCounts[level.category] = (categoryCounts[level.category] || 0) + 1

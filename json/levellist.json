@@ -30,14 +30,14 @@
     "category": "intro"
   },
   {
-    "name": "Box Bridge",
-    "level": "distance",
+    "name": "Sewers",
+    "level": "sewers",
     "prerequisites": ["fire"],
     "category": "intro"
   },
   {
-    "name": "Sewers",
-    "level": "sewers",
+    "name": "Box Bridge",
+    "level": "distance",
     "prerequisites": ["fire"],
     "category": "intro"
   },
@@ -68,13 +68,13 @@
   {
     "name": "Air Ride",
     "level": "bird",
-    "prerequisites": ["swim"],
+    "prerequisites": ["cove"],
     "category": "wind"
   },
   {
     "name": "Island Access",
     "level": "islets",
-    "prerequisites": ["bird", "cove"],
+    "prerequisites": ["bird"],
     "category": "wind"
   },
   {
