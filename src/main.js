@@ -178,6 +178,7 @@ await game.loadAssets({
     windsquad: 'json/levels/windsquad.json',
     metaltransport: 'json/levels/metaltransport.json',
     snowboxes2: 'json/levels/snowboxes2.json',
+    bridge: 'json/levels/bridge.json',
   },
 
   sounds: {

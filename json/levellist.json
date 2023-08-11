@@ -66,6 +66,12 @@
     "category": "intro"
   },
   {
+    "name": "Bridge Engineers",
+    "level": "bridge",
+    "prerequisites": ["sokoban", "sewers"],
+    "category": "intro"
+  },
+  {
     "name": "Air Ride",
     "level": "bird",
     "prerequisites": ["cove"],
