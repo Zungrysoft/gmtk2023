@@ -181,6 +181,7 @@ await game.loadAssets({
     bridge: 'json/levels/bridge.json',
     bridge2: 'json/levels/bridge2.json',
     seatbelt: 'json/levels/seatbelt.json',
+    safety2: 'json/levels/safety2.json',
   },
 
   sounds: {

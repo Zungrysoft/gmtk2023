@@ -54,6 +54,12 @@
     "category": "intro"
   },
   {
+    "name": "Handle the Heat",
+    "level": "safety2",
+    "prerequisites": ["distance"],
+    "category": "intro"
+  },
+  {
     "name": "Bridge Engineers",
     "level": "bridge2",
     "prerequisites": ["sokoban", "sewers"],
@@ -368,7 +374,7 @@
   {
     "name": "Steel Transport",
     "level": "metaltransport",
-    "prerequisites": ["hallways", "snowboxes"],
+    "prerequisites": ["hallways", "snowboxes2"],
     "category": "magnet"
   },
   {
