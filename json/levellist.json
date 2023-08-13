@@ -36,6 +36,12 @@
     "category": "intro"
   },
   {
+    "name": "Time Out",
+    "level": "around",
+    "prerequisites": ["cove"],
+    "category": "intro"
+  },
+  {
     "name": "Box Bridge",
     "level": "distance",
     "prerequisites": ["fire"],
