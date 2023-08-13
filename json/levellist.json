@@ -222,15 +222,15 @@
     "category": "ice"
   },
   {
-    "name": "Take the Ferry II",
-    "level": "ferry",
-    "prerequisites": ["ferry2"],
-    "category": "ice"
-  },
-  {
     "name": "Snow Maze",
     "level": "snowmaze",
     "prerequisites": ["lake", "boat"],
+    "category": "ice"
+  },
+  {
+    "name": "Take the Ferry II",
+    "level": "ferry",
+    "prerequisites": ["ferry2"],
     "category": "ice"
   },
   {
