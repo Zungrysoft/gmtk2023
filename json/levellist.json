@@ -211,7 +211,7 @@
   },
   {
     "name": "Take the Ferry",
-    "level": "ferry",
+    "level": "ferry2",
     "prerequisites": ["boat"],
     "category": "ice"
   },
@@ -219,6 +219,12 @@
     "name": "The Frosty Shuffle",
     "level": "iceshuffle2",
     "prerequisites": ["ferry"],
+    "category": "ice"
+  },
+  {
+    "name": "Take the Ferry II",
+    "level": "ferry",
+    "prerequisites": ["ferry2"],
     "category": "ice"
   },
   {
