@@ -90,6 +90,12 @@
     "category": "intro"
   },
   {
+    "name": "Wind Tunnel",
+    "level": "windcontrol",
+    "prerequisites": ["bird"],
+    "category": "wind"
+  },
+  {
     "name": "Air Ride",
     "level": "bird",
     "prerequisites": ["cove"],
@@ -108,15 +114,15 @@
     "category": "wind"
   },
   {
-    "name": "Dodge and Burn",
-    "level": "dodging",
-    "prerequisites": ["doublestop", "dodging3", "distance"],
-    "category": "wind"
-  },
-  {
     "name": "Coming Your Way!",
     "level": "warehouse",
     "prerequisites": ["islets", "swim"],
+    "category": "wind"
+  },
+  {
+    "name": "Dodge and Burn",
+    "level": "dodging",
+    "prerequisites": ["doublestop", "dodging3", "distance"],
     "category": "wind"
   },
   {

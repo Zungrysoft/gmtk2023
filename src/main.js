@@ -186,6 +186,7 @@ await game.loadAssets({
     around: 'json/levels/around.json',
     ferry2: 'json/levels/ferry2.json',
     doublestop: 'json/levels/doublestop.json',
+    windcontrol: 'json/levels/windcontrol.json',
   },
 
   sounds: {
