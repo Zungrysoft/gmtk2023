@@ -90,15 +90,21 @@
     "category": "intro"
   },
   {
-    "name": "Wind Tunnel",
-    "level": "windcontrol",
-    "prerequisites": ["bird"],
+    "name": "Air Ride",
+    "level": "windintro",
+    "prerequisites": ["cove"],
     "category": "wind"
   },
   {
-    "name": "Air Ride",
+    "name": "Wind Tunnel",
+    "level": "windcontrol",
+    "prerequisites": ["windintro"],
+    "category": "wind"
+  },
+  {
+    "name": "Remote Locations",
     "level": "bird",
-    "prerequisites": ["cove"],
+    "prerequisites": ["windintro"],
     "category": "wind"
   },
   {
