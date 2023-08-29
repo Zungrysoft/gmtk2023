@@ -118,7 +118,7 @@ export default class Board extends Thing {
       game.globals.usingGamepad = false
     }
 
-    if (game.keysPressed.KeyJ && game.keysDown.ShiftLeft) {
+    if (game.keysPressed.KeyJ && (game.keysDown.ShiftLeft || game.keysDown.ShiftRight)) {
       let active = this.getActivePlayer()
       let goalPos = this.state.things.filter(x => x.name === 'goal')?.[0]?.position
       if (active && goalPos) {
@@ -147,7 +147,7 @@ export default class Board extends Thing {
       if (game.keysPressed.Escape || game.keysPressed.Backspace || game.buttonsPressed[8] || game.buttonsPressed[9]) {
         game.addThing(new PauseMenu())
       }
-      if (game.keysPressed.ShiftLeft || game.buttonsPressed[1]) {
+      if (game.keysPressed.ShiftLeft || game.keysPressed.ShiftRight || game.buttonsPressed[1]) {
         setControl = 'switch'
       }
 
