@@ -189,6 +189,7 @@ await game.loadAssets({
     windcontrol: 'json/levels/windcontrol.json',
     windintro: 'json/levels/windintro.json',
     melt: 'json/levels/melt.json',
+    clamp: 'json/levels/clamp.json',
   },
 
   sounds: {

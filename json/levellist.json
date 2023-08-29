@@ -210,6 +210,12 @@
     "category": "wind"
   },
   {
+    "name": "Eye on the Prize",
+    "level": "clamp",
+    "prerequisites": ["windsquad"],
+    "category": "wind"
+  },
+  {
     "name": "Over the Seas",
     "level": "boat",
     "prerequisites": ["warehouse"],
