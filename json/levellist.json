@@ -102,9 +102,15 @@
     "category": "wind"
   },
   {
+    "name": "Double Back",
+    "level": "doublestop",
+    "prerequisites": ["bird"],
+    "category": "wind"
+  },
+  {
     "name": "Dodge and Burn",
     "level": "dodging",
-    "prerequisites": ["bird", "dodging3", "distance"],
+    "prerequisites": ["doublestop", "dodging3", "distance"],
     "category": "wind"
   },
   {
