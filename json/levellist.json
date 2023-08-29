@@ -96,12 +96,6 @@
     "category": "wind"
   },
   {
-    "name": "Wind Tunnel",
-    "level": "windcontrol",
-    "prerequisites": ["windintro"],
-    "category": "wind"
-  },
-  {
     "name": "Remote Locations",
     "level": "bird",
     "prerequisites": ["windintro"],
