@@ -129,26 +129,30 @@ export default class Board extends Thing {
     // Camera controls
     let setControl = ''
     if (!this.movementDisabled) {
-      if (game.keysPressed.ArrowUp || game.keysPressed.KeyW || game.buttonsPressed[12]) {
-        setControl = 'up'
+      // Don't allow inputs (aside from undo) if Person Guy is dead
+      if (!this.state.deathScreenActive) {
+        if (game.keysPressed.ArrowUp || game.keysPressed.KeyW || game.buttonsPressed[12]) {
+          setControl = 'up'
+        }
+        if (game.keysPressed.ArrowDown || game.keysPressed.KeyS || game.buttonsPressed[13]) {
+          setControl = 'down'
+        }
+        if (game.keysPressed.ArrowRight || game.keysPressed.KeyD || game.buttonsPressed[15]) {
+          setControl = 'right'
+        }
+        if (game.keysPressed.ArrowLeft || game.keysPressed.KeyA || game.buttonsPressed[14]) {
+          setControl = 'left'
+        }
+        if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) {
+          setControl = 'action'
+        }
+        if (game.keysPressed.ShiftLeft || game.keysPressed.ShiftRight || game.buttonsPressed[1]) {
+          setControl = 'switch'
+        }
       }
-      if (game.keysPressed.ArrowDown || game.keysPressed.KeyS || game.buttonsPressed[13]) {
-        setControl = 'down'
-      }
-      if (game.keysPressed.ArrowRight || game.keysPressed.KeyD || game.buttonsPressed[15]) {
-        setControl = 'right'
-      }
-      if (game.keysPressed.ArrowLeft || game.keysPressed.KeyA || game.buttonsPressed[14]) {
-        setControl = 'left'
-      }
-      if (game.keysPressed.Space || game.keysPressed.Enter || game.buttonsPressed[0]) {
-        setControl = 'action'
-      }
+      
       if (game.keysPressed.Escape || game.keysPressed.Backspace || game.buttonsPressed[8] || game.buttonsPressed[9]) {
         game.addThing(new PauseMenu())
-      }
-      if (game.keysPressed.ShiftLeft || game.keysPressed.ShiftRight || game.buttonsPressed[1]) {
-        setControl = 'switch'
       }
 
       // Undo function
@@ -1422,6 +1426,7 @@ export default class Board extends Thing {
 
     // If person guy is killed, bring up death screen
     if (player.type === 'person') {
+      this.state.deathScreenActive = true
       game.addThing(new DeathScreen())
     }
 
