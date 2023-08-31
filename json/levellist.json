@@ -498,6 +498,12 @@
     "category": "blob"
   },
   {
+    "name": "Cross the Stream",
+    "level": "blobchain4",
+    "prerequisites": ["twoblobs"],
+    "category": "blob"
+  },
+  {
     "name": "Stealing the Wind II",
     "level": "blobchain3",
     "prerequisites": ["blobchain2", "twoblobs"],
