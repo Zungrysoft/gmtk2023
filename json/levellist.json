@@ -468,21 +468,27 @@
     "category": "blob"
   },
   {
-    "name": "Stealing the Wind",
-    "level": "blobchain2",
-    "prerequisites": ["blobchain"],
-    "category": "blob"
-  },
-  {
     "name": "Swimming Lesson",
     "level": "blobfish",
     "prerequisites": ["preplaced"],
     "category": "blob"
   },
   {
+    "name": "Stealing the Wind",
+    "level": "blobchain2",
+    "prerequisites": ["blobchain"],
+    "category": "blob"
+  },
+  {
     "name": "Baths of Enigma",
     "level": "blobvine",
     "prerequisites": ["shielding", "vine"],
+    "category": "blob"
+  },
+  {
+    "name": "Cross the Stream",
+    "level": "blobchain4",
+    "prerequisites": ["blobfish"],
     "category": "blob"
   },
   {
@@ -495,6 +501,12 @@
     "name": "Staring Contest",
     "level": "twoblobs",
     "prerequisites": ["blobchain", "iceshuffle2"],
+    "category": "blob"
+  },
+  {
+    "name": "Cross the Stream II",
+    "level": "blobchain5",
+    "prerequisites": ["twoblobs", "blobchain4"],
     "category": "blob"
   },
   {
@@ -514,17 +526,5 @@
     "level": "xraymagnet",
     "prerequisites": ["magnetintro", "xray"],
     "category": "xray"
-  },
-  {
-    "name": "Cross the Stream",
-    "level": "blobchain5",
-    "prerequisites": ["twoblobs", "blobfish"],
-    "category": "blob"
-  },
-  {
-    "name": "Cross the Stream II",
-    "level": "blobchain4",
-    "prerequisites": ["blobchain5"],
-    "category": "blob"
   }
 ]
