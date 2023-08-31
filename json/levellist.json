@@ -498,12 +498,6 @@
     "category": "blob"
   },
   {
-    "name": "Cross the Stream",
-    "level": "blobchain4",
-    "prerequisites": ["twoblobs", "blobfish"],
-    "category": "blob"
-  },
-  {
     "name": "Stealing the Wind II",
     "level": "blobchain3",
     "prerequisites": ["blobchain2", "twoblobs"],
@@ -520,5 +514,17 @@
     "level": "xraymagnet",
     "prerequisites": ["magnetintro", "xray"],
     "category": "xray"
+  },
+  {
+    "name": "Cross the Stream",
+    "level": "blobchain5",
+    "prerequisites": ["twoblobs", "blobfish"],
+    "category": "blob"
+  },
+  {
+    "name": "Cross the Stream II",
+    "level": "blobchain4",
+    "prerequisites": ["blobchain5"],
+    "category": "blob"
   }
 ]

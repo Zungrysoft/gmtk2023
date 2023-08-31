@@ -191,6 +191,7 @@ await game.loadAssets({
     melt: 'json/levels/melt.json',
     clamp: 'json/levels/clamp.json',
     blobchain4: 'json/levels/blobchain4.json',
+    blobchain5: 'json/levels/blobchain5.json',
   },
 
   sounds: {
