@@ -500,7 +500,7 @@
   {
     "name": "Cross the Stream",
     "level": "blobchain4",
-    "prerequisites": ["twoblobs"],
+    "prerequisites": ["twoblobs", "blobfish"],
     "category": "blob"
   },
   {
