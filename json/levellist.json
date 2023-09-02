@@ -104,7 +104,7 @@
   {
     "name": "Island Access",
     "level": "islets",
-    "prerequisites": ["bird"],
+    "prerequisites": ["windintro"],
     "category": "wind"
   },
   {
@@ -128,7 +128,7 @@
   {
     "name": "Far Out",
     "level": "safety",
-    "prerequisites": ["bird", "dodging3"],
+    "prerequisites": ["windintro", "dodging3"],
     "category": "wind"
   },
   {
@@ -152,7 +152,7 @@
   {
     "name": "Wind Blocker",
     "level": "doublestack",
-    "prerequisites": ["bird"],
+    "prerequisites": ["windintro"],
     "category": "wind"
   },
   {
@@ -465,6 +465,12 @@
     "name": "Shared Space",
     "level": "blobdodge",
     "prerequisites": ["shielding"],
+    "category": "blob"
+  },
+  {
+    "name": "Lend a Hand",
+    "level": "blobfire",
+    "prerequisites": ["blobchain", "vine", "bird"],
     "category": "blob"
   },
   {

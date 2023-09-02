@@ -192,6 +192,7 @@ await game.loadAssets({
     clamp: 'json/levels/clamp.json',
     blobchain4: 'json/levels/blobchain4.json',
     blobchain5: 'json/levels/blobchain5.json',
+    blobfire: 'json/levels/blobfire.json',
   },
 
   sounds: {
