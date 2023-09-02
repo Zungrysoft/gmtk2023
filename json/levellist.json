@@ -408,7 +408,7 @@
     "category": "magnet"
   },
   {
-    "name": "Steel Transport",
+    "name": "Steel Shipment",
     "level": "metaltransport",
     "prerequisites": ["hallways", "snowboxes2"],
     "category": "magnet"
