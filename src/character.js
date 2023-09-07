@@ -1,18 +1,19 @@
 import * as game from './core/game.js'
 import * as u from './core/utils.js'
 import * as soundmanager from './core/soundmanager.js'
-import * as gfx from './core/webgl.js'
-import * as mat from './core/matrices.js'
 import * as vec2 from './core/vector2.js'
-import * as vec3 from './core/vector3.js'
 import Thing from './core/thing.js'
-import Fire from './fire.js'
 import Wind from './wind.js'
 import WinScreen from './winscreen.js'
+import VoidParticle from './voidparticle.js'
 
 export default class Player extends Thing {
   sprite = 'player_fire'
   time = 0
+  phaseTime = 0
+  phaseScale = 1.0
+  phaseRotation = 0
+  wasPhasedOut = false
   wasActive = true
   wasSelected = false
   isSelected = false
@@ -21,6 +22,7 @@ export default class Player extends Thing {
   drawPosition = [0, 0]
   walkBob = 0
   depth = 10
+  alpha = 1.0
   squish = 0
   lastDestination = [0, 0]
   animations = {
@@ -46,6 +48,9 @@ export default class Player extends Thing {
       game.getCamera2D().position = [...this.position]
       game.setThingName(this, 'playercharacter')
     }
+    this.phaseScale = tileThingReference.phasedOut ? 1.3 : 1.0
+    this.wasPhasedOut = tileThingReference.phasedOut
+    this.alpha = tileThingReference.phasedOut ? 0.4 : 1.0
   }
 
   update () {
@@ -76,6 +81,23 @@ export default class Player extends Thing {
       this.scale = [scalar, scalar]
     }
 
+    // Phase scale
+    if (this.tileThingReference.phasedOut) {
+      this.phaseScale = u.lerp(this.phaseScale, 1.3, 0.2)
+    }
+    else {
+      this.phaseScale = u.lerp(this.phaseScale, 1.0, 0.2)
+    }
+    this.scale = vec2.scale(this.scale, this.phaseScale)
+
+    // Phase alpha
+    if (this.tileThingReference.phasedOut) {
+      this.alpha = u.lerp(this.alpha, 0.4, 0.15)
+    }
+    else {
+      this.alpha = u.lerp(this.alpha, 1.0, 0.15)
+    }
+
     // Squishing
     const squishFactor = 0.18
     this.scale[0] *= u.map(this.squish, 0, 1, 1.0, squishFactor)
@@ -84,7 +106,7 @@ export default class Player extends Thing {
     // Move towards and face towards my destination
     const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
-    if (this.sprite.includes('wind')) {
+    if (this.sprite.includes('wind') || this.sprite.includes('void')) {
       if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       }
@@ -108,11 +130,36 @@ export default class Player extends Thing {
     }
     this.lastDestination = [...destination]
 
+    // Phase sprite update
+    if (!!this.tileThingReference.phasedOut !== !!this.wasPhasedOut) {
+      this.updateSprite()
+    }
+    this.wasPhasedOut = this.tileThingReference.phasedOut
+
+    // ========
+    // Rotation
+    // ========
+
+    this.rotation = 0
+
     // Walk animation and bobbing
-    this.walkBob += u.distance(this.position, this.lastPosition)
-    this.drawPosition[0] = this.position[0]
-    this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
-    this.rotation = Math.sin(this.walkBob / 30) * 0.12
+    if (this.tileThingReference.active) {
+      this.walkBob += u.distance(this.position, this.lastPosition)
+      this.drawPosition[0] = this.position[0]
+      this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
+      this.rotation += Math.sin(this.walkBob / 30) * 0.12
+    }
+
+    // Phase rotation
+    if (this.tileThingReference.phasedOut) {
+      this.phaseTime += 1/80
+      this.phaseRotation = Math.sin(this.phaseTime) * 0.7
+    }
+    else {
+      this.phaseTime = 0
+      this.phaseRotation = vec2.lerpAngles(this.phaseRotation, 0, 0.2)
+    }
+    this.rotation += this.phaseRotation
 
     // =================
     // Blob Transforming
@@ -200,8 +247,6 @@ export default class Player extends Thing {
         } else {
           if (this.tileThingReference === board.lastActivePlayer) {
             game.getCamera2D().position = vec2.lerp(game.getCamera2D().position, this.position, 0.75)
-          } else {
-            this.rotation = 0
           }
         }
       }
@@ -261,7 +306,7 @@ export default class Player extends Thing {
 
     // Fire guy passive fire
     if (this.sprite.includes('fire') && !this.tileThingReference.active && !this.tileThingReference.wasActiveBeforeDeath) {
-      if (this.timers.death === undefined) {
+      if (this.timers.death === undefined && !this.tileThingReference.phasedOut) {
         ctx.save()
         ctx.translate(...this.position)
         for (let a = 0; a < 8; a += 1) {
@@ -283,7 +328,7 @@ export default class Player extends Thing {
     // Usually happens if blob guy quick-switches to vine guy then switches back immediately
     // This will render fake vines if the player looks like vine guy but doesn't actually have the type because he already switched back
     if (this.sprite.includes('vine') && this.type !== 'vine' && !this.tileThingReference.active && !this.tileThingReference.wasActiveBeforeDeath) {
-      if (this.timers.death === undefined) {
+      if (this.timers.death === undefined && !this.tileThingReference.phasedOut) {
         const render = (position, direction) => {
           const sprite = vec2.directionToVector(direction)[0] !== 0 ? 'deco_vine' : 'deco_vine_v'
           ctx.save()
@@ -330,6 +375,7 @@ export default class Player extends Thing {
       ctx.globalAlpha = u.map(this.timer('death'), 0.5, 1, 1, 0)
       this.scale = u.squareMap(this.timer('death'), 0.5, 1, 1, 0, true)
     }
+    ctx.globalAlpha = this.alpha
     super.draw(...this.drawPosition)
     this.scale = prevScale
     ctx.restore()
@@ -430,6 +476,25 @@ export default class Player extends Thing {
     }
   }
 
+  createVoidParticle () {
+    if (!(this.sprite.includes('void'))) {
+      return
+    }
+
+    const board = game.getThing('board')
+    const attackDistance = 15
+    if (!board) return
+    for (let i = 0; i < attackDistance; i += 1) {
+      const dir = vec2.directionToVector(this.renderDirection)
+      const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
+      const thingAtPos = board.state.things.filter(x => vec2.equals(x.position, pos))[0]
+      if ((thingAtPos && board.isPhaseable(thingAtPos)) || board.state.phasedOut[pos]) {
+        game.addThing(new VoidParticle(this.tileThingReference.position, pos))
+        return
+      }
+    }
+  }
+
   updateSprite (type, direction) {
     let thing = this.tileThingReference
 
@@ -479,16 +544,26 @@ export default class Player extends Thing {
     // Render order
     // Fire guy is slightly above other guys so there is consistent render order when golem guy stands in his flame
     this.depth = this.sprite.includes('fire') ? 11 : 10
+
+    // Phased out depth
+    if (thing.phasedOut) {
+      this.depth = 4
+    }
   }
 
   npcAnimations (init = false) {
     this.animation = 'idle'
     const board = game.getThing('board')
-    if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead) {
+    if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead && !this.tileThingReference.phasedOut) {
       if (this.sprite.includes('wind')) {
         if (!this.timer('wind')) {
           if (init) { this.createWind() }
           this.after(50, () => (this.active || this.createWind()), 'wind')
+        }
+      }
+      if (this.sprite.includes('void')) {
+        if (!this.timer('void')) {
+          this.after(20, () => (this.active || this.createVoidParticle()), 'void')
         }
       }
       if (this.tileThingReference.type === 'person') {
@@ -499,6 +574,9 @@ export default class Player extends Thing {
         board.getTileHeight(this.tileThingReference.position) === 0 &&
         !(this.tileThingReference.position in board.state.waterlogged)) {
       this.animation = 'swim'
+    }
+    if (this.tileThingReference.phasedOut) {
+      this.animation = 'none'
     }
     if (this.timers.death !== undefined) {
       this.sprite = 'skull'

@@ -532,5 +532,11 @@
     "level": "xraymagnet",
     "prerequisites": ["magnetintro", "xray"],
     "category": "xray"
+  },
+  {
+    "name": "Void Guy Test",
+    "level": "voidtest",
+    "prerequisites": [],
+    "category": "void"
   }
 ]

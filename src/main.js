@@ -23,6 +23,7 @@ await game.loadAssets({
     player_water: 'images/waterguy.png',
     player_magnet: 'images/magnetguy.png',
     player_magnet_alt: 'images/magnetguy_alt.png',
+    player_void: 'images/voidguy.png',
 
     // Blob guy
     player_blob: 'images/blobguy.png',
@@ -64,6 +65,7 @@ await game.loadAssets({
     deco_xray: 'images/xray.png',
     deco_xray_waterlogged: 'images/xray_waterlogged.png',
     deco_leaf: 'images/leaf.png',
+    deco_void_particle: 'images/void_particle.png',
     sign: 'images/sign.png',
 
     // UI
@@ -193,6 +195,7 @@ await game.loadAssets({
     blobchain4: 'json/levels/blobchain4.json',
     blobchain5: 'json/levels/blobchain5.json',
     blobfire: 'json/levels/blobfire.json',
+    voidtest: 'json/levels/voidtest.json',
   },
 
   sounds: {
@@ -216,6 +219,8 @@ await game.loadAssets({
     detach: 'sounds/detach.wav',
     squish: 'sounds/squish.wav',
     xray: 'sounds/xray2.wav',
+    phase_out: 'sounds/phase_out.wav',
+    phase_in: 'sounds/phase_in.wav',
 
     // Music
     puzzle_music: 'sounds/personguy_puzzle1.mp3',

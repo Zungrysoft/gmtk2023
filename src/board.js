@@ -20,18 +20,6 @@ import PauseMenu from './pausemenu.js'
 const tileWidth = 64
 const tileDepth = 64
 const wallDepth = 12
-const waterHeight = 6
-
-const iconMapping = {
-  'bolt': 'iconItemIconBolt',
-  'fire': 'iconItemIconFire',
-}
-const baseMapping = {
-  'up': 'iconItemBaseUp',
-  'down': 'iconItemBaseUp',
-  'left': 'iconItemBaseLeft',
-  'right': 'iconItemBaseRight',
-}
 
 export default class Board extends Thing {
   state = {}
@@ -60,6 +48,7 @@ export default class Board extends Thing {
     this.state.clock = 0
     this.state.actionQueue = []
     this.state.waterlogged = {}
+    this.state.phasedOut = {}
     this.state.turns = 0
     this.state.thingMoveTimestampCounter = 0
     this.state.moveCount = 0
@@ -150,7 +139,7 @@ export default class Board extends Thing {
           setControl = 'switch'
         }
       }
-      
+
       if (game.keysPressed.Escape || game.keysPressed.Backspace || game.buttonsPressed[8] || game.buttonsPressed[9]) {
         game.addThing(new PauseMenu())
       }
@@ -267,6 +256,9 @@ export default class Board extends Thing {
         else if (adv === 'magnet') {
           this.advanceMagnet()
         }
+        else if (adv === 'void') {
+          this.advanceVoid()
+        }
 
         blocked = this.isAnimationBlocking()
       }
@@ -307,6 +299,15 @@ export default class Board extends Thing {
     Object.values(this.state.waterlogged).forEach(thing => {
       if (thing.name === 'deco') {
         game.addThing(new Deco(thing))
+      }
+    })
+
+    Object.values(this.state.phasedOut).forEach(thing => {
+      if (thing.name === 'deco') {
+        game.addThing(new Deco(thing))
+      }
+      if (thing.name === 'player') {
+        game.addThing(new Character(thing))
       }
     })
   }
@@ -436,6 +437,11 @@ export default class Board extends Thing {
         return player
       }
     }
+    for (const player of Object.values(this.state.phasedOut)) {
+      if (player.active) {
+        return player
+      }
+    }
     return undefined
   }
 
@@ -538,7 +544,7 @@ export default class Board extends Thing {
 
   requeueAdvancements() {
     // Define what counts as a "movement advancement" and their priority order
-    const advancements = ['ice', 'magnet', 'vine', 'blob', 'wind', 'waterlog', 'mine', 'fire']
+    const advancements = ['ice', 'magnet', 'vine', 'blob', 'wind', 'waterlog', 'mine', 'fire', 'void']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -579,6 +585,11 @@ export default class Board extends Thing {
     // Get player
     let player = this.getActivePlayer()
     if (!player) {
+      return
+    }
+
+    // Cancel if dead or phased out
+    if (player.dead || player.phasedOut) {
       return
     }
 
@@ -657,6 +668,11 @@ export default class Board extends Thing {
       return undefined
     }
 
+    // Cancel if dead or phased out
+    if (player.dead || player.phasedOut) {
+      return
+    }
+
     if (player.type === 'fire') {
       this.executeFire(player)
       soundmanager.playSound('fire', 0.2)
@@ -688,6 +704,12 @@ export default class Board extends Thing {
     }
 
     let otherPlayer = this.getSwitchPlayer()
+
+    // Cancel if dead or phased out, but only if we're person guy
+    // We are allowed to switch back to person guy
+    if (player.type === 'person' && (player.dead || player.phasedOut)) {
+      return
+    }
 
     if (otherPlayer) {
       player.active = false
@@ -727,7 +749,8 @@ export default class Board extends Thing {
   }
 
   executeFire(player) {
-    if (player.dead) {
+    // Cancel if dead or phased out
+    if (player.dead || player.phasedOut) {
       return
     }
 
@@ -796,6 +819,11 @@ export default class Board extends Thing {
           didRemoveIce = true
         }
       }
+    }
+
+    // Cancel if dead or phased out
+    if (player.dead || player.phasedOut) {
+      return
     }
 
     // Build ice around this player
@@ -943,21 +971,175 @@ export default class Board extends Thing {
     }
   }
 
-  sortBlobs(a, b) {
+  advanceVoid() {
+    // Create empty set for executeVoid() to store object id's that have been phased out.
+    let newlyPhasedOut = new Set()
+    let totalPhasedOut = new Set()
+
+    // Iterate over void guys
+    const voidPlayers = this.getThingsByName('player').filter((t) => t.type === 'void')
+    for (const player of voidPlayers) {
+      if (!player.active) {
+        this.executeVoid(player, newlyPhasedOut, totalPhasedOut)
+      }
+    }
+
+    // Phase back in all phased out things that were not phased out by executeVoid()
+    let didPhaseIn = false
+    for (const position in this.state.phasedOut) {
+      let thing = this.state.phasedOut[position]
+      if (!totalPhasedOut.has(thing.id)) {
+        didPhaseIn = this.phaseIn(thing)
+      }
+    }
+
+    // If something was phased back in by the above code, we need to requeue advancements
+    if (didPhaseIn || newlyPhasedOut.size > 0) {
+      if (didPhaseIn && newlyPhasedOut.size > 0) {
+        console.log("Requeue on both")
+      }
+      else if (didPhaseIn) {
+        console.log("Requeue on phase in")
+      }
+      else {
+        console.log("Requeue on phase out")
+      }
+      this.requeueAdvancements()
+    }
+  }
+
+  isPhaseable(thing) {
+    if (thing.name === 'deco') {
+      if (!['vine'].includes(thing.type)) {
+        return true
+      }
+    }
+    if (thing.name === 'player') {
+      return true
+    }
+    return false
+  }
+
+  executeVoid(player, newlyPhasedOut, totalPhasedOut) {
+    // Cancel if dead or phased out
+    if (player.dead || player.phasedOut) {
+      return
+    }
+
+    // Do not do anything if about to be waterlogged (and are thus about to die)
+    if (this.isInWater(player)) {
+      return
+    }
+
+    let curPos = player.position
+    let delta = vec2.directionToVector(player.direction)
+    const attackDistance = 15
+    let i = 0
+
+    while (i < attackDistance) {
+      // Advance
+      curPos = vec2.add(curPos, delta)
+      i ++
+
+      // Blocked by walls
+      const tileHeight = this.getTileHeight(curPos)
+      if (tileHeight > 1) {
+        return
+      }
+
+      // Found already phased-out thing
+      const phasedOutThing = this.state.phasedOut[curPos]
+      if (phasedOutThing) {
+        // Mark it as phased out to keep it phased out, then return
+        totalPhasedOut.add(phasedOutThing.id)
+        return
+      }
+
+      // Found a thing to phase
+      const foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && this.isPhaseable(x))[0]
+      if (foundThing) {
+        newlyPhasedOut.add(foundThing.id)
+        totalPhasedOut.add(foundThing.id)
+        this.phaseOut(foundThing)
+        break
+      }
+    }
+  }
+
+  phaseOut(thing) {
+    // Make sure thing is not already phased out
+    if (thing.phasedOut) {
+      return false
+    }
+
+    // Make sure there isn't already something phased out at this location
+    if (this.state.phasedOut[thing.position]) {
+      return false
+    }
+
+    // Add it to phased-out zone
+    thing.phasedOut = true
+    this.state.phasedOut[thing.position] = thing
+
+    // Remove it from main thing list
+    this.state.things = this.state.things.filter(x => x.id !== thing.id)
+
+    // Run phase out function on entity in case it has state updates to do
+    this.executePlayerPhaseOut(thing)
+
+    // Sound effect
+    soundmanager.playSound('phase_out', 0.3, [1.3, 1.5])
+    console.log("Phased out " + thing.name + "-" + thing.type)
+
+    return true
+  }
+
+  phaseIn(thing) {
+    // Make sure thing is not already phased in
+    if (!thing.phasedOut) {
+      return false
+    }
+
+    // Make sure there isn't already something in the main thing list at this location
+    // We can't phase back in if another thing is in this spot
+    if (this.state.things.filter(x => vec2.equals(x.position, thing.position)).length > 0) {
+      return false
+    }
+
+    // Add it to main thing list
+    thing.phasedOut = false
+    this.state.things.push(thing)
+
+    // Remove it from phased-out zone
+    delete this.state.phasedOut[thing.position]
+
+    // Sound effect
+    soundmanager.playSound('phase_in', 0.3, [1.2, 1.4])
+    console.log("Phased in " + thing.name + "-" + thing.type)
+
+    return true
+  }
+
+  sortByMoveTimestamp(a, b) {
     // Prioritize blob that most recently moved
     return b.thingMoveTimestamp - a.thingMoveTimestamp
   }
 
   advanceBlob() {
     // Iterate over blob guys
-    // Sort them so that the active blob guy is first; resolves certain index conditions
-    let blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob).sort(this.sortBlobs)
+    // Sort them by move timestamp; resolves certain index conditions
+    let blobPlayers = this.getThingsByName('player').filter((t) => t.isBlob).sort(this.sortByMoveTimestamp)
     for (const player of blobPlayers) {
       this.executeBlob(player)
     }
   }
 
   executeBlob(player) {
+    // Cancel if dead or phased out
+    if (player.dead || player.phasedOut) {
+      return
+    }
+
     let lookingAt = this.getLookingAt(player, {directionKey:'blobDirection'})
     let previousState = {...player}
     if (lookingAt && lookingAt.name === 'player' && lookingAt.type !== 'person') {
@@ -1059,7 +1241,7 @@ export default class Board extends Thing {
     if (thing.attached) {
       const attached = this.state.things.filter(x => x.id === thing.attached)[0]
       // Follow attached thing
-      if (attached) {
+      if (attached && !attached.dead && !attached.phaseOut) {
         // Determine if we should break the connection
 
         // Make sure the attached thing is still adjacent to the attachment point
@@ -1258,8 +1440,8 @@ export default class Board extends Thing {
       return
     }
 
-    // Do not extend vines if dead
-    if (player.dead) {
+    // Do not extend vines if dead or phased out
+    if (player.dead || player.phasedOut) {
       return
     }
 
@@ -1397,6 +1579,29 @@ export default class Board extends Thing {
     }
   }
 
+  executePlayerPhaseOut(player) {
+    // Exit if this is not a player
+    if (player.name !== 'player') {
+      return
+    }
+
+    // Vine guys must update their vines
+    if (player.type === 'vine' || player.isBlob) {
+      this.executeRetractVines(player)
+    }
+
+    // Ice guy must kill all his ice
+    if (player.type === 'ice') {
+      for (const key in this.state.waterlogged) {
+        let thing = this.state.waterlogged[key]
+        if (thing.type === 'ice' && thing.owner === player.id) {
+          this.state.waterlogged[key].dead = true
+          delete this.state.waterlogged[key]
+        }
+      }
+    }
+  }
+
   executePlayerDeath(player) {
     // Exit if this is not a player
     if (player.name !== 'player') {
@@ -1518,13 +1723,18 @@ export default class Board extends Thing {
       let levelName = 'You are dead'
       let activePlayer = this.getActivePlayer()
       if (activePlayer) {
-        const name = activePlayer.type
-        const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
-        levelName = `You are ${capitalizedName} Guy`
+        if (activePlayer.phasedOut) {
+          levelName = 'You are incorporeal'
+        }
+        else {
+          const name = activePlayer.type
+          const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
+          levelName = `You are ${capitalizedName} Guy`
 
-        // Question mark on blob guy clones
-        if (activePlayer.isBlob && activePlayer.type !== 'blob') {
-          levelName += '?'
+          // Question mark on blob guy clones
+          if (activePlayer.isBlob && activePlayer.type !== 'blob') {
+            levelName += '?'
+          }
         }
       }
       ctx.fillText(levelName, 0, 0)

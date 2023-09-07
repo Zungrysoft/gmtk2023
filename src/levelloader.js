@@ -117,6 +117,7 @@ export function getLevelNumber(level) {
     'magnet': 'E',
     'blob': 'F',
     'xray': 'G',
+    'void': 'H',
   }
 
   const category = getLevelList().filter(x => x.level === level)[0]?.category

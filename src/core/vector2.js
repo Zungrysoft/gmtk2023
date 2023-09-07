@@ -108,6 +108,10 @@ export function angleToVector (angle, length = 1) {
   return [Math.cos(angle) * length, Math.sin(angle) * length]
 }
 
+export function vectorToAngle(vector) {
+  return Math.atan2(vector[1], vector[0]);
+}
+
 export function angleDistance(a, b) {
   // Bind angles to be from 0 to 2*PI
   a = a % (Math.PI*2)

@@ -14,13 +14,13 @@ export default class Leaf extends Thing {
     this.position = position.map(x => x * 64 + 32)
     this.position[0] += (Math.random() - 0.5) * 32
     this.position[1] += (Math.random() - 0.5) * 32
-    this.direction = vec2.angleToVector(Math.random() * Math.PI*2)
+    this.velocity = vec2.angleToVector(Math.random() * Math.PI*2, 3)
     this.rotation = Math.random() * Math.PI*2
   }
 
   update () {
     this.time += 1
-    this.position = vec2.add(this.position, vec2.scale(this.direction, 3))
+    this.position = vec2.add(this.position, this.velocity)
     this.rotation += 0.16
     if (this.time > this.liveTime) {
       this.dead = true

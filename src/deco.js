@@ -11,9 +11,13 @@ import Thing from './core/thing.js'
 export default class Deco extends Thing {
   sprite = 'undefined_sprite'
   time = 0
+  wasPhasedOut = false
+  phaseTime = 0
+  phaseScale = 1.0
   lastPosition = [0, 0]
   drawPosition = [0, 0]
   depth = 5
+  alpha = 1.0
   wasAttached = false
   lastAttachmentCount = 0
   wasWaterlogged = false
@@ -36,6 +40,9 @@ export default class Deco extends Thing {
     this.wasWaterlogged = tileThingReference.waterlogged
     this.wasAttached = tileThingReference.attached
     this.lastAttachmentCount = tileThingReference.attachmentCount
+    this.phaseScale = tileThingReference.phasedOut ? 1.3 : 1.0
+    this.wasPhasedOut = tileThingReference.phasedOut
+    this.alpha = tileThingReference.phasedOut ? 0.4 : 1.0
   }
 
   update () {
@@ -62,6 +69,39 @@ export default class Deco extends Thing {
       const scalar = u.squareMap(this.timer('announce'), 0, 1, 1.3, 1)
       this.scale = [scalar, scalar]
     }
+
+    // Phase scale
+    if (this.tileThingReference.phasedOut) {
+      this.phaseScale = u.lerp(this.phaseScale, 1.3, 0.2)
+    }
+    else {
+      this.phaseScale = u.lerp(this.phaseScale, 1.0, 0.2)
+    }
+    this.scale = vec2.scale(this.scale, this.phaseScale)
+
+    // Calculate rotation
+    if (this.tileThingReference.phasedOut) {
+      this.phaseTime += 1/80
+      this.rotation = Math.sin(this.phaseTime) * 0.7
+    }
+    else {
+      this.phaseTime = 0
+      this.rotation = vec2.lerpAngles(this.rotation, 0, 0.2)
+    }
+
+    // Phase alpha
+    if (this.tileThingReference.phasedOut) {
+      this.alpha = u.lerp(this.alpha, 0.4, 0.15)
+    }
+    else {
+      this.alpha = u.lerp(this.alpha, 1.0, 0.15)
+    }
+
+    // Phase sprite update
+    if (!!this.tileThingReference.phasedOut !== !!this.wasPhasedOut) {
+      this.updateSprite()
+    }
+    this.wasPhasedOut = this.tileThingReference.phasedOut
 
     // Move towards and face towards my destination
     const destination = this.getDestination()
@@ -98,6 +138,7 @@ export default class Deco extends Thing {
 
     ctx.save()
     const prevScale = this.scale
+    ctx.globalAlpha = this.alpha
     super.draw(...this.drawPosition)
     this.scale = prevScale
 
@@ -146,7 +187,12 @@ export default class Deco extends Thing {
     // Render depth
     this.depth = thing.waterlogged ? -5 : 5
 
+    // Phased out
+    if (thing.phasedOut) {
+      this.depth = 4
+    }
+
     // Animation
-    this.animation = (type === 'xray' && !thing.waterlogged) ? 'computer' : 'idle'
+    this.animation = (type === 'xray' && !thing.waterlogged && !thing.phasedOut) ? 'computer' : 'idle'
   }
 }
