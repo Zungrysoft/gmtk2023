@@ -552,6 +552,12 @@
     "category": "void"
   },
   {
+    "name": "Save This Soul",
+    "level": "phaseperson",
+    "prerequisites": ["voidintro"],
+    "category": "void"
+  },
+  {
     "name": "The Chokepoint II",
     "level": "voidfire",
     "prerequisites": ["voidfire2"],

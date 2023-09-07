@@ -1079,7 +1079,7 @@ export default class Board extends Thing {
     this.executePlayerPhaseOut(thing)
 
     // Sound effect
-    soundmanager.playSound('phase_out', 0.3, [1.3, 1.5])
+    soundmanager.playSound('phase_out', 0.22, [1.3, 1.5])
 
     return true
   }
