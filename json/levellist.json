@@ -541,14 +541,20 @@
   },
   {
     "name": "The Chokepoint",
-    "level": "voidfire",
+    "level": "voidfire2",
     "prerequisites": ["voidintro"],
+    "category": "void"
+  },
+  {
+    "name": "The Chokepoint II",
+    "level": "voidfire",
+    "prerequisites": ["voidfire2"],
     "category": "void"
   },
   {
     "name": "Hold it Right There!",
     "level": "stand",
-    "prerequisites": ["voidintro", "corners"],
+    "prerequisites": ["voidfire2", "corners"],
     "category": "void"
   }
 ]

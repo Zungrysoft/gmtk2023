@@ -200,6 +200,7 @@ await game.loadAssets({
     voidfire: 'json/levels/voidfire.json',
     voidintro: 'json/levels/voidintro.json',
     stand: 'json/levels/stand.json',
+    voidfire2: 'json/levels/voidfire2.json',
   },
 
   sounds: {
