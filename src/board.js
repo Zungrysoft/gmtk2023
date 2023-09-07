@@ -995,15 +995,6 @@ export default class Board extends Thing {
 
     // If something was phased back in by the above code, we need to requeue advancements
     if (didPhaseIn || newlyPhasedOut.size > 0) {
-      if (didPhaseIn && newlyPhasedOut.size > 0) {
-        console.log("Requeue on both")
-      }
-      else if (didPhaseIn) {
-        console.log("Requeue on phase in")
-      }
-      else {
-        console.log("Requeue on phase out")
-      }
       this.requeueAdvancements()
     }
   }
@@ -1089,7 +1080,6 @@ export default class Board extends Thing {
 
     // Sound effect
     soundmanager.playSound('phase_out', 0.3, [1.3, 1.5])
-    console.log("Phased out " + thing.name + "-" + thing.type)
 
     return true
   }
@@ -1115,7 +1105,6 @@ export default class Board extends Thing {
 
     // Sound effect
     soundmanager.playSound('phase_in', 0.3, [1.2, 1.4])
-    console.log("Phased in " + thing.name + "-" + thing.type)
 
     return true
   }

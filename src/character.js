@@ -143,12 +143,10 @@ export default class Player extends Thing {
     this.rotation = 0
 
     // Walk animation and bobbing
-    if (this.tileThingReference.active) {
-      this.walkBob += u.distance(this.position, this.lastPosition)
-      this.drawPosition[0] = this.position[0]
-      this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
-      this.rotation += Math.sin(this.walkBob / 30) * 0.12
-    }
+    this.walkBob += u.distance(this.position, this.lastPosition)
+    this.drawPosition[0] = this.position[0]
+    this.drawPosition[1] = this.position[1] + Math.sin(this.walkBob / 10) * 3
+    this.rotation += Math.sin(this.walkBob / 30) * 0.12
 
     // Phase rotation
     if (this.tileThingReference.phasedOut) {
