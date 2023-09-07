@@ -540,6 +540,12 @@
     "category": "void"
   },
   {
+    "name": "Woodworks",
+    "level": "voiddouble",
+    "prerequisites": ["voidintro"],
+    "category": "void"
+  },
+  {
     "name": "Shadow Duel",
     "level": "voidring",
     "prerequisites": ["voidintro"],
@@ -566,7 +572,7 @@
   {
     "name": "Hold it Right There!",
     "level": "stand",
-    "prerequisites": ["voidfire2", "corners"],
+    "prerequisites": ["voiddouble", "corners"],
     "category": "void"
   }
 ]
