@@ -394,7 +394,7 @@ export default class Player extends Thing {
     ctx.translate(...game.getCamera2D().position.map(x => x * -1))
     // Draw cursor over myself when i'm the next to be selected
     if (board) {
-      if (this.isSelected && tileThing.type !== 'person') {
+      if (this.isSelected && tileThing.type !== 'person' && !board.getActivePlayer()?.phasedOut) {
         ctx.save()
         ctx.translate(this.position[0], this.position[1])
         ctx.rotate(this.time / 30)
@@ -485,6 +485,13 @@ export default class Player extends Thing {
     for (let i = 0; i < attackDistance; i += 1) {
       const dir = vec2.directionToVector(this.renderDirection)
       const pos = vec2.add(this.tileThingReference.position, vec2.scale(dir, i + 1))
+
+      // Blocked by wall
+      if (board.getTileHeight(pos) > 1) {
+        return
+      }
+
+      // Found thing
       const thingAtPos = board.state.things.filter(x => vec2.equals(x.position, pos))[0]
       if ((thingAtPos && board.isPhaseable(thingAtPos)) || board.state.phasedOut[pos]) {
         game.addThing(new VoidParticle(this.tileThingReference.position, pos))

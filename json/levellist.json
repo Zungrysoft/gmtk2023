@@ -534,9 +534,15 @@
     "category": "xray"
   },
   {
-    "name": "Void Guy Test",
-    "level": "voidtest",
-    "prerequisites": [],
+    "name": "Surrender to the Void",
+    "level": "voidintro",
+    "prerequisites": ["metalmaze"],
+    "category": "void"
+  },
+  {
+    "name": "The Chokepoint",
+    "level": "voidfire",
+    "prerequisites": ["voidintro"],
     "category": "void"
   }
 ]

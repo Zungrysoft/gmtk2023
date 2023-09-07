@@ -38,6 +38,7 @@ await game.loadAssets({
     player_vine_blob: 'images/blobguy_vineguy.png',
     player_water_blob: 'images/blobguy_waterguy.png',
     player_magnet_blob: 'images/blobguy_magnetguy.png',
+    player_void_blob: 'images/blobguy_voidguy.png',
 
     // Deco Objects
     deco_rock: 'images/rock.png',
@@ -196,6 +197,8 @@ await game.loadAssets({
     blobchain5: 'json/levels/blobchain5.json',
     blobfire: 'json/levels/blobfire.json',
     voidtest: 'json/levels/voidtest.json',
+    voidfire: 'json/levels/voidfire.json',
+    voidintro: 'json/levels/voidintro.json',
   },
 
   sounds: {
