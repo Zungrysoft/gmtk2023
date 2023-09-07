@@ -544,5 +544,11 @@
     "level": "voidfire",
     "prerequisites": ["voidintro"],
     "category": "void"
+  },
+  {
+    "name": "Hold it Right There!",
+    "level": "stand",
+    "prerequisites": ["voidintro", "corners"],
+    "category": "void"
   }
 ]
