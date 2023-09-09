@@ -781,7 +781,7 @@ export default class Board extends Thing {
       }
 
       // Wind guy should immediately show a visual of his wind once you lose control of him
-      if (player.type === 'wind') {
+      if (['wind', 'butter'].includes(player.type)) {
         for (const thing of game.getThings()) {
           if (thing.tileThingReference === player) {
             thing.createWind()
@@ -1682,7 +1682,7 @@ export default class Board extends Thing {
     player.thingMoveTimestamp = this.state.thingMoveTimestampCounter ++
 
     // Wind guy should reset his wind visual
-    if (player.type === 'wind' && !player.active && !this.isInWater(player)) {
+    if (['wind', 'butter'].includes(player.type) && !player.active && !this.isInWater(player)) {
       for (const thing of game.getThings()) {
         if (thing.tileThingReference === player) {
           thing.createWind()
