@@ -576,8 +576,8 @@
     "category": "void"
   },
   {
-    "name": "Butter Guy Test",
-    "level": "buttertest",
+    "name": "Butter Side Up",
+    "level": "butterintro",
     "prerequisites": [],
     "category": "butter"
   }

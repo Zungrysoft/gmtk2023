@@ -207,6 +207,7 @@ await game.loadAssets({
     phaseperson: 'json/levels/phaseperson.json',
     voiddouble: 'json/levels/voiddouble.json',
     buttertest: 'json/levels/buttertest.json',
+    butterintro: 'json/levels/butterintro.json',
   },
 
   sounds: {
