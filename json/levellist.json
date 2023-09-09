@@ -574,5 +574,11 @@
     "level": "stand",
     "prerequisites": ["voiddouble", "corners"],
     "category": "void"
+  },
+  {
+    "name": "Butter Guy Test",
+    "level": "buttertest",
+    "prerequisites": [],
+    "category": "butter"
   }
 ]

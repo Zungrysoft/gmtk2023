@@ -106,7 +106,7 @@ export default class Player extends Thing {
     // Move towards and face towards my destination
     const destination = this.getDestination()
     this.position = vec2.lerp(this.position, destination, 0.25)
-    if (this.sprite.includes('wind') || this.sprite.includes('void')) {
+    if (this.spriteIncludes(['wind', 'butter', 'void'])) {
       if (vec2.directionToVector(this.tileThingReference.direction)[0] === -1) {
         this.scale[0] = Math.abs(this.scale[0]) * -1
       }
@@ -456,8 +456,17 @@ export default class Player extends Thing {
     return this.tileThingReference.active
   }
 
+  spriteIncludes(list) {
+    for (const sprite of list) {
+      if (this.sprite.includes(sprite)) {
+        return true
+      }
+    }
+    return false
+  }
+
   createWind () {
-    if (!(this.sprite.includes('wind'))) {
+    if (!this.spriteIncludes(['wind', 'butter'])) {
       return
     }
 
@@ -470,7 +479,8 @@ export default class Player extends Thing {
       if (board.isBlockingAt(pos, true)) {
         break
       }
-      game.addThing(new Wind(pos, dir))
+      const showDir = this.sprite.includes('butter') ? vec2.scale(dir, -1) : dir
+      game.addThing(new Wind(pos, showDir))
     }
   }
 
@@ -515,8 +525,8 @@ export default class Player extends Thing {
       this.sprite += '_alt'
     }
 
-    // Special logic for wind guy
-    if (['wind'].includes(type)) {
+    // Special logic for directional guys
+    if (['wind', 'butter'].includes(type)) {
       if (vec2.directionToVector(thing.direction)[1] === -1) {
         this.sprite += '_back'
       }
@@ -542,7 +552,7 @@ export default class Player extends Thing {
     this.renderDirection = direction
 
     // Create wind
-    if (this.sprite.includes('wind') && !thing.active) {
+    if ((this.sprite.includes('wind') || this.sprite.includes('butter')) && !thing.active) {
       this.createWind()
     }
 
@@ -560,7 +570,7 @@ export default class Player extends Thing {
     this.animation = 'idle'
     const board = game.getThing('board')
     if (board && this.tileThingReference !== board.getActivePlayer() && !this.tileThingReference.dead && !this.tileThingReference.phasedOut) {
-      if (this.sprite.includes('wind')) {
+      if (this.sprite.includes('wind') || this.sprite.includes('butter')) {
         if (!this.timer('wind')) {
           if (init) { this.createWind() }
           this.after(50, () => (this.active || this.createWind()), 'wind')

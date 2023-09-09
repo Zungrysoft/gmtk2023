@@ -235,6 +235,9 @@ export default class Board extends Thing {
         else if (adv === 'wind') {
           this.advanceWind()
         }
+        else if (adv === 'butter') {
+          this.advanceButter()
+        }
         else if (adv === 'fire') {
           this.advanceFire()
         }
@@ -512,7 +515,7 @@ export default class Board extends Thing {
   tileIsInWindTunnel(position, direction) {
     let delta = vec2.directionToVector(vec2.oppositeDirection(direction))
     let curPos = position
-    for (let i = 0; i < 12; i ++) {
+    for (let i = 0; i < 15; i ++) {
       curPos = vec2.add(curPos, delta)
 
       // Found a wind guy
@@ -542,9 +545,42 @@ export default class Board extends Thing {
     return 0
   }
 
+  tileIsInSuckTunnel(position, direction) {
+    let delta = vec2.directionToVector(direction)
+    let curPos = position
+    for (let i = 0; i < 15; i ++) {
+      curPos = vec2.add(curPos, delta)
+
+      // Found a butter guy
+      let foundButter = this.state.things.filter(x =>
+        vec2.equals(curPos, x.position) &&
+        x.name === 'player' &&
+        x.type === 'butter' &&
+        x.direction === vec2.oppositeDirection(direction) &&
+        !(x.active)
+      )[0]
+      if (foundButter) {
+        return i+1
+      }
+
+      // Wind is blocked by walls
+      const tileHeight = this.getTileHeight(curPos)
+      if (tileHeight > 1) {
+        break
+      }
+
+      // Wind is blocked by deco objects
+      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && ['deco', 'player'].includes(x.name))[0]
+      if (blockingThing) {
+        break
+      }
+    }
+    return 0
+  }
+
   requeueAdvancements() {
     // Define what counts as a "movement advancement" and their priority order
-    const advancements = ['ice', 'magnet', 'vine', 'blob', 'wind', 'waterlog', 'void', 'mine', 'fire']
+    const advancements = ['ice', 'magnet', 'vine', 'blob', 'wind', 'butter', 'waterlog', 'void', 'mine', 'fire']
 
     // Remove all pre-existing movement items from the queue
     for (let i = this.advancementData.queue.length-1; i >= 0; i --) {
@@ -621,6 +657,14 @@ export default class Board extends Thing {
       return
     }
 
+    // Player can't move towards a headwind
+    if (this.tileIsInSuckTunnel(player.position, vec2.oppositeDirection(control)) > 0) {
+      // Play wind sound
+      soundmanager.playSound('wind', 0.2)
+
+      return
+    }
+
     // Check if there is an thing blocking us
     const blockingThing = this.state.things.filter(x => vec2.equals(newPosition, x.position) && ['deco', 'player'].includes(x.name))[0]
     if (blockingThing) {
@@ -679,6 +723,17 @@ export default class Board extends Thing {
     }
     if (player.type === 'wind') {
       this.executeWind(player)
+      soundmanager.playSound('wind', 0.2)
+
+      // Play the wind animation on the wind guy's character
+      for (const thing of game.getThings()) {
+        if (thing.tileThingReference === player) {
+          thing.createWind()
+        }
+      }
+    }
+    if (player.type === 'butter') {
+      this.executeButter(player)
       soundmanager.playSound('wind', 0.2)
 
       // Play the wind animation on the wind guy's character
@@ -1313,16 +1368,6 @@ export default class Board extends Thing {
     return false
   }
 
-  advanceWind() {
-    // Iterate over wind guys
-    const windPlayers = this.getThingsByName('player').filter((t) => t.type === 'wind')
-    for (const player of windPlayers) {
-      if (!player.active) {
-        this.executeWind(player)
-      }
-    }
-  }
-
   isPushableByWind(thing) {
     if (thing.name === 'player') {
       return true
@@ -1331,6 +1376,16 @@ export default class Board extends Thing {
       return true
     }
     return false
+  }
+
+  advanceWind() {
+    // Iterate over wind guys
+    const windPlayers = this.getThingsByName('player').filter((t) => t.type === 'wind')
+    for (const player of windPlayers) {
+      if (!player.active) {
+        this.executeWind(player)
+      }
+    }
   }
 
   executeWind(player) {
@@ -1404,6 +1459,74 @@ export default class Board extends Thing {
     // If something was pushed at least one tile, play sound effect and requeue advancements
     if (didPush) {
       soundmanager.playSound('wind', 0.2)
+      this.requeueAdvancements()
+      this.playerMoved(foundThing)
+    }
+  }
+
+  advanceButter() {
+    // Iterate over wind guys
+    const butterPlayers = this.getThingsByName('player').filter((t) => t.type === 'butter')
+    for (const player of butterPlayers) {
+      if (!player.active) {
+        this.executeButter(player)
+      }
+    }
+  }
+
+  executeButter(player) {
+    // Do not blow if dead
+    if (player.dead) {
+      return
+    }
+
+    // Do not blow if about to be waterlogged (and are thus about to die)
+    if (this.isInWater(player)) {
+      return
+    }
+
+    let curPos = player.position
+    let delta = vec2.directionToVector(player.direction)
+    const blowDistance = 15
+    let foundThing = undefined
+    let i = 0
+
+    let didPush = false
+
+    while (i < blowDistance) {
+      // Advance
+      curPos = vec2.add(curPos, delta)
+      i ++
+
+      // Wind is blocked by walls
+      const tileHeight = this.getTileHeight(curPos)
+      if (tileHeight > 1) {
+        return
+      }
+
+      // Wind is blocked by deco objects
+      const blockingThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && !this.isPushableByWind(x))[0]
+      if (blockingThing) {
+        return
+      }
+
+      // Found a player to push
+      foundThing = this.state.things.filter(x => vec2.equals(curPos, x.position) && this.isPushableByWind(x))[0]
+      if (foundThing) {
+        break
+      }
+    }
+
+    // If we found a player to pull, place them in front of this guy
+    if (foundThing && i > 1) {
+      // Move player
+      foundThing.position = vec2.add(player.position, delta)
+      didPush = true
+
+      // Sound effect
+      soundmanager.playSound('wind', 0.2)
+
+      // Movement state update stuff
       this.requeueAdvancements()
       this.playerMoved(foundThing)
     }
@@ -1746,8 +1869,12 @@ export default class Board extends Thing {
         text = 'Press space to shoot fire!'
         color = '#FF711C'
       }
-      if (this.getActivePlayer()?.type === 'wind') {
+      else if (this.getActivePlayer()?.type === 'wind') {
         text = 'Press space to blow wind!'
+        color = '#C1F3FF'
+      }
+      else if (this.getActivePlayer()?.type === 'butter') {
+        text = 'Press space to create suction!'
         color = '#C1F3FF'
       }
       ctx.fillText(text, 0, 0)

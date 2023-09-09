@@ -24,6 +24,8 @@ await game.loadAssets({
     player_magnet: 'images/magnetguy.png',
     player_magnet_alt: 'images/magnetguy_alt.png',
     player_void: 'images/voidguy.png',
+    player_butter: 'images/butterguy.png',
+    player_butter_front: 'images/butterguy2.png',
 
     // Blob guy
     player_blob: 'images/blobguy.png',
@@ -204,6 +206,7 @@ await game.loadAssets({
     voidring: 'json/levels/voidring.json',
     phaseperson: 'json/levels/phaseperson.json',
     voiddouble: 'json/levels/voiddouble.json',
+    buttertest: 'json/levels/buttertest.json',
   },
 
   sounds: {
