@@ -733,15 +733,15 @@ export default class Board extends Thing {
       }
     }
     if (player.type === 'butter') {
-      this.executeButter(player)
-      soundmanager.playSound('wind', 0.2)
-
       // Play the wind animation on the wind guy's character
       for (const thing of game.getThings()) {
         if (thing.tileThingReference === player) {
           thing.createWind()
         }
       }
+
+      this.executeButter(player)
+      soundmanager.playSound('wind', 0.2)
     }
     if (player.type === 'person') {
       this.advanceSwitch('switch')

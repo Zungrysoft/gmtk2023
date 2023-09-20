@@ -208,6 +208,7 @@ await game.loadAssets({
     voiddouble: 'json/levels/voiddouble.json',
     buttertest: 'json/levels/buttertest.json',
     butterintro: 'json/levels/butterintro.json',
+    snowlabyrinth: 'json/levels/snowlabyrinth.json',
   },
 
   sounds: {

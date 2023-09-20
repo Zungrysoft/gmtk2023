@@ -578,7 +578,13 @@
   {
     "name": "Butter Side Up",
     "level": "butterintro",
-    "prerequisites": [],
+    "prerequisites": ["dodging"],
+    "category": "butter"
+  },
+  {
+    "name": "Remote Control",
+    "level": "snowlabyrinth",
+    "prerequisites": ["butterintro"],
     "category": "butter"
   }
 ]
