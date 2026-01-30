@@ -1,424 +1,88 @@
 [
   {
-    "name": "Baby's First Mind Control",
-    "level": "intro",
-    "prerequisites": [],
-    "category": "intro"
-  },
-  {
-    "name": "Four Square",
-    "level": "four",
-    "prerequisites": ["intro"],
-    "category": "intro"
-  },
-  {
-    "name": "Double Trouble",
-    "level": "fire",
-    "prerequisites": ["four"],
-    "category": "intro"
-  },
-  {
-    "name": "Fountain of Flame",
-    "level": "fountain",
-    "prerequisites": ["fire"],
-    "category": "intro"
-  },
-  {
-    "name": "Riverway",
-    "level": "cove",
-    "prerequisites": ["fountain"],
-    "category": "intro"
-  },
-  {
-    "name": "Sewers",
-    "level": "sewers",
-    "prerequisites": ["fire"],
-    "category": "intro"
-  },
-  {
     "name": "Time Out",
     "level": "around",
     "prerequisites": ["cove"],
     "category": "intro"
   },
-  {
-    "name": "Box Bridge",
-    "level": "distance",
-    "prerequisites": ["fire"],
-    "category": "intro"
-  },
-  {
-    "name": "Blazing Trails",
-    "level": "dodging3",
-    "prerequisites": ["fire"],
-    "category": "intro"
-  },
-  {
-    "name": "Going For a Swim",
-    "level": "swim",
-    "prerequisites": ["fire"],
-    "category": "intro"
-  },
-  {
-    "name": "Handle the Heat",
-    "level": "safety2",
-    "prerequisites": ["distance"],
-    "category": "intro"
-  },
-  {
-    "name": "Bridge Engineers",
-    "level": "bridge2",
-    "prerequisites": ["sokoban", "sewers"],
-    "category": "intro"
-  },
-  {
-    "name": "Rockoban",
-    "level": "sokoban",
-    "prerequisites": ["sewers"],
-    "category": "intro"
-  },
+  
+  
   {
     "name": "Corners",
     "level": "corners",
     "prerequisites": ["sokoban", "distance", "dodging3", "safety", "cove"],
     "category": "intro"
   },
-  {
-    "name": "Bridge Engineers II",
-    "level": "bridge",
-    "prerequisites": ["bridge2"],
-    "category": "intro"
-  },
-  {
-    "name": "Air Ride",
-    "level": "windintro",
-    "prerequisites": ["cove"],
-    "category": "wind"
-  },
-  {
-    "name": "Remote Locations",
-    "level": "bird",
-    "prerequisites": ["windintro"],
-    "category": "wind"
-  },
-  {
-    "name": "Island Access",
-    "level": "islets",
-    "prerequisites": ["windintro"],
-    "category": "wind"
-  },
-  {
-    "name": "Double Back",
-    "level": "doublestop",
-    "prerequisites": ["bird"],
-    "category": "wind"
-  },
-  {
-    "name": "Coming Your Way!",
-    "level": "warehouse",
-    "prerequisites": ["islets", "swim"],
-    "category": "wind"
-  },
+  
+  
   {
     "name": "Dodge and Burn",
     "level": "dodging",
     "prerequisites": ["doublestop", "dodging3", "distance"],
     "category": "wind"
   },
-  {
-    "name": "Far Out",
-    "level": "safety",
-    "prerequisites": ["windintro", "dodging3"],
-    "category": "wind"
-  },
-  {
-    "name": "Headwind",
-    "level": "headwind",
-    "prerequisites": ["islets"],
-    "category": "wind"
-  },
-  {
-    "name": "Hop Across",
-    "level": "islands",
-    "prerequisites": ["headwind", "dodging3"],
-    "category": "wind"
-  },
-  {
-    "name": "Throw it Over",
-    "level": "windoban",
-    "prerequisites": ["islets", "sewers"],
-    "category": "wind"
-  },
+  
+  
+  
+  
   {
     "name": "Wind Blocker",
     "level": "doublestack",
     "prerequisites": ["windintro"],
     "category": "wind"
   },
-  {
-    "name": "Cavern Lake",
-    "level": "lake",
-    "prerequisites": ["islands"],
-    "category": "wind"
-  },
-  {
-    "name": "Windy Day",
-    "level": "windy",
-    "prerequisites": ["lake"],
-    "category": "wind"
-  },
-  {
-    "name": "Split Stream",
-    "level": "split",
-    "prerequisites": ["lake"],
-    "category": "wind"
-  },
-  {
-    "name": "Hot to the Touch",
-    "level": "windstop",
-    "prerequisites": ["warehouse"],
-    "category": "wind"
-  },
-  {
-    "name": "Fire Gate",
-    "level": "seatbelt",
-    "prerequisites": ["corners", "islets"],
-    "category": "wind"
-  },
-  {
-    "name": "Alongside the Maze",
-    "level": "maze",
-    "prerequisites": ["doublestack"],
-    "category": "wind"
-  },
-  {
-    "name": "Downforce",
-    "level": "windoban2",
-    "prerequisites": ["windy"],
-    "category": "wind"
-  },
-  {
-    "name": "Forward Progress",
-    "level": "windsquad",
-    "prerequisites": ["doublestack", "headwind"],
-    "category": "wind"
-  },
-  {
-    "name": "Open and Shut",
-    "level": "shutter",
-    "prerequisites": ["doublestack"],
-    "category": "wind"
-  },
-  {
-    "name": "Eye on the Prize",
-    "level": "clamp",
-    "prerequisites": ["windsquad"],
-    "category": "wind"
-  },
-  {
-    "name": "Over the Seas",
-    "level": "boat",
-    "prerequisites": ["warehouse"],
-    "category": "ice"
-  },
-  {
-    "name": "Tight Squeeze",
-    "level": "corridors2",
-    "prerequisites": ["boat"],
-    "category": "ice"
-  },
-  {
-    "name": "Take the Ferry",
-    "level": "ferry2",
-    "prerequisites": ["boat"],
-    "category": "ice"
-  },
-  {
-    "name": "The Frosty Shuffle",
-    "level": "iceshuffle2",
-    "prerequisites": ["ferry"],
-    "category": "ice"
-  },
-  {
-    "name": "Snow Maze",
-    "level": "snowmaze",
-    "prerequisites": ["lake", "boat"],
-    "category": "ice"
-  },
-  {
-    "name": "Take the Ferry II",
-    "level": "ferry",
-    "prerequisites": ["ferry2"],
-    "category": "ice"
-  },
-  {
-    "name": "Double Slit Experiment",
-    "level": "snowboxes2",
-    "prerequisites": ["ferry"],
-    "category": "ice"
-  },
-  {
-    "name": "Don't Melt the Ice!",
-    "level": "melt",
-    "prerequisites": ["ferry", "corners"],
-    "category": "ice"
-  },
-  {
-    "name": "Mineral Transport",
-    "level": "windwall",
-    "prerequisites": ["ferry", "corridors2"],
-    "category": "ice"
-  },
-  {
-    "name": "Spelunking",
-    "level": "snowboxes",
-    "prerequisites": ["snowboxes2"],
-    "category": "ice"
-  },
-  {
-    "name": "Icebox",
-    "level": "icecrawl",
-    "prerequisites": ["iceshuffle2"],
-    "category": "ice"
-  },
-  {
-    "name": "Rocky River",
-    "level": "icerace",
-    "prerequisites": ["windwall"],
-    "category": "ice"
-  },
-  {
-    "name": "Snow Maze II",
-    "level": "snowmaze2",
-    "prerequisites": ["snowmaze"],
-    "category": "ice"
-  },
-  {
-    "name": "Wall of Thorns",
-    "level": "blocking",
-    "prerequisites": ["safety", "islets"],
-    "category": "vine"
-  },
-  {
-    "name": "Special Delivery",
-    "level": "snowblower",
-    "prerequisites": ["blocking"],
-    "category": "vine"
-  },
-  {
-    "name": "Crossway",
-    "level": "vine",
-    "prerequisites": ["blocking"],
-    "category": "vine"
-  },
-  {
-    "name": "Boxed In",
-    "level": "vineoban",
-    "prerequisites": ["snowblower"],
-    "category": "vine"
-  },
-  {
-    "name": "Repotting",
-    "level": "vineice",
-    "prerequisites": ["vine", "boat"],
-    "category": "vine"
-  },
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   {
     "name": "Weed Control",
     "level": "vinewall",
     "prerequisites": ["vineoban", "doublestack"],
     "category": "vine"
   },
-  {
-    "name": "Sorting Stack",
-    "level": "sorting",
-    "prerequisites": ["vine", "vinewall", "headwind"],
-    "category": "vine"
-  },
-  {
-    "name": "Carnivorous Cove",
-    "level": "swamp",
-    "prerequisites": ["vine"],
-    "category": "vine"
-  },
-  {
-    "name": "Roundabout",
-    "level": "big",
-    "prerequisites": ["vine", "windy"],
-    "category": "vine"
-  },
-  {
-    "name": "My Hobby",
-    "level": "magnetintro",
-    "prerequisites": ["shutter"],
-    "category": "magnet"
-  },
-  {
-    "name": "Magnetic Vacuum",
-    "level": "vacuum",
-    "prerequisites": ["magnetintro"],
-    "category": "magnet"
-  },
-  {
-    "name": "Ring of Fire",
-    "level": "magnetwind2",
-    "prerequisites": ["vacuum"],
-    "category": "magnet"
-  },
-  {
-    "name": "Metal Maze",
-    "level": "metalmaze",
-    "prerequisites": ["vacuum"],
-    "category": "magnet"
-  },
-  {
-    "name": "The Shelf",
-    "level": "magnetwind",
-    "prerequisites": ["magnetwind2"],
-    "category": "magnet"
-  },
-  {
-    "name": "Safety Transport",
-    "level": "transport",
-    "prerequisites": ["magnetwind2"],
-    "category": "magnet"
-  },
-  {
-    "name": "Firesnake Island",
-    "level": "magnetfire2",
-    "prerequisites": ["metalmaze", "dodging"],
-    "category": "magnet"
-  },
-  {
-    "name": "Compact Storage",
-    "level": "compact",
-    "prerequisites": ["metalmaze"],
-    "category": "magnet"
-  },
-  {
-    "name": "Cul-De-Sacs",
-    "level": "hallways",
-    "prerequisites": ["metalmaze", "ferry"],
-    "category": "magnet"
-  },
-  {
-    "name": "Hold the Line",
-    "level": "hold",
-    "prerequisites": ["magnetwind", "doublestack"],
-    "category": "magnet"
-  },
-  {
-    "name": "Steel Shipment",
-    "level": "metaltransport",
-    "prerequisites": ["hallways", "snowboxes2"],
-    "category": "magnet"
-  },
-  {
-    "name": "Magnet Fishing",
-    "level": "shape",
-    "prerequisites": ["transport"],
-    "category": "magnet"
-  },
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
   {
     "name": "Pinwheel",
     "level": "magnettrip",
@@ -431,96 +95,29 @@
     "prerequisites": ["metalmaze"],
     "category": "magnet"
   },
-  {
-    "name": "Beanstalks",
-    "level": "magnetvine",
-    "prerequisites": ["metalmaze", "vinewall"],
-    "category": "magnet"
-  },
-  {
-    "name": "An Eerie Resemblance",
-    "level": "blob",
-    "prerequisites": ["corners"],
-    "category": "blob"
-  },
-  {
-    "name": "Pusher Protector",
-    "level": "shielding",
-    "prerequisites": ["blob"],
-    "category": "blob"
-  },
-  {
-    "name": "Candelabra",
-    "level": "preplaced",
-    "prerequisites": ["blob"],
-    "category": "blob"
-  },
-  {
-    "name": "The Horseshoe",
-    "level": "blobchain",
-    "prerequisites": ["preplaced"],
-    "category": "blob"
-  },
-  {
-    "name": "Shared Space",
-    "level": "blobdodge",
-    "prerequisites": ["shielding"],
-    "category": "blob"
-  },
-  {
-    "name": "Lend a Hand",
-    "level": "blobfire",
-    "prerequisites": ["blobchain", "vine", "bird"],
-    "category": "blob"
-  },
-  {
-    "name": "Swimming Lesson",
-    "level": "blobfish",
-    "prerequisites": ["preplaced"],
-    "category": "blob"
-  },
-  {
-    "name": "Stealing the Wind",
-    "level": "blobchain2",
-    "prerequisites": ["blobchain"],
-    "category": "blob"
-  },
-  {
-    "name": "Baths of Enigma",
-    "level": "blobvine",
-    "prerequisites": ["shielding", "vine"],
-    "category": "blob"
-  },
-  {
-    "name": "Cross the Stream",
-    "level": "blobchain4",
-    "prerequisites": ["blobfish"],
-    "category": "blob"
-  },
-  {
-    "name": "The Divider",
-    "level": "blobice",
-    "prerequisites": ["blobfish", "windwall"],
-    "category": "blob"
-  },
-  {
-    "name": "Staring Contest",
-    "level": "twoblobs",
-    "prerequisites": ["blobchain", "iceshuffle2"],
-    "category": "blob"
-  },
+  
+  
+  
+  
+  
+  
   {
     "name": "Cross the Stream II",
     "level": "blobchain5",
-    "prerequisites": ["twoblobs", "blobchain4"],
-    "category": "blob"
+    "position": [3, 0],
+    "anchor": "blob"
   },
-  {
-    "name": "Stealing the Wind II",
-    "level": "blobchain3",
-    "prerequisites": ["blobchain2", "twoblobs"],
-    "category": "blob"
-  },
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
   {
     "name": "Secret Spy Tech",
     "level": "xray",
@@ -533,48 +130,14 @@
     "prerequisites": ["magnetintro", "xray"],
     "category": "xray"
   },
-  {
-    "name": "Surrender to the Void",
-    "level": "voidintro",
-    "prerequisites": ["metalmaze"],
-    "category": "void"
-  },
-  {
-    "name": "Woodworks",
-    "level": "voiddouble",
-    "prerequisites": ["voidintro"],
-    "category": "void"
-  },
-  {
-    "name": "Shadow Duel",
-    "level": "voidring",
-    "prerequisites": ["voidintro"],
-    "category": "void"
-  },
-  {
-    "name": "The Chokepoint",
-    "level": "voidfire2",
-    "prerequisites": ["voidintro"],
-    "category": "void"
-  },
-  {
-    "name": "Save This Soul",
-    "level": "phaseperson",
-    "prerequisites": ["voidintro"],
-    "category": "void"
-  },
-  {
-    "name": "The Chokepoint II",
-    "level": "voidfire",
-    "prerequisites": ["voidfire2"],
-    "category": "void"
-  },
-  {
-    "name": "Hold it Right There!",
-    "level": "stand",
-    "prerequisites": ["voiddouble", "corners"],
-    "category": "void"
-  },
+
+
+  
+  
+  
+  
+  
+  
   {
     "name": "Butter Side Up",
     "level": "butterintro",
@@ -584,6 +147,12 @@
   {
     "name": "Remote Control",
     "level": "snowlabyrinth",
+    "prerequisites": ["butterintro"],
+    "category": "butter"
+  },
+  {
+    "name": "Bloblands",
+    "level": "blobdependencies",
     "prerequisites": ["butterintro"],
     "category": "butter"
   }

@@ -6,14 +6,16 @@ import PauseMenu from './pausemenu.js'
 
 const globals = game.globals
 
+const NOUNS = ['Guy', 'Gal', 'Dude', 'Dudette', 'Man', 'Lady', 'Thing', 'One'];
+
 export default class OptionsMenu extends Thing {
   time = 0
   selection = 0
   menu = [
     globals.settings.musicOn ? 'Music: ON' : 'Music: OFF',
     globals.settings.soundOn ? 'Sound: ON' : 'Sound: OFF',
-    //'Delete Save Data',
-    'Back'
+    'Noun: ' + (globals.settings.noun ?? 'Guy'),
+    'Back',
   ]
   offsets = this.menu.map(_ => 0)
   selected = false
@@ -61,11 +63,21 @@ export default class OptionsMenu extends Thing {
             }
           }
           if (this.selection === 2) {
+            callback = () => {
+              const nounIndex = NOUNS.indexOf(globals.settings.noun);
+              const newIndex = (nounIndex + 1) % NOUNS.length;
+              globals.settings.noun = NOUNS[newIndex];
+              this.menu[2] = 'Noun: ' + (globals.settings.noun ?? 'Guy'),
+              document.title = `You Are Person ${game.globals.settings.noun ?? 'Guy'}`
+              localStorage.settings = JSON.stringify(globals.settings);
+            }
+          }
+          if (this.selection === 3) {
             this.dead = true
             game.addThing(new PauseMenu())
             this.selected = true
           }
-          this.after(this.selection === 3 ? 20 : 1, callback, 'fadeout')
+          this.after(this.selection === 4 ? 20 : 1, callback, 'fadeout')
           soundmanager.playSound('menu_ok', 0.1, [0.75, 0.85])
         }
       }

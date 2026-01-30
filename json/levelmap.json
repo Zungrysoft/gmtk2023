@@ -1,0 +1,949 @@
+{
+  "deco": [],
+  "anchors": {
+    "intro": [0, 0],
+    "bridge_engineers": [0, 6],
+    "wind": [-3, 6],
+    "ice": [3, 8],
+    "vine": [3, 16],
+    "magnet": [0, 19],
+    "void": [4, 25],
+    "blob": [1, 34]
+  },
+  "levels": [
+    {
+      "name": "Baby's First Mind Control",
+      "level": "intro",
+      "position": [0, 0],
+      "anchor": "intro"
+    },
+    {
+      "name": "Four Square",
+      "level": "four",
+      "position": [0, 1],
+      "anchor": "intro"
+    },
+    {
+      "name": "Double Trouble",
+      "level": "fire",
+      "position": [0, 2],
+      "anchor": "intro"
+    },
+    {
+      "name": "Sewers",
+      "level": "sewers",
+      "position": [1, 2],
+      "anchor": "intro"
+    },
+    {
+      "isKey": true,
+      "keyName": "sewerKey",
+      "position": [2, 2],
+      "anchor": "intro"
+    },
+    {
+      "name": "Fountain of Flame",
+      "level": "fountain",
+      "position": [-1, 2],
+      "anchor": "intro"
+    },
+    {
+      "name": "Riverway",
+      "level": "cove",
+      "position": [-1, 3],
+      "anchor": "intro"
+    },
+    {
+      "name": "Blazing Trails",
+      "level": "dodging3",
+      "position": [-1, 4],
+      "anchor": "intro"
+    },
+    {
+      "isLock": true,
+      "lockName": "introLock",
+      "position": [-1, 5],
+      "anchor": "intro"
+    },
+    {
+      "name": "Handle the Heat",
+      "level": "safety2",
+      "position": [-1, 6],
+      "anchor": "intro"
+    },
+    {
+      "isPath": true,
+      "position": [-2, 6],
+      "anchor": "intro"
+    },
+
+
+    {
+      "name": "Bridge Engineers",
+      "level": "bridge2",
+      "position": [0, 0],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "isLock": true,
+      "lockName": "bridgeEngineersLock",
+      "position": [1, 0],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "name": "Rockoban",
+      "level": "sokoban",
+      "position": [2, 0],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "name": "Box Bridge",
+      "level": "distance",
+      "position": [3, 0],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "name": "Bridge Engineers II",
+      "level": "bridge",
+      "position": [2, -1],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "isKey": true,
+      "keyName": "bridgeEngineersKey",
+      "position": [3, -1],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "isKey": true,
+      "keyName": "bridgeEngineersKey2",
+      "position": [2, -2],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "isPath": true,
+      "position": [0, 1],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "name": "Going For a Swim",
+      "level": "swim",
+      "position": [0, 2],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "isLock": true,
+      "lockName": "iceLock",
+      "lockCount": 2,
+      "lockCountDisplay": "bottom",
+      "position": [1, 2],
+      "anchor": "bridge_engineers"
+    },
+    {
+      "isPath": true,
+      "position": [2, 2],
+      "anchor": "bridge_engineers"
+    },
+
+
+    {
+      "name": "Air Ride",
+      "level": "windintro",
+      "position": [0, 0],
+      "anchor": "wind"
+    },
+    {
+      "name": "Remote Locations",
+      "level": "bird",
+      "position": [-1, 0],
+      "anchor": "wind"
+    },
+    {
+      "name": "Island Access",
+      "level": "islets",
+      "position": [0, 1],
+      "anchor": "wind"
+    },
+    {
+      "name": "Double Back",
+      "level": "doublestop",
+      "position": [-1, 1],
+      "anchor": "wind"
+    },
+    {
+      "isKey": true,
+      "keyName": "doublestopKey",
+      "position": [-2, 1],
+      "anchor": "wind"
+    },
+    {
+      "name": "Warehouse",
+      "level": "warehouse",
+      "position": [0, 2],
+      "anchor": "wind"
+    },
+    {
+      "name": "Hot to the Touch",
+      "level": "windstop",
+      "position": [1, 2],
+      "anchor": "wind"
+    },
+    {
+      "name": "Fire Gate",
+      "level": "seatbelt",
+      "position": [1, 3],
+      "anchor": "wind"
+    },
+    {
+      "name": "Alongside the Maze",
+      "level": "maze",
+      "position": [2, 3],
+      "anchor": "wind"
+    },
+    {
+      "isKey": true,
+      "keyName": "alongsideTheMazeKey",
+      "position": [2, 4],
+      "anchor": "wind"
+    },
+    {
+      "name": "Far Out",
+      "level": "safety",
+      "position": [0, 3],
+      "anchor": "wind"
+    },
+    {
+      "isKey": true,
+      "keyName": "farOutKey",
+      "position": [0, 4],
+      "anchor": "wind"
+    },
+    {
+      "name": "Headwind",
+      "level": "windoban2",
+      "position": [-1, 2],
+      "anchor": "wind"
+    },
+    {
+      "name": "Throw it Over",
+      "level": "windoban",
+      "position": [-1, 3],
+      "anchor": "wind"
+    },
+    {
+      "name": "Hop Across",
+      "level": "islands",
+      "position": [-2, 2],
+      "anchor": "wind"
+    },
+    {
+      "name": "Eye on the Prize",
+      "level": "clamp",
+      "position": [-3, 2],
+      "anchor": "wind"
+    },
+    {
+      "isKey": true,
+      "keyName": "clampKey",
+      "position": [-3, 1],
+      "anchor": "wind"
+    },
+    {
+      "name": "Cavern Lake",
+      "level": "lake",
+      "position": [-2, 3],
+      "anchor": "wind"
+    },
+    {
+      "name": "Split Stream",
+      "level": "split",
+      "position": [-3, 3],
+      "anchor": "wind"
+    },
+    {
+      "name": "Windy Day",
+      "level": "windy",
+      "position": [-2, 4],
+      "anchor": "wind"
+    },
+    {
+      "isKey": true,
+      "keyName": "windyKey",
+      "position": [-3, 4],
+      "anchor": "wind"
+    },
+    {
+      "name": "Forward Progress",
+      "level": "windsquad",
+      "position": [-2, 5],
+      "anchor": "wind"
+    },
+    {
+      "isKey": true,
+      "keyName": "forwardProgressKey",
+      "position": [-2, 6],
+      "anchor": "wind"
+    },
+
+
+    {
+      "name": "Over the Seas",
+      "level": "boat",
+      "position": [0, 0],
+      "anchor": "ice"
+    },
+    {
+      "name": "Take the Ferry",
+      "level": "ferry2",
+      "position": [0, 1],
+      "anchor": "ice"
+    },
+    {
+      "name": "Snow Maze",
+      "level": "snowmaze",
+      "position": [0, 2],
+      "anchor": "ice"
+    },
+    {
+      "name": "Snow Maze II",
+      "level": "snowmaze2",
+      "position": [-1, 2],
+      "anchor": "ice"
+    },
+    {
+      "isKey": true,
+      "keyName": "snowMazeKey",
+      "position": [-2, 2],
+      "anchor": "ice"
+    },
+    {
+      "name": "Tight Squeeze",
+      "level": "corridors2",
+      "position": [1, 0],
+      "anchor": "ice"
+    },
+    {
+      "name": "Take the Ferry II",
+      "level": "ferry",
+      "position": [2, 1],
+      "anchor": "ice"
+    },
+    {
+      "name": "The Frosty Shuffle",
+      "level": "iceshuffle2",
+      "position": [2, 0],
+      "anchor": "ice"
+    },
+    {
+      "isKey": true,
+      "keyName": "iceShuffleKey",
+      "position": [3, 0],
+      "anchor": "ice"
+    },
+    {
+      "name": "Icebox",
+      "level": "icecrawl",
+      "position": [2, -1],
+      "anchor": "ice"
+    },
+    {
+      "isKey": true,
+      "keyName": "iceBoxKey",
+      "position": [3, -1],
+      "anchor": "ice"
+    },
+    {
+      "name": "Mineral Transport",
+      "level": "windwall",
+      "position": [2, 2],
+      "anchor": "ice"
+    },
+    {
+      "name": "Double Slit Experiment",
+      "level": "snowboxes2",
+      "position": [1, 4],
+      "anchor": "ice"
+    },
+    {
+      "name": "Spelunking",
+      "level": "snowboxes",
+      "position": [1, 5],
+      "anchor": "ice"
+    },
+    {
+      "name": "Don't Melt the Ice!",
+      "level": "melt",
+      "position": [2, 4],
+      "anchor": "ice"
+    },
+    {
+      "isKey": true,
+      "keyName": "meltyKey",
+      "position": [3, 4],
+      "anchor": "ice"
+    },
+    {
+      "name": "Rocky River",
+      "level": "icerace",
+      "position": [-2, 4],
+      "anchor": "ice"
+    },
+    {
+      "isKey": true,
+      "keyName": "riverKey",
+      "position": [-2, 3],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [1, 1],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [1, 2],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [1, 3],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [1, 3],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [0, 3],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [0, 4],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [-1, 4],
+      "anchor": "ice"
+    },
+    {
+      "name": "Wall of Thorns",
+      "level": "blocking",
+      "position": [0, 5],
+      "anchor": "ice"
+    },
+    {
+      "isLock": true,
+      "lockName": "vineLock",
+      "lockCount": 2,
+      "lockCountDisplay": "left",
+      "position": [0, 6],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [0, 7],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [0, 8],
+      "anchor": "ice"
+    },
+    {
+      "isPath": true,
+      "position": [0, 9],
+      "anchor": "ice"
+    },
+
+
+    {
+      "name": "Crossway",
+      "level": "vine",
+      "position": [0, 2],
+      "anchor": "vine"
+    },
+    {
+      "name": "Repotting",
+      "level": "vineice",
+      "position": [1, 2],
+      "anchor": "vine"
+    },
+    {
+      "name": "Boxed In",
+      "level": "vineoban",
+      "position": [0, 3],
+      "anchor": "vine"
+    },
+    {
+      "isLock": true,
+      "lockName": "vineLock2",
+      "lockCount": 3,
+      "lockCountDisplay": "bottom",
+      "position": [-1, 3],
+      "anchor": "vine"
+    },
+    {
+      "isPath": true,
+      "position": [-2, 3],
+      "anchor": "vine"
+    },
+    {
+      "name": "Special Delivery",
+      "level": "snowblower",
+      "position": [1, 3],
+      "anchor": "vine"
+    },
+    {
+      "name": "Carnivorous Cove",
+      "level": "swamp",
+      "position": [2, 3],
+      "anchor": "vine"
+    },
+    {
+      "name": "Roundabout",
+      "level": "big",
+      "position": [2, 4],
+      "anchor": "vine"
+    },
+    {
+      "name": "Sorting Stack",
+      "level": "sorting",
+      "position": [1, 4],
+      "anchor": "vine"
+    },
+    {
+      "isKey": true,
+      "keyName": "coveKey",
+      "position": [3, 3],
+      "anchor": "vine"
+    },
+    {
+      "isKey": true,
+      "keyName": "roundaboutKey",
+      "position": [3, 4],
+      "anchor": "vine"
+    },
+    {
+      "isLock": true,
+      "lockName": "vineLock3",
+      "lockCount": 3,
+      "lockCountDisplay": "left",
+      "position": [1, 5],
+      "anchor": "vine"
+    },
+    {
+      "isPath": true,
+      "position": [1, 6],
+      "anchor": "vine"
+    },
+    {
+      "isPath": true,
+      "position": [1, 7],
+      "anchor": "vine"
+    },
+    {
+      "isPath": true,
+      "position": [1, 8],
+      "anchor": "vine"
+    },
+
+
+    {
+      "name": "My Hobby",
+      "level": "magnetintro",
+      "position": [0, 0],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Magnetic Vacuum",
+      "level": "vacuum",
+      "position": [-1, 0],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Metal Maze",
+      "level": "metalmaze",
+      "position": [-1, -1],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Firesnake Island",
+      "level": "magnetfire2",
+      "position": [-2, -1],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Ring of Fire",
+      "level": "magnetwind2",
+      "position": [-1, 1],
+      "anchor": "magnet"
+    },
+    {
+      "name": "The Shelf",
+      "level": "magnetwind",
+      "position": [-2, 1],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Hold the Line",
+      "level": "hold",
+      "position": [-3, 1],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Compact Storage",
+      "level": "compact",
+      "position": [-1, -2],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Steel Shipment",
+      "level": "metaltransport",
+      "position": [0, -2],
+      "anchor": "magnet"
+    },
+    {
+      "isKey": true,
+      "keyName": "steelKey",
+      "position": [1, -2],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Cul-De-Sacs",
+      "level": "hallways",
+      "position": [-3, -1],
+      "anchor": "magnet"
+    },
+    {
+      "isKey": true,
+      "keyName": "magnetKeyTop",
+      "position": [-3, -2],
+      "anchor": "magnet"
+    },
+    {
+      "isKey": true,
+      "keyName": "magnetKeyMiddle",
+      "position": [-3, 0],
+      "anchor": "magnet"
+    },
+    {
+      "isKey": true,
+      "keyName": "magnetKeyBottom",
+      "position": [-3, 2],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Safety Transport",
+      "level": "transport",
+      "position": [-1, 2],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Magnet Fishing",
+      "level": "shape",
+      "position": [0, 2],
+      "anchor": "magnet"
+    },
+    {
+      "name": "Beanstalks",
+      "level": "magnetvine",
+      "position": [-1, 3],
+      "anchor": "magnet"
+    },
+    {
+      "isKey": true,
+      "keyName": "beanstalksKey",
+      "position": [0, 3],
+      "anchor": "magnet"
+    },
+
+
+    {
+      "name": "Surrender to the Void",
+      "level": "voidintro",
+      "position": [0, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-1, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-2, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-3, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-4, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-5, 0],
+      "anchor": "void"
+    },
+    {
+      "name": "Woodworks",
+      "level": "voiddouble",
+      "position": [-6, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-7, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-8, 0],
+      "anchor": "void"
+    },
+    {
+      "name": "Shadow Duel",
+      "level": "voidring",
+      "position": [-9, 0],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, 1],
+      "anchor": "void"
+    },
+    {
+      "name": "Save This Soul",
+      "level": "phaseperson",
+      "position": [-9, 2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-6, 1],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-6, 2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-6, 3],
+      "anchor": "void"
+    },
+    {
+      "name": "The Chokepoint",
+      "level": "voidfire2",
+      "position": [-6, 4],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-5, 4],
+      "anchor": "void"
+    },
+    {
+      "name": "The Chokepoint II",
+      "level": "voidfire",
+      "position": [-4, 4],
+      "anchor": "void"
+    },
+    {
+      "isKey": true,
+      "keyName": "chokepointKey",
+      "position": [-4, 3],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-8, 2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-7, 2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-5, 2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-4, 2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-3, 2],
+      "anchor": "void"
+    },
+    {
+      "name": "Hold it Right There!",
+      "level": "stand",
+      "position": [-2, 2],
+      "anchor": "void"
+    },
+    {
+      "isKey": true,
+      "keyName": "voidKey1",
+      "position": [-2, 1],
+      "anchor": "void"
+    },
+    {
+      "isLock": true,
+      "lockName": "voidExitLock",
+      "position": [-9, 3],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, 4],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, 5],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, 6],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, 7],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, 8],
+      "anchor": "void"
+    },
+    {
+      "name": "Open and Shut",
+      "level": "shutter",
+      "position": [-9, 9],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-8, 9],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-7, 9],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-6, 9],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-5, 9],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-4, 9],
+      "anchor": "void"
+    },
+
+
+    
+    {
+      "name": "An Eerie Resemblance",
+      "level": "blob",
+      "position": [0, 0],
+      "anchor": "blob"
+    },
+    {
+      "name": "Pusher Protector",
+      "level": "shielding",
+      "position": [0, -1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Candelabra",
+      "level": "preplaced",
+      "position": [0, 1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Swimming Lesson",
+      "level": "blobfish",
+      "position": [1, 0],
+      "anchor": "blob"
+    },
+    {
+      "name": "The Divider",
+      "level": "blobice",
+      "position": [1, 1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Cross the Stream",
+      "level": "blobchain4",
+      "position": [2, 0],
+      "anchor": "blob"
+    },
+    
+    {
+      "name": "The Horseshoe",
+      "level": "blobchain",
+      "position": [1, -1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Lend a Hand",
+      "level": "blobfire",
+      "position": [0, -2],
+      "anchor": "blob"
+    },
+    {
+      "name": "Tricky River",
+      "level": "twoblobs",
+      "position": [2, -1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Stealing the Wind",
+      "level": "blobchain2",
+      "position": [-1, 1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Stealing the Wind II",
+      "level": "blobchain3",
+      "position": [-2, 1],
+      "anchor": "blob"
+    },
+    {
+      "name": "Baths of Enigma",
+      "level": "blobvine",
+      "position": [-1, -2],
+      "anchor": "blob"
+    },
+    {
+      "name": "Shared Space",
+      "level": "blobdodge",
+      "position": [-1, -1],
+      "anchor": "blob"
+    }
+  ]
+}

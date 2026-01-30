@@ -7,7 +7,8 @@ import TitleScreen from './titlescreen.js'
 //game.config.width = 1600 * 3/4
 //game.config.height = 1200 * 3/4
 //game.config.isWebglEnabled = false
-document.title = 'You Are Person Guy'
+
+document.title = `Loading...`
 
 await game.loadAssets({
   images: {
@@ -41,6 +42,8 @@ await game.loadAssets({
     player_water_blob: 'images/blobguy_waterguy.png',
     player_magnet_blob: 'images/blobguy_magnetguy.png',
     player_void_blob: 'images/blobguy_voidguy.png',
+    player_butter_blob: 'images/blobguy_butterguy.png',
+    player_butter_front_blob: 'images/blobguy_butterguy2.png',
 
     // Deco Objects
     deco_rock: 'images/rock.png',
@@ -81,14 +84,19 @@ await game.loadAssets({
     you_win: 'images/you_win.png',
     you_died: 'images/you_died.png',
     title: 'images/title.png',
-    checkbox_unchecked: 'images/checkbox_unchecked.png',
-    checkbox_checked: 'images/checkbox_checked.png',
+    key: 'images/key.png',
+    levelmap_level: 'images/levelmap_level.png',
+    levelmap_incomplete: 'images/levelmap_incomplete.png',
+    levelmap_lock: 'images/levelmap_lock.png',
+    levelmap_select: 'images/levelmap_select.png',
+    levelmap_path: 'images/levelmap_path.png',
+    levelmap_key: 'images/levelmap_key.png',
     undefined_sprite: 'images/mystery.png',
   },
 
   json: {
     // Level definition file
-    levelList: 'json/levellist.json',
+    levelMap: 'json/levelmap.json',
 
     // Level files
     test: 'json/levels/test.json',
@@ -209,6 +217,7 @@ await game.loadAssets({
     buttertest: 'json/levels/buttertest.json',
     butterintro: 'json/levels/butterintro.json',
     snowlabyrinth: 'json/levels/snowlabyrinth.json',
+    blobdependencies: 'json/levels/blobdependencies.json',
   },
 
   sounds: {
@@ -259,6 +268,16 @@ if (localStorage.personGuyVersion === '2') {
     game.globals.levelCompletions = {}
   }
   try {
+    game.globals.keysObtained = JSON.parse(localStorage.keysObtained)
+  } catch (e) {
+    game.globals.keysObtained = {}
+  }
+  try {
+    game.globals.locksOpened = JSON.parse(localStorage.locksOpened)
+  } catch (e) {
+    game.globals.locksOpened = {}
+  }
+  try {
     game.globals.settings = JSON.parse(localStorage.settings)
   } catch (e) {
     game.globals.settings = {
@@ -268,6 +287,8 @@ if (localStorage.personGuyVersion === '2') {
   }
 }
 localStorage.personGuyVersion = '2'
+
+document.title = `You Are Person ${game.globals.settings.noun ?? 'Guy'}`
 
 // Apply initial settings
 soundmanager.setMusicVolume(game.globals.settings.musicOn ? 1 : 0)

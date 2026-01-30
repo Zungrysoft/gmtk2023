@@ -1841,7 +1841,7 @@ export default class Board extends Thing {
         else {
           const name = activePlayer.type
           const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1)
-          levelName = `You are ${capitalizedName} Guy`
+          levelName = `You are ${capitalizedName} ${game.globals.settings.noun ?? 'Guy'}`
 
           // Question mark on blob guy clones
           if (activePlayer.isBlob && activePlayer.type !== 'blob') {

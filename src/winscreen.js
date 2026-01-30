@@ -1,7 +1,7 @@
 import * as game from './core/game.js'
 import * as u from './core/utils.js'
 import Thing from './core/thing.js'
-import { getLevelList, getNextLevel } from './levelloader.js'
+import { getNextLevel } from './levelloader.js'
 import LevelSelect from './levelselect.js'
 
 export default class WinScreen extends Thing {
@@ -19,7 +19,8 @@ export default class WinScreen extends Thing {
     this.time += 1
     if (this.time >= 0) {
       if (Object.keys(game.keysPressed).length > 0 || Object.keys(game.buttonsPressed).length > 0) {
-        const nextLevel = getNextLevel(game.globals.level)
+        // const nextLevel = getNextLevel(game.globals.level)
+        const nextLevel = null;
         if (!nextLevel) {
           this.dead = true
           game.addThing(new LevelSelect())

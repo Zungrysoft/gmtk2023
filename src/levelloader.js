@@ -1,5 +1,6 @@
 import { assets } from './core/game.js'
 import * as game from './core/game.js'
+import * as vec2 from './core/vector2.js'
 
 export function getLevel(lvl) {
   // Retrieve level data
@@ -40,7 +41,7 @@ export function getLevel(lvl) {
 let levelList = undefined
 export function getLevelList() {
   if (!levelList) {
-    levelList = JSON.parse(assets.json.levelList)
+    levelList = JSON.parse(assets.json.levelMap).levels.filter(x => !x.isPath && !x.isLock && !x.isKey);
   }
   return levelList
 }
@@ -54,58 +55,33 @@ export function checkPrerequisites(level) {
   return true
 }
 
-export function getUnlockedLevels() {
-  const levels = getLevelList()
-  const levelsPerCategory = 3
-
-  // Iterate over levels to check whether they should be unlocked
-  let ret = []
-  let categoryCounts = {}
-  for (const level of levels) {
-    // Early exit if the level has been completed; it should obviously be unlocked in that case
-    if (game.globals.levelCompletions[level.level]) {
-      ret.push(level)
-      continue
-    }
-
-    // Check category counts
-    if (categoryCounts[level.category] >= levelsPerCategory) {
-      continue
-    }
-    categoryCounts[level.category] = (categoryCounts[level.category] || 0) + 1
-
-    // Check level prerequisites
-    if (!checkPrerequisites(level)) {
-      continue
-    }
-
-    // Passed checks; add it to the list
-    ret.push(level)
-  }
-
-  return ret
-}
-
 export function getNextLevel(currentLevel) {
   // Get all levels which are unlocked but not yet completed
   // Also includes the current level so we can reference its index against the candidates
-  const candidates = getUnlockedLevels().filter(x => x.level === currentLevel || !(game.globals.levelCompletions[x.level]))
+  const { levels } = getLevelMap(levelsOnly);
+  const candidates = levels.filter(x => !x.complete && x.level !== game.globals.level);
+  const current = levels.filter(x => x.level === currentLevel)[0];
 
-  // Get index of the current level
-  const selection = candidates.map(x => x.level).indexOf(currentLevel)
-
-  // First, try to switch to the next unlocked, uncompleted level
-  if (selection + 1 < candidates.length) {
-    return candidates[selection + 1].level
+  let nearest = null;
+  let nearestDist = 999999999999;
+  for (const candidate of candidates) {
+    const dist = vec2.distance(candidate.position, current.position);
+    if (dist < nearestDist) {
+      nearestDist = dist;
+      nearest = candidate.level;
+    }
   }
 
-  // Next, try to switch to the previous unlocked, uncompleted level
-  if (selection - 1 >= 0) {
-    return candidates[selection - 1].level
-  }
+  return nearest;
+}
 
-  // Return undefined if there are no more levels to complete
-  return undefined
+export function getLevelName(levelId) {
+  for (const level of getLevelList()) {
+    if (level.level === levelId) {
+      return level.name;
+    }
+  }
+  return '';
 }
 
 export function getLevelNumber(level) {
@@ -130,3 +106,118 @@ export function getLevelNumber(level) {
     return ""
   }
 }
+
+export function getNumberOfKeys() {
+  let numKeysObtained = 0;
+  let numLocksOpened = 0;
+
+  for (const keyName of Object.keys(game.globals.keysObtained ?? {})) {
+    if (game.globals.keysObtained?.[keyName]) {
+      numKeysObtained ++;
+    }
+  }
+
+  for (const lockName of Object.keys(game.globals.locksOpened ?? {})) {
+    if (game.globals.locksOpened?.[lockName]) {
+      let lockCount = 1;
+      for (const level of getRawLevelMap()["levels"]) {
+        if (level.lockName === lockName && level.lockCount) {
+          lockCount = level.lockCount;
+        }
+      }
+      numLocksOpened += lockCount;
+    }
+  }
+
+  return numKeysObtained - numLocksOpened;
+}
+
+export function hasFoundAnyKeys() {
+  let numKeysObtained = 0;
+
+  for (const keyName of Object.keys(game.globals.keysObtained ?? {})) {
+    if (game.globals.keysObtained?.[keyName]) {
+      numKeysObtained ++;
+    }
+  }
+
+  return numKeysObtained > 0;
+}
+
+let levelMap = undefined;
+export function getRawLevelMap() {
+  if (!levelMap) {
+    levelMap = JSON.parse(assets.json.levelMap)
+  }
+  return levelMap;
+}
+
+export function getLevelMap(levelsOnly) {
+  const rawLevelMap = getRawLevelMap();
+
+  const anchoredLevels = [];
+  for (const level of rawLevelMap["levels"]) {
+    const newLevel = {...level};
+    if (level.anchor) {
+      newLevel.position = vec2.add(newLevel.position, rawLevelMap.anchors[newLevel.anchor]);
+    }
+    anchoredLevels.push(newLevel);
+  }
+
+  const completedLocationsMap = new Set(anchoredLevels.filter(l => game.globals.levelCompletions[l.level]).map(l => l.position.toString()));
+
+  const positionMap = {};
+  for (const level of anchoredLevels) {
+    positionMap[level.position] = level;
+  }
+
+  const continuePath = (level, offset) => {
+    const adj = positionMap[vec2.add(offset, level.position)];
+    if (adj) {
+      adj.unlocked = true;
+      if ((adj.isPath || adj.isLock)) {
+        continuePath(adj, offset);
+      }
+    }
+  }
+
+  for (const level of anchoredLevels) {
+    if (completedLocationsMap.has(level.position.toString())) {
+      level.complete = true;
+      level.unlocked = true;
+      for (const offset of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+        const adj = positionMap[vec2.add(offset, level.position)];
+        if (adj) {
+          adj.unlocked = true;
+          if (adj.isPath || adj.isLock) {
+            continuePath(adj, offset);
+          }
+        }
+      }
+    }
+    if (level.level === 'intro') {
+      level.unlocked = true;
+    }
+  }
+
+  // Filter out locked levels
+  let unlockedLevels = anchoredLevels.filter(x => x.unlocked);
+
+  // Convert open locks to paths
+  for (const level of unlockedLevels) {
+    if (level.isLock && game.globals.locksOpened[level.lockName]) {
+      level.isLock = false;
+      level.isPath = true;
+    }
+  }
+
+  // Levels only param
+  if (levelsOnly) {
+    unlockedLevels = unlockedLevels.filter(x => !x.isPath && !x.isLock && !x.isKey);
+  }
+  
+  return {
+    levels: unlockedLevels,
+  };
+}
+

@@ -173,7 +173,6 @@ export function stringToColor (hex, mod = []) {
 }
 
 export function stringToCoords(s) {
-  console.log(s)
   return map(s.split(','), x => parseInt(x))
 }
 

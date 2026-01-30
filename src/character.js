@@ -54,6 +54,10 @@ export default class Player extends Thing {
   }
 
   update () {
+    if (this.dead) {
+      return;
+    }
+
     this.time += 1
     this.updateTimers()
     this.animate()
@@ -301,6 +305,10 @@ export default class Player extends Thing {
   draw () {
     const { ctx } = game
     const board = game.getThing('board')
+
+    if (this.dead || !board) {
+      return;
+    }
 
     // Fire guy passive fire
     if (this.sprite.includes('fire') && !this.tileThingReference.active && !this.tileThingReference.wasActiveBeforeDeath) {
