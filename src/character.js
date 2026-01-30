@@ -180,7 +180,12 @@ export default class Player extends Thing {
     }
     // Detect if the player changed type
     else if (this.tileThingReference.type !== this.lastState.type) {
-      this.after(transformTime * 2, null, 'changedType')
+      if (this.time <= 2) {
+        this.updateSprite()
+      }
+      else {
+        this.after(transformTime * 2, null, 'changedType')
+      }
     }
     this.lastState = {...this.tileThingReference}
 

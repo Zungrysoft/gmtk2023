@@ -77,6 +77,8 @@ export default class Board extends Thing {
 
     // Initial setup of animations
     this.resetAnimations()
+
+    this.update();
   }
 
   update () {
