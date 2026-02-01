@@ -1805,7 +1805,7 @@ export default class Board extends Thing {
       ctx.translate(32, game.config.height - 32)
       ctx.font = 'italic bold 20px Arial'
       ctx.fillStyle = '#21235B'
-      const levelName = `Level ${getLevelNumber(game.globals.level)}: ${this.state.name}`
+      const levelName = this.state.name
       ctx.fillText(levelName, 0, 0)
       ctx.translate(2, -2)
       ctx.fillStyle = 'white'

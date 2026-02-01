@@ -6,6 +6,10 @@ import Thing from './core/thing.js'
 import { getLevelMap, getLevelName, getNumberOfKeys, hasFoundAnyKeys } from './levelloader.js'
 import Board from './board.js'
 import TitleScreen from './titlescreen.js'
+import CollectedKey from './collectedkey.js'
+import LockFragment from './lockfragment.js'
+
+export const KEY_COLLECT_ANIMATION_DURATION = 30;
 
 export default class LevelSelect extends Thing {
   time = -10
@@ -16,6 +20,10 @@ export default class LevelSelect extends Thing {
   fadeout = 0
   scroll = 0
   scrollTarget = 0
+  displayKeys = 0
+  keyCollectedTime = 0
+  isPartOfLevelSelect = true
+  blockOffset = [0, 0]
 
   constructor (previousMenu = TitleScreen) {
     super()
@@ -29,10 +37,11 @@ export default class LevelSelect extends Thing {
     game.setThingName(this, 'levelselect')
     this.previousMenu = previousMenu
     for (const thing of game.getThings()) {
-      if (thing !== this) {
-        thing.dead = true
+      if (!thing.isPartOfLevelSelect) {
+        thing.dead = true;
       }
     }
+    this.displayKeys = getNumberOfKeys();
     this.loadLevel();
   }
 
@@ -54,10 +63,12 @@ export default class LevelSelect extends Thing {
   }
 
   update () {
-    this.updateTimers()
-    this.time += 1
-    this.scroll = u.lerp(this.scroll, this.scrollTarget, 0.25)
+    this.updateTimers();
+    this.time += 1;
+    this.scroll = u.lerp(this.scroll, this.scrollTarget, 0.25);
     this.selectorPosition = vec2.lerp(this.selectorPosition, this.position, 0.25);
+    this.blockOffset = vec2.lerp(this.blockOffset, [0, 0], 0.17);
+    this.keyCollectedTime --;
 
     if (game.assets.sounds.title_music.paused) {
       soundmanager.playMusic('title_music', 0.125)
@@ -96,7 +107,7 @@ export default class LevelSelect extends Thing {
     if (!vec2.equals(lastPosition, this.position)) {
       soundmanager.playSound('menu_move', 0.2)
       for (const thing of game.getThings()) {
-        if (thing !== this) {
+        if (!thing.isPartOfLevelSelect) {
           thing.dead = true
         }
       }
@@ -113,23 +124,48 @@ export default class LevelSelect extends Thing {
     this.scrollTarget = Math.max(0, this.position[1] - scrollStart)
   }
 
-  tryToMove(offset) {
+  getLevelScreenPosition(level) {
+    return [
+      350 + (level.position[0] * 48),
+      128 + ((level.position[1] - this.scroll) * 48),
+    ];
+  }
+
+  tryToMove(offset, isRoot = true) {
     const desiredPosition = vec2.add(this.position, offset);
     for (const level of this.levels) {
       if (vec2.equals(level.position, desiredPosition)) {
         if (level.isKey) {
-          game.globals.keysObtained[level.keyName] = true
-          localStorage.keysObtained = JSON.stringify(game.globals.keysObtained)
+          if (!game.globals.keysObtained[level.keyName]) {
+            game.globals.keysObtained[level.keyName] = true
+            localStorage.keysObtained = JSON.stringify(game.globals.keysObtained)
+
+            const spawnKeyPos = this.getLevelScreenPosition(level);
+            const spawnKeyVel = vec2.scale(vec2.normalize(offset), 7);
+            const spawnKeyDest = [700 - 50, 50];
+
+            game.addThing(new CollectedKey(spawnKeyPos, spawnKeyVel, spawnKeyDest));
+            this.blockOffset = vec2.scale(vec2.normalize(offset), 30);
+          }
         }
         else if (level.isLock) {
+          this.blockOffset = vec2.scale(vec2.normalize(offset), 30);
           if (getNumberOfKeys() >= (level.lockCount ?? 1)) {
             game.globals.locksOpened[level.lockName] = true
             localStorage.locksOpened = JSON.stringify(game.globals.locksOpened)
+            this.displayKeys -= (level.lockCount ?? 1);
+            soundmanager.playSound('break_lock', 0.4, 1.0);
+            for (let i = 0; i < 4; i ++) {
+              game.addThing(new LockFragment(this.getLevelScreenPosition(level)));
+            }
             this.reloadMap();
+          }
+          else {
+            soundmanager.playSound('blocked', 0.4, [0.46, 0.5]);
           }
         }
         else if (level.isPath) {
-          this.tryToMove(vec2.add(offset, vec2.normalize(offset)));
+          this.tryToMove(vec2.add(offset, vec2.normalize(offset)), false);
         }
         else {
           this.position = desiredPosition;
@@ -137,9 +173,6 @@ export default class LevelSelect extends Thing {
         break;
       }
     }
-
-    // Failed move
-    // Failure sound and animation
   }
 
   postDraw () {
@@ -179,6 +212,7 @@ export default class LevelSelect extends Thing {
       ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
     }
     ctx.translate(...vec2.scale(this.selectorPosition, 48))
+    ctx.translate(...this.blockOffset);
     ctx.translate(0, this.scroll * -48)
     ctx.drawImage(game.assets.images.levelmap_select, -32, -32)
     ctx.restore()
@@ -200,8 +234,14 @@ export default class LevelSelect extends Thing {
         }
         ctx.translate(0, Math.sin(this.time / 15) * 6)
       }
-      if (this.levels[i].isLock) {
+      else if (this.levels[i].isLock) {
         icon = 'levelmap_lock';
+        const lockCount = this.levels[i].lockCount ?? 1;
+        if (lockCount > 1) {
+          const offset = vec2.scale(vec2.directionToVector(this.levels[i].lockCountDirection), 44);
+          const pos = vec2.add([-32, -32], offset);
+          ctx.drawImage(game.assets.images['levelmap_' + lockCount], ...pos)
+        }
       }
       else if (this.levels[i].isPath) {
         icon = 'levelmap_path';
@@ -263,11 +303,15 @@ export default class LevelSelect extends Thing {
         //ctx.globalAlpha = u.map(this.timer('fadeout'), 0, 1, 1, 0, true)
         ctx.translate(u.squareMap(this.timer('fadeout'), 0, 1, 0, -800, true), 0)
       }
+      ctx.translate(700-58, 50)
+      const scaleAmt = u.squareMap(this.keyCollectedTime, 0, KEY_COLLECT_ANIMATION_DURATION, 1, 1.8, true);
+      ctx.scale(scaleAmt, scaleAmt)
       ctx.fillStyle = 'white'
       ctx.font = 'italic bold 32px Arial'
       ctx.textAlign = 'right'
-      ctx.fillText(getNumberOfKeys(), 700 - 58, 50)
-      ctx.drawImage(game.assets.images.levelmap_key, 700 - 64, 10)
+      
+      ctx.fillText(this.displayKeys, 0, 0)
+      ctx.drawImage(game.assets.images.levelmap_key, -6, -40)
       ctx.restore()
     }
 

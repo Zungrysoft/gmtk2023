@@ -133,14 +133,13 @@
     },
     {
       "isLock": true,
-      "lockName": "iceLock",
-      "lockCount": 2,
-      "lockCountDisplay": "bottom",
+      "lockName": "iceLock_a",
       "position": [1, 2],
       "anchor": "bridge_engineers"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "iceLock_b",
       "position": [2, 2],
       "anchor": "bridge_engineers"
     },
@@ -395,7 +394,7 @@
       "anchor": "ice"
     },
     {
-      "isPath": true,
+      "isLock": true,
       "position": [1, 1],
       "anchor": "ice"
     },
@@ -437,14 +436,13 @@
     },
     {
       "isLock": true,
-      "lockName": "vineLock",
-      "lockCount": 2,
-      "lockCountDisplay": "left",
+      "lockName": "vineLock_a",
       "position": [0, 6],
       "anchor": "ice"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "vineLock_b",
       "position": [0, 7],
       "anchor": "ice"
     },
@@ -480,14 +478,13 @@
     },
     {
       "isLock": true,
-      "lockName": "vineLock2",
-      "lockCount": 3,
-      "lockCountDisplay": "bottom",
+      "lockName": "vineLock2_a",
       "position": [-1, 3],
       "anchor": "vine"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "vineLock2_b",
       "position": [-2, 3],
       "anchor": "vine"
     },
@@ -529,19 +526,19 @@
     },
     {
       "isLock": true,
-      "lockName": "vineLock3",
-      "lockCount": 3,
-      "lockCountDisplay": "left",
+      "lockName": "vineLock3_a",
       "position": [1, 5],
       "anchor": "vine"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "vineLock3_b",
       "position": [1, 6],
       "anchor": "vine"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "vineLock3_c",
       "position": [1, 7],
       "anchor": "vine"
     },
@@ -649,15 +646,21 @@
       "anchor": "magnet"
     },
     {
+      "isKey": true,
+      "keyName": "fishingKey",
+      "position": [1, 2],
+      "anchor": "magnet"
+    },
+    {
       "name": "Beanstalks",
       "level": "magnetvine",
-      "position": [-1, 3],
+      "position": [0, 3],
       "anchor": "magnet"
     },
     {
       "isKey": true,
       "keyName": "beanstalksKey",
-      "position": [0, 3],
+      "position": [1, 3],
       "anchor": "magnet"
     },
 
@@ -803,27 +806,31 @@
     },
     {
       "isLock": true,
-      "lockName": "voidExitLock",
+      "lockName": "voidExitLock_a",
       "position": [-9, 3],
       "anchor": "void"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "voidExitLock_b",
       "position": [-9, 4],
       "anchor": "void"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "voidExitLock_c",
       "position": [-9, 5],
       "anchor": "void"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "voidExitLock_d",
       "position": [-9, 6],
       "anchor": "void"
     },
     {
-      "isPath": true,
+      "isLock": true,
+      "lockName": "voidExitLock_e",
       "position": [-9, 7],
       "anchor": "void"
     },
@@ -861,6 +868,44 @@
     {
       "isPath": true,
       "position": [-4, 9],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-6, -1],
+      "anchor": "void"
+    },
+    {
+      "name": "Fictional Alleyway",
+      "level": "voidandice",
+      "position": [-6, -2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-7, -2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-8, -2],
+      "anchor": "void"
+    },
+    {
+      "isPath": true,
+      "position": [-9, -2],
+      "anchor": "void"
+    },
+    {
+      "name": "Slip Through Space",
+      "level": "voidandmagnet",
+      "position": [-10, -2],
+      "anchor": "void"
+    },
+    {
+      "isKey": true,
+      "keyName": "slipThroughSpaceKey",
+      "position": [-10, -1],
       "anchor": "void"
     },
 

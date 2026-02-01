@@ -88,9 +88,14 @@ await game.loadAssets({
     levelmap_level: 'images/levelmap_level.png',
     levelmap_incomplete: 'images/levelmap_incomplete.png',
     levelmap_lock: 'images/levelmap_lock.png',
+    levelmap_lock_fragment: 'images/levelmap_lock_fragment.png',
     levelmap_select: 'images/levelmap_select.png',
     levelmap_path: 'images/levelmap_path.png',
     levelmap_key: 'images/levelmap_key.png',
+    levelmap_2: 'images/levelmap_2.png',
+    levelmap_3: 'images/levelmap_3.png',
+    levelmap_4: 'images/levelmap_4.png',
+    levelmap_5: 'images/levelmap_5.png',
     undefined_sprite: 'images/mystery.png',
   },
 
@@ -218,6 +223,8 @@ await game.loadAssets({
     butterintro: 'json/levels/butterintro.json',
     snowlabyrinth: 'json/levels/snowlabyrinth.json',
     blobdependencies: 'json/levels/blobdependencies.json',
+    voidandmagnet: 'json/levels/voidandmagnet.json',
+    voidandice: 'json/levels/voidandice.json',
   },
 
   sounds: {
@@ -243,6 +250,10 @@ await game.loadAssets({
     xray: 'sounds/xray2.wav',
     phase_out: 'sounds/phase_out.wav',
     phase_in: 'sounds/phase_in.wav',
+    collect_key_1: 'sounds/collect_key_1.wav',
+    collect_key_2: 'sounds/collect_key_2.wav',
+    break_lock: 'sounds/break_lock.wav',
+    blocked: 'sounds/blocked.wav',
 
     // Music
     puzzle_music: 'sounds/personguy_puzzle1.mp3',
