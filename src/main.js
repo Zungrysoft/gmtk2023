@@ -92,10 +92,6 @@ await game.loadAssets({
     levelmap_select: 'images/levelmap_select.png',
     levelmap_path: 'images/levelmap_path.png',
     levelmap_key: 'images/levelmap_key.png',
-    levelmap_2: 'images/levelmap_2.png',
-    levelmap_3: 'images/levelmap_3.png',
-    levelmap_4: 'images/levelmap_4.png',
-    levelmap_5: 'images/levelmap_5.png',
     undefined_sprite: 'images/mystery.png',
   },
 

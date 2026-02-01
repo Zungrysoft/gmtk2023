@@ -133,13 +133,15 @@
     },
     {
       "isLock": true,
-      "lockName": "iceLock_a",
+      "lockName": "iceLock",
+      "lockCount": 2,
       "position": [1, 2],
       "anchor": "bridge_engineers"
     },
     {
       "isLock": true,
-      "lockName": "iceLock_b",
+      "lockName": "iceLock",
+      "lockCount": 2,
       "position": [2, 2],
       "anchor": "bridge_engineers"
     },
@@ -395,6 +397,7 @@
     },
     {
       "isLock": true,
+      "lockName": "iceMidLock",
       "position": [1, 1],
       "anchor": "ice"
     },
@@ -436,13 +439,15 @@
     },
     {
       "isLock": true,
-      "lockName": "vineLock_a",
+      "lockName": "vineLock",
+      "lockCount": 2,
       "position": [0, 6],
       "anchor": "ice"
     },
     {
       "isLock": true,
-      "lockName": "vineLock_b",
+      "lockName": "vineLock",
+      "lockCount": 2,
       "position": [0, 7],
       "anchor": "ice"
     },
@@ -478,13 +483,15 @@
     },
     {
       "isLock": true,
-      "lockName": "vineLock2_a",
+      "lockName": "vineLock2",
+      "lockCount": 2,
       "position": [-1, 3],
       "anchor": "vine"
     },
     {
       "isLock": true,
-      "lockName": "vineLock2_b",
+      "lockName": "vineLock2",
+      "lockCount": 2,
       "position": [-2, 3],
       "anchor": "vine"
     },
@@ -526,19 +533,22 @@
     },
     {
       "isLock": true,
-      "lockName": "vineLock3_a",
+      "lockName": "vineLock3",
+      "lockCount": 3,
       "position": [1, 5],
       "anchor": "vine"
     },
     {
       "isLock": true,
-      "lockName": "vineLock3_b",
+      "lockName": "vineLock3",
+      "lockCount": 3,
       "position": [1, 6],
       "anchor": "vine"
     },
     {
       "isLock": true,
-      "lockName": "vineLock3_c",
+      "lockName": "vineLock3",
+      "lockCount": 3,
       "position": [1, 7],
       "anchor": "vine"
     },
@@ -806,31 +816,36 @@
     },
     {
       "isLock": true,
-      "lockName": "voidExitLock_a",
+      "lockName": "voidExitLock",
+      "lockCount": 5,
       "position": [-9, 3],
       "anchor": "void"
     },
     {
       "isLock": true,
-      "lockName": "voidExitLock_b",
+      "lockName": "voidExitLock",
+      "lockCount": 5,
       "position": [-9, 4],
       "anchor": "void"
     },
     {
       "isLock": true,
-      "lockName": "voidExitLock_c",
+      "lockName": "voidExitLock",
+      "lockCount": 5,
       "position": [-9, 5],
       "anchor": "void"
     },
     {
       "isLock": true,
-      "lockName": "voidExitLock_d",
+      "lockName": "voidExitLock",
+      "lockCount": 5,
       "position": [-9, 6],
       "anchor": "void"
     },
     {
       "isLock": true,
-      "lockName": "voidExitLock_e",
+      "lockName": "voidExitLock",
+      "lockCount": 5,
       "position": [-9, 7],
       "anchor": "void"
     },

@@ -151,13 +151,19 @@ export default class LevelSelect extends Thing {
         else if (level.isLock) {
           this.blockOffset = vec2.scale(vec2.normalize(offset), 30);
           if (getNumberOfKeys() >= (level.lockCount ?? 1)) {
+            // Lock particles on all broken locks
+            for (const levelLock of this.levels) {
+              if (levelLock.isLock && levelLock.lockName === level.lockName) {
+                for (let i = 0; i < 4; i ++) {
+                  game.addThing(new LockFragment(this.getLevelScreenPosition(levelLock)));
+                }
+              }
+            }
+            soundmanager.playSound('break_lock', 0.4, 1.0);
+
             game.globals.locksOpened[level.lockName] = true
             localStorage.locksOpened = JSON.stringify(game.globals.locksOpened)
             this.displayKeys -= (level.lockCount ?? 1);
-            soundmanager.playSound('break_lock', 0.4, 1.0);
-            for (let i = 0; i < 4; i ++) {
-              game.addThing(new LockFragment(this.getLevelScreenPosition(level)));
-            }
             this.reloadMap();
           }
           else {
@@ -236,12 +242,6 @@ export default class LevelSelect extends Thing {
       }
       else if (this.levels[i].isLock) {
         icon = 'levelmap_lock';
-        const lockCount = this.levels[i].lockCount ?? 1;
-        if (lockCount > 1) {
-          const offset = vec2.scale(vec2.directionToVector(this.levels[i].lockCountDirection), 44);
-          const pos = vec2.add([-32, -32], offset);
-          ctx.drawImage(game.assets.images['levelmap_' + lockCount], ...pos)
-        }
       }
       else if (this.levels[i].isPath) {
         icon = 'levelmap_path';
